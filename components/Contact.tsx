@@ -8,9 +8,38 @@ const Contact: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // En una aplicación real, aquí se manejaría el envío del formulario,
-    // por ejemplo, enviando los datos a un servidor o a un servicio de correo.
-    alert('Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.');
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries()) as {
+        name: string;
+        contactInfo: string;
+        serviceType: string;
+        date: string;
+        details: string;
+    };
+
+    const isEmail = (contact: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+
+    const messageBody = `
+        Nombre: ${data.name}
+        Contacto: ${data.contactInfo}
+        Tipo de Servicio: ${data.serviceType}
+        Fecha Sugerida: ${data.date || 'No especificada'}
+        ---
+        Detalles del Proyecto:
+        ${data.details}
+    `;
+
+    if (isEmail(data.contactInfo)) {
+        const subject = encodeURIComponent(`Solicitud de Reserva: ${data.serviceType} - ${data.name}`);
+        const body = encodeURIComponent(messageBody);
+        window.location.href = `mailto:contacto@habanaminimax.com?subject=${subject}&body=${body}`;
+    } else {
+        // Asume que es WhatsApp
+        const whatsappNumber = "5352679828";
+        const whatsappMessage = `Hola, me gustaría hacer una reserva. Mis datos son:\n\n*Nombre:* ${data.name}\n*Contacto:* ${data.contactInfo}\n*Tipo de Servicio:* ${data.serviceType}\n*Fecha Sugerida:* ${data.date || 'No especificada'}\n\n*Detalles del proyecto:*\n${data.details}`;
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappUrl, '_blank');
+    }
   };
 
   return (
