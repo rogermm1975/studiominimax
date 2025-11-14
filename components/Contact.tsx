@@ -98,7 +98,7 @@ const Contact: React.FC = () => {
                 <textarea id="details" name="details" rows={5} className={inputStyles} placeholder="Cuéntanos sobre tu visión, referencias, y cualquier detalle importante." required></textarea>
               </div>
               <div>
-                <button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:opacity-90 transition-opacity duration-300 transform hover:scale-105">
+                <button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:opacity-90 transition-opacity duration-300 transform hover:scale-105 btn-neon-gradient-cyan">
                   Enviar Mensaje
                 </button>
               </div>

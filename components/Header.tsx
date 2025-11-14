@@ -67,10 +67,10 @@ const Header: React.FC = () => {
           </a>
           <nav className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className="text-gray-300 hover:text-cyan-400 transition-colors duration-300 uppercase text-sm tracking-widest">{link.name}</a>
+              <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className="nav-link-neon text-gray-300 uppercase text-sm tracking-widest">{link.name}</a>
             ))}
           </nav>
-          <a href="#contacto" onClick={(e) => handleNavClick(e, '#contacto')} className="hidden md:inline-block bg-cyan-500 text-[#05060d] font-bold py-2 px-6 rounded-full uppercase text-sm tracking-widest hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105">
+          <a href="#contacto" onClick={(e) => handleNavClick(e, '#contacto')} className="hidden md:inline-block bg-cyan-500 text-[#05060d] font-bold py-2 px-6 rounded-full uppercase text-sm tracking-widest hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105 btn-neon-cyan">
             Reserva Ahora
           </a>
           <div className="md:hidden">
@@ -91,9 +91,9 @@ const Header: React.FC = () => {
       >
         <nav className="flex flex-col space-y-6 items-center">
            {navLinks.map((link) => (
-              <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className="text-gray-300 hover:text-cyan-400 transition-colors duration-300 uppercase text-lg tracking-widest">{link.name}</a>
+              <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className="nav-link-neon text-gray-300 uppercase text-lg tracking-widest">{link.name}</a>
             ))}
-          <a href="#contacto" onClick={(e) => handleNavClick(e, '#contacto')} className="bg-cyan-500 text-[#05060d] font-bold py-3 px-8 rounded-full uppercase text-md tracking-widest hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105 mt-4">
+          <a href="#contacto" onClick={(e) => handleNavClick(e, '#contacto')} className="bg-cyan-500 text-[#05060d] font-bold py-3 px-8 rounded-full uppercase text-md tracking-widest hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105 mt-4 btn-neon-cyan">
             Reserva Ahora
           </a>
         </nav>

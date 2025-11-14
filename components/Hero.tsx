@@ -69,10 +69,10 @@ const Hero: React.FC = () => {
           Capturamos la esencia vibrante de tus historias en La Habana
         </motion.p>
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <a href="#servicios" onClick={smoothScrollTo} className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:opacity-90 transition-opacity duration-300 transform hover:scale-105">
+          <a href="#servicios" onClick={smoothScrollTo} className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:opacity-90 transition-opacity duration-300 transform hover:scale-105 btn-neon-gradient-red">
             Conoce nuestros servicios
           </a>
-          <a href="#testimonios" onClick={smoothScrollTo} className="w-full sm:w-auto border-2 border-cyan-400 text-cyan-400 font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:bg-cyan-400 hover:text-[#05060d] transition-colors duration-300 transform hover:scale-105">
+          <a href="#testimonios" onClick={smoothScrollTo} className="w-full sm:w-auto border-2 border-cyan-400 text-cyan-400 font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:bg-cyan-400 hover:text-[#05060d] transition-colors duration-300 transform hover:scale-105 btn-neon-cyan">
             Ver inspiración
           </a>
         </motion.div>
