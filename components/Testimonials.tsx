@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { QuoteIcon } from '../assets/icons';
@@ -42,7 +41,7 @@ const Testimonials: React.FC = () => {
     };
   
   return (
-    <section id="testimonios" className="py-20 md:py-32">
+    <section id="testimonios" className="py-16 sm:py-20 md:py-32">
       <div className="container mx-auto px-6">
         <motion.div 
           className="text-center mb-16"
@@ -51,7 +50,7 @@ const Testimonials: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-5xl md:text-6xl font-heading tracking-widest text-white">Experiencias que Inspiran</h2>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading tracking-widest text-white">Experiencias que Inspiran</h2>
           <p className="text-lg text-gray-400 mt-2">Lo que nuestros clientes dicen de nosotros.</p>
         </motion.div>
 

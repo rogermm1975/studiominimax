@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CameraIcon, EditIcon, StarIcon, CheckCircleIcon, TshirtIcon } from '../assets/icons';
@@ -47,7 +46,7 @@ const Services: React.FC = () => {
   };
 
   return (
-    <section id="servicios" className="py-20 md:py-32 bg-black/20">
+    <section id="servicios" className="py-16 sm:py-20 md:py-32 bg-black/20">
       <div className="container mx-auto px-6">
         <motion.div 
           className="text-center mb-16"
@@ -56,7 +55,7 @@ const Services: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-5xl md:text-6xl font-heading tracking-widest text-white">Nuestros Servicios</h2>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading tracking-widest text-white">Nuestros Servicios</h2>
           <p className="text-lg text-gray-400 mt-2 max-w-2xl mx-auto">Creamos experiencias visuales que trascienden lo convencional.</p>
         </motion.div>
 
@@ -94,7 +93,7 @@ const Services: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <h3 className="text-4xl md:text-5xl font-heading tracking-widest text-white mb-12">Nuestro Proceso Creativo</h3>
+          <h3 className="text-3xl sm:text-4xl md:text-5xl font-heading tracking-widest text-white mb-12">Nuestro Proceso Creativo</h3>
           <div className="relative grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
             <div className="absolute top-8 left-0 w-full h-0.5 bg-gray-700 hidden md:block"></div>
              <div className="absolute top-8 left-0 w-full h-0.5 hidden md:block" style={{ background: 'linear-gradient(90deg, rgba(0,255,255,1) 0%, rgba(255,107,0,1) 100%)', clipPath: 'polygon(0 0, 33% 0, 33% 100%, 0% 100%)' }}></div>

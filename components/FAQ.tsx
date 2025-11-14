@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDownIcon } from '../assets/icons';
@@ -62,7 +61,7 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
 
 const FAQ: React.FC = () => {
   return (
-    <section id="faq" className="py-20 md:py-32 bg-black/20">
+    <section id="faq" className="py-16 sm:py-20 md:py-32 bg-black/20">
       <div className="container mx-auto px-6">
         <motion.div 
           className="text-center mb-16"
@@ -71,7 +70,7 @@ const FAQ: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-5xl md:text-6xl font-heading tracking-widest text-white">Preguntas Frecuentes</h2>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading tracking-widest text-white">Preguntas Frecuentes</h2>
           <p className="text-lg text-gray-400 mt-2">Resolvemos tus dudas para que solo te preocupes por disfrutar la experiencia.</p>
         </motion.div>
 

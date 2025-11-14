@@ -50,7 +50,8 @@ const Header: React.FC = () => {
     { name: 'Inicio', href: '#hero' },
     { name: 'Servicios', href: '#servicios' },
     { name: 'Experiencias', href: '#testimonios' },
-    { name: 'Preguntas', href: '#faq' }
+    { name: 'Preguntas', href: '#faq' },
+    { name: 'Contacto', href: '#contacto' },
   ];
 
   return (

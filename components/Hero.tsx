@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -42,8 +43,7 @@ const Hero: React.FC = () => {
     <section id="hero" className="relative min-h-screen flex items-center justify-center text-center text-white overflow-hidden py-24">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        {/* Remplazar con: <img src="/src/assets/hero-havana-lighthouse.jpg" alt="La Habana al atardecer" className="w-full h-full object-cover" /> */}
-        <img src="https://picsum.photos/seed/havana-hero/1920/1080" alt="La Habana al atardecer" className="w-full h-full object-cover" />
+        <img src="https://ik.imagekit.io/ilczwuvvn/Quinces/Capitolio.webp" alt="Capitolio de La Habana al atardecer" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
       </div>
       
@@ -53,7 +53,7 @@ const Hero: React.FC = () => {
         initial="hidden"
         animate="visible"
       >
-        <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-heading tracking-widest leading-tight mb-4">
+        <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-heading tracking-widest leading-tight mb-4">
           Habana MiniMax Studio
         </motion.h1>
         <motion.p variants={itemVariants} className="text-lg md:text-xl text-cyan-400 tracking-widest my-4 font-light">
