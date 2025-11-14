@@ -4,9 +4,9 @@ import { InstagramIcon, FacebookIcon, WhatsAppIcon } from '../assets/icons';
 
 const Footer: React.FC = () => {
   const socialLinks = [
-    { name: 'Instagram', icon: <InstagramIcon className="w-6 h-6" />, href: '#' },
-    { name: 'Facebook', icon: <FacebookIcon className="w-6 h-6" />, href: '#' },
-    { name: 'WhatsApp', icon: <WhatsAppIcon className="w-6 h-6" />, href: '#' },
+    { name: 'Instagram', icon: <InstagramIcon className="w-6 h-6" />, href: 'https://www.instagram.com/habanaminimax' },
+    { name: 'Facebook', icon: <FacebookIcon className="w-6 h-6" />, href: 'https://www.facebook.com/profile.php?id=61583419842634' },
+    { name: 'WhatsApp', icon: <WhatsAppIcon className="w-6 h-6" />, href: 'https://wa.me/5352679828' },
   ];
 
   return (
@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
              <h4 className="font-bold uppercase tracking-widest text-white mb-4">Síguenos</h4>
              <div className="flex justify-center md:justify-end space-x-6">
                 {socialLinks.map((link) => (
-                    <a key={link.name} href={link.href} aria-label={link.name} className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
+                    <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.name} className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
                         {link.icon}
                     </a>
                 ))}
