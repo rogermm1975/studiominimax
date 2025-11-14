@@ -40,7 +40,13 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center text-center text-white overflow-hidden py-24">
+    <motion.section 
+      id="hero" 
+      className="relative min-h-screen flex items-center justify-center text-center text-white overflow-hidden py-24"
+      initial={{ opacity: 0, filter: 'blur(8px) saturate(0.2)' }}
+      animate={{ opacity: 1, filter: 'blur(0px) saturate(1)' }}
+      transition={{ duration: 1.5, ease: 'easeOut' }}
+    >
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img src="https://ik.imagekit.io/ilczwuvvn/Quinces/Capitolio.webp" alt="Capitolio de La Habana al atardecer" className="w-full h-full object-cover" />
@@ -85,7 +91,7 @@ const Hero: React.FC = () => {
           </div>
         </motion.div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 };
 
