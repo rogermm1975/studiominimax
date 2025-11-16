@@ -4,12 +4,17 @@ import { MailIcon, PhoneIcon, LocationMarkerIcon, WhatsAppIcon, ClipboardCopyIco
 
 const Contact: React.FC = () => {
   const displayEmail = 'contacto@habanaminimax.com';
-  const actualEmail = 'carlose7460@gmail.com';
+  const actualEmail = 'carlose6074@gmail.com';
   
-  // Simplificado para máxima compatibilidad
   const mailtoLink = `mailto:${actualEmail}`;
 
   const [isCopied, setIsCopied] = useState(false);
+  
+  // State for the new form
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [service, setService] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(actualEmail).then(() => {
@@ -17,6 +22,29 @@ const Contact: React.FC = () => {
       setTimeout(() => setIsCopied(false), 2500); // Reset after 2.5 seconds
     });
   };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const whatsappNumber = '5352679828';
+    const formattedMessage = `
+Hola, vengo de su página web y quisiera solicitar un servicio.
+---
+👤 *Nombre:* ${name}
+📧 *Correo:* ${email}
+🛠️ *Servicio de Interés:* ${service}
+---
+💬 *Mensaje:*
+${message}
+    `.trim();
+    
+    const encodedMessage = encodeURIComponent(formattedMessage);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const formInputStyles = "w-full bg-gray-900/50 border border-gray-700 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all";
+  const formLabelStyles = "block text-sm font-semibold mb-2 text-gray-300 tracking-wider";
 
   return (
     <section id="contacto" className="py-16 sm:py-20 md:py-32 relative overflow-hidden">
@@ -34,39 +62,50 @@ const Contact: React.FC = () => {
         </motion.div>
 
         <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-12">
-          {/* Action Buttons Container */}
+          {/* Action Form Container */}
           <motion.div 
-            className="md:col-span-3 bg-black/30 backdrop-blur-md p-8 rounded-lg border border-gray-800 flex flex-col justify-center items-center text-center"
+            className="md:col-span-3 bg-black/30 backdrop-blur-md p-8 rounded-lg border border-gray-800 flex flex-col justify-center"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-3xl font-heading tracking-wider text-white mb-4">Inicia la Conversación</h3>
-            <p className="text-gray-400 mb-8 max-w-md">
-              Estamos listos para escucharte. Elige el método que prefieras para contarnos sobre tu proyecto.
+            <h3 className="text-3xl font-heading tracking-wider text-white mb-4 text-center">Inicia la Conversación</h3>
+            <p className="text-gray-400 mb-8 text-center max-w-md mx-auto">
+              Completa el formulario y envíanos los detalles de tu proyecto directamente por WhatsApp.
             </p>
-            <div className="w-full max-w-sm space-y-4">
-              <a 
-                href={mailtoLink}
-                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-4 px-8 rounded-full uppercase text-sm tracking-widest transition-all duration-300 transform hover:scale-105 btn-neon-gradient-cyan flex items-center justify-center"
-              >
-                <MailIcon className="w-5 h-5 mr-3" />
-                Enviar un Correo
-              </a>
-              <a 
-                href="https://wa.me/5352679828?text=Hola,%20vengo%20de%20su%20página%20web%20y%20quisiera%20más%20información."
-                target="_blank" 
-                rel="noopener noreferrer"
+            <form onSubmit={handleFormSubmit} className="w-full space-y-6">
+              <div>
+                <label htmlFor="name" className={formLabelStyles}>Tu Nombre</label>
+                <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej: Ana de Armas" required className={formInputStyles} />
+              </div>
+               <div>
+                <label htmlFor="email" className={formLabelStyles}>Tu Correo</label>
+                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ana@email.com" required className={formInputStyles} />
+              </div>
+              <div>
+                <label htmlFor="service" className={formLabelStyles}>Servicio de Interés</label>
+                <select id="service" value={service} onChange={(e) => setService(e.target.value)} required className={`${formInputStyles} appearance-none`}>
+                  <option value="" disabled>Selecciona una opción...</option>
+                  <option>Fotografía</option>
+                  <option>Edición Web</option>
+                  <option>Diseño Gráfico</option>
+                  <option>Sublimación</option>
+                  <option>Otro</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="message" className={formLabelStyles}>Cuéntanos tu idea</label>
+                <textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Describe brevemente tu proyecto, fechas importantes, etc." rows={4} required className={formInputStyles}></textarea>
+              </div>
+              <button
+                type="submit"
                 className="w-full bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold py-4 px-8 rounded-full uppercase text-sm tracking-widest transition-all duration-300 transform hover:scale-105 btn-neon-gradient-green flex items-center justify-center"
               >
                 <WhatsAppIcon className="w-5 h-5 mr-3" />
-                Chatear por WhatsApp
-              </a>
-            </div>
-            <p className="text-gray-500 text-sm mt-8">
-              También puedes usar la información de contacto directo que se encuentra a la derecha.
-            </p>
+                Enviar por WhatsApp
+              </button>
+            </form>
           </motion.div>
           
           {/* Info & Map */}
@@ -90,7 +129,7 @@ const Contact: React.FC = () => {
                     <div className="space-y-4">
                         <div className="flex items-center group">
                             <a
-                              href={`mailto:${actualEmail}`}
+                              href={mailtoLink}
                               className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors"
                             >
                                 <MailIcon className="w-5 h-5 mr-3" />
