@@ -33,7 +33,7 @@ const Contact: React.FC = () => {
             </p>
             <div className="w-full max-w-sm space-y-4">
               <a 
-                href="mailto:contacto@habanaminimax.com?subject=Solicitud%20de%20Cotización%20-%20Habana%20MiniMax&body=Hola,%20quisiera%20más%20información%20sobre%20sus%20servicios.%0D%0A%0D%0ANombre:%0D%0AServicio%20de%20interés:%0D%0ADetalles%20del%20proyecto:"
+                href="mailto:carlose7460@gmail.com?subject=Solicitud%20de%20Cotización%20-%20Habana%20MiniMax&body=Hola,%20quisiera%20más%20información%20sobre%20sus%20servicios.%0D%0A%0D%0ANombre:%0D%0AServicio%20de%20interés:%0D%0ADetalles%20del%20proyecto:"
                 className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-4 px-8 rounded-full uppercase text-sm tracking-widest transition-all duration-300 transform hover:scale-105 btn-neon-gradient-cyan flex items-center justify-center"
               >
                 <MailIcon className="w-5 h-5 mr-3" />
@@ -73,7 +73,7 @@ const Contact: React.FC = () => {
                  <div>
                     <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">Contacto Directo</h3>
                     <div className="space-y-4">
-                        <a href="mailto:contacto@habanaminimax.com" className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors">
+                        <a href="mailto:carlose7460@gmail.com" className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors">
                             <MailIcon className="w-5 h-5 mr-3" />
                             contacto@habanaminimax.com
                         </a>
