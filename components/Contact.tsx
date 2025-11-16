@@ -3,10 +3,12 @@ import { motion } from 'framer-motion';
 import { MailIcon, PhoneIcon, LocationMarkerIcon, WhatsAppIcon } from '../assets/icons';
 
 const Contact: React.FC = () => {
-  const emailAddress = 'contacto@habanaminimax.com';
+  const displayEmail = 'contacto@habanaminimax.com';
+  const actualEmail = 'carlose7460@gmail.com';
+  
   const mailtoSubject = 'Solicitud de Cotización - Habana MiniMax';
   const mailtoBody = 'Hola, quisiera más información sobre sus servicios.\n\nNombre:\nServicio de interés:\nDetalles del proyecto:';
-  const mailtoLink = `mailto:${emailAddress}?subject=${encodeURIComponent(mailtoSubject)}&body=${encodeURIComponent(mailtoBody)}`;
+  const mailtoLink = `mailto:${actualEmail}?subject=${encodeURIComponent(mailtoSubject)}&body=${encodeURIComponent(mailtoBody)}`;
 
   return (
     <section id="contacto" className="py-16 sm:py-20 md:py-32 relative overflow-hidden">
@@ -79,11 +81,11 @@ const Contact: React.FC = () => {
                     <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">Contacto Directo</h3>
                     <div className="space-y-4">
                         <a
-                          href={`mailto:${emailAddress}`}
+                          href={`mailto:${actualEmail}`}
                           className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors"
                         >
                             <MailIcon className="w-5 h-5 mr-3" />
-                            {emailAddress}
+                            {displayEmail}
                         </a>
                         <a href="https://wa.me/5352679828" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors">
                             <PhoneIcon className="w-5 h-5 mr-3" />
