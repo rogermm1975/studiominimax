@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MailIcon, PhoneIcon, LocationMarkerIcon, WhatsAppIcon } from '../assets/icons';
+import { MailIcon, PhoneIcon, LocationMarkerIcon, WhatsAppIcon, ClipboardCopyIcon, CheckIcon } from '../assets/icons';
 
 const Contact: React.FC = () => {
   const displayEmail = 'contacto@habanaminimax.com';
   const actualEmail = 'carlose7460@gmail.com';
   
-  const mailtoSubject = 'Solicitud de Cotización - Habana MiniMax';
-  const mailtoBody = 'Hola, quisiera más información sobre sus servicios.\n\nNombre:\nServicio de interés:\nDetalles del proyecto:';
-  const mailtoLink = `mailto:${actualEmail}?subject=${encodeURIComponent(mailtoSubject)}&body=${encodeURIComponent(mailtoBody)}`;
+  // Simplificado para máxima compatibilidad
+  const mailtoLink = `mailto:${actualEmail}`;
+
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(actualEmail).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2500); // Reset after 2.5 seconds
+    });
+  };
 
   return (
     <section id="contacto" className="py-16 sm:py-20 md:py-32 relative overflow-hidden">
@@ -80,13 +88,23 @@ const Contact: React.FC = () => {
                  <div>
                     <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">Contacto Directo</h3>
                     <div className="space-y-4">
-                        <a
-                          href={`mailto:${actualEmail}`}
-                          className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors"
-                        >
-                            <MailIcon className="w-5 h-5 mr-3" />
-                            {displayEmail}
-                        </a>
+                        <div className="flex items-center group">
+                            <a
+                              href={`mailto:${actualEmail}`}
+                              className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors"
+                            >
+                                <MailIcon className="w-5 h-5 mr-3" />
+                                {displayEmail}
+                            </a>
+                            <button 
+                                onClick={handleCopyEmail} 
+                                className="ml-4 text-gray-500 hover:text-white transition-opacity duration-300 opacity-0 group-hover:opacity-100" 
+                                aria-label="Copiar correo electrónico"
+                                title={isCopied ? '¡Copiado!' : 'Copiar correo'}
+                            >
+                              {isCopied ? <CheckIcon className="w-5 h-5 text-green-400" /> : <ClipboardCopyIcon className="w-5 h-5" />}
+                            </button>
+                        </div>
                         <a href="https://wa.me/5352679828" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors">
                             <PhoneIcon className="w-5 h-5 mr-3" />
                             +53 52679828
