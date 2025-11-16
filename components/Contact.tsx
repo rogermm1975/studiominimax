@@ -3,6 +3,11 @@ import { motion } from 'framer-motion';
 import { MailIcon, PhoneIcon, LocationMarkerIcon, WhatsAppIcon } from '../assets/icons';
 
 const Contact: React.FC = () => {
+  const emailAddress = 'contacto@habanaminimax.com';
+  const mailtoSubject = 'Solicitud de Cotización - Habana MiniMax';
+  const mailtoBody = 'Hola, quisiera más información sobre sus servicios.\n\nNombre:\nServicio de interés:\nDetalles del proyecto:';
+  const mailtoLink = `mailto:${emailAddress}?subject=${encodeURIComponent(mailtoSubject)}&body=${encodeURIComponent(mailtoBody)}`;
+
   return (
     <section id="contacto" className="py-16 sm:py-20 md:py-32 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-gradient-to-tr from-red-900/30 to-orange-800/20 rounded-full blur-3xl -z-10"></div>
@@ -33,7 +38,7 @@ const Contact: React.FC = () => {
             </p>
             <div className="w-full max-w-sm space-y-4">
               <a 
-                href="mailto:carlose7460@gmail.com?subject=Solicitud%20de%20Cotización%20-%20Habana%20MiniMax&body=Hola,%20quisiera%20más%20información%20sobre%20sus%20servicios.%0D%0A%0D%0ANombre:%0D%0AServicio%20de%20interés:%0D%0ADetalles%20del%20proyecto:"
+                href={mailtoLink}
                 className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-4 px-8 rounded-full uppercase text-sm tracking-widest transition-all duration-300 transform hover:scale-105 btn-neon-gradient-cyan flex items-center justify-center"
               >
                 <MailIcon className="w-5 h-5 mr-3" />
@@ -74,11 +79,11 @@ const Contact: React.FC = () => {
                     <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">Contacto Directo</h3>
                     <div className="space-y-4">
                         <a
-                          href="mailto:carlose7460@gmail.com"
+                          href={`mailto:${emailAddress}`}
                           className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors"
                         >
                             <MailIcon className="w-5 h-5 mr-3" />
-                            contacto@habanaminimax.com
+                            {emailAddress}
                         </a>
                         <a href="https://wa.me/5352679828" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-300 hover:text-cyan-400 transition-colors">
                             <PhoneIcon className="w-5 h-5 mr-3" />
