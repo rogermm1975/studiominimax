@@ -1,44 +1,146 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { MailIcon, PhoneIcon, LocationMarkerIcon } from '../assets/icons';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MailIcon, PhoneIcon, LocationMarkerIcon, CheckCircleIcon, XCircleIcon, RefreshIcon, SpinnerIcon } from '../assets/icons';
 
 const Contact: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    contactInfo: '',
+    serviceType: 'Sesión Editorial',
+    date: '',
+    details: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
   const inputStyles = "w-full bg-gray-900/50 border border-gray-700 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all";
   const labelStyles = "block text-sm font-bold mb-2 uppercase tracking-wider text-gray-300";
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries()) as {
-        name: string;
-        contactInfo: string;
-        serviceType: string;
-        date: string;
-        details: string;
-    };
+    setIsSubmitting(true);
 
-    const isEmail = (contact: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+    // Simulate API call to a CRM endpoint like GoHighLevel
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Fake network delay
+        // In a real app, you would post to your CRM webhook:
+        // await fetch('https://your-gohighlevel-webhook.com', {
+        //   method: 'POST',
+        //   body: JSON.stringify(formData),
+        // });
+        console.log("Form data submitted:", formData);
+        setSubmitStatus('success');
+    } catch (error) {
+        console.error("Submission failed:", error);
+        setSubmitStatus('error');
+    } finally {
+        setIsSubmitting(false);
+    }
+  };
+  
+  const handleResetForm = () => {
+    setFormData({
+        name: '',
+        contactInfo: '',
+        serviceType: 'Sesión Editorial',
+        date: '',
+        details: '',
+    });
+    setSubmitStatus('idle');
+  }
 
-    const messageBody = `
-        Nombre: ${data.name}
-        Contacto: ${data.contactInfo}
-        Tipo de Servicio: ${data.serviceType}
-        Fecha Sugerida: ${data.date || 'No especificada'}
-        ---
-        Detalles del Proyecto:
-        ${data.details}
-    `;
-
-    if (isEmail(data.contactInfo)) {
-        const subject = encodeURIComponent(`Solicitud de Reserva: ${data.serviceType} - ${data.name}`);
-        const body = encodeURIComponent(messageBody);
-        window.location.href = `mailto:contacto@habanaminimax.com?subject=${subject}&body=${body}`;
-    } else {
-        // Asume que es WhatsApp
-        const whatsappNumber = "5352679828";
-        const whatsappMessage = `Hola, me gustaría hacer una reserva. Mis datos son:\n\n*Nombre:* ${data.name}\n*Contacto:* ${data.contactInfo}\n*Tipo de Servicio:* ${data.serviceType}\n*Fecha Sugerida:* ${data.date || 'No especificada'}\n\n*Detalles del proyecto:*\n${data.details}`;
-        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-        window.open(whatsappUrl, '_blank');
+  const renderFormContent = () => {
+    switch (submitStatus) {
+        case 'success':
+            return (
+                <div className="text-center flex flex-col items-center justify-center min-h-[500px] md:min-h-0 md:h-full">
+                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }}>
+                        <CheckCircleIcon className="w-20 h-20 text-cyan-400 mb-6" />
+                    </motion.div>
+                    <h3 className="text-3xl font-heading tracking-wider text-white mb-3">¡Mensaje Enviado!</h3>
+                    <p className="text-gray-300 max-w-sm mb-8">
+                        Gracias por contactarnos. Hemos recibido tu solicitud y nuestro equipo se pondrá en contacto contigo en las próximas 24 horas.
+                    </p>
+                    <button
+                        onClick={handleResetForm}
+                        className="border-2 border-cyan-400 text-cyan-400 font-bold py-2 px-6 rounded-full uppercase text-sm tracking-widest hover:bg-cyan-400 hover:text-[#05060d] transition-colors duration-300 transform hover:scale-105 btn-neon-cyan"
+                    >
+                        Enviar otro mensaje
+                    </button>
+                </div>
+            );
+        case 'error':
+             return (
+                <div className="text-center flex flex-col items-center justify-center min-h-[500px] md:min-h-0 md:h-full">
+                    <motion.div initial={{ scale: 0, rotate: -15 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }}>
+                        <XCircleIcon className="w-20 h-20 text-red-500 mb-6" />
+                    </motion.div>
+                    <h3 className="text-3xl font-heading tracking-wider text-white mb-3">Algo Salió Mal</h3>
+                    <p className="text-gray-300 max-w-sm mb-8">
+                        Lo sentimos, no pudimos enviar tu mensaje. Por favor, intenta de nuevo o contáctanos directamente por otra vía.
+                    </p>
+                    <button
+                        onClick={() => handleSubmit(new Event('submit') as any)}
+                        disabled={isSubmitting}
+                        className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:opacity-90 transition-opacity duration-300 transform hover:scale-105 btn-neon-gradient-red flex items-center justify-center disabled:opacity-60"
+                    >
+                        <RefreshIcon className="w-5 h-5 mr-2" />
+                        Intentar de Nuevo
+                    </button>
+                </div>
+            );
+        default:
+            return (
+                <form onSubmit={handleSubmit}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                        <label htmlFor="name" className={labelStyles}>Nombre</label>
+                        <input type="text" id="name" name="name" className={inputStyles} placeholder="Tu nombre completo" required value={formData.name} onChange={handleChange} />
+                        </div>
+                        <div>
+                        <label htmlFor="contactInfo" className={labelStyles}>Email / WhatsApp</label>
+                        <input type="text" id="contactInfo" name="contactInfo" className={inputStyles} placeholder="Correo o número de teléfono" required value={formData.contactInfo} onChange={handleChange} />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                        <label htmlFor="serviceType" className={labelStyles}>Tipo de Servicio</label>
+                        <select id="serviceType" name="serviceType" className={inputStyles} value={formData.serviceType} onChange={handleChange}>
+                            <option>Sesión Editorial</option>
+                            <option>Cobertura de Evento</option>
+                            <option>Dirección de Arte</option>
+                            <option>Producción Personalizada</option>
+                            <option>Otro</option>
+                        </select>
+                        </div>
+                        <div>
+                        <label htmlFor="date" className={labelStyles}>Fecha Sugerida</label>
+                        <input type="date" id="date" name="date" className={inputStyles} value={formData.date} onChange={handleChange} />
+                        </div>
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="details" className={labelStyles}>Detalles del Proyecto</label>
+                        <textarea id="details" name="details" rows={5} className={inputStyles} placeholder="Cuéntanos sobre tu visión, referencias, y cualquier detalle importante." required value={formData.details} onChange={handleChange}></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest transition-all duration-300 transform hover:scale-105 btn-neon-gradient-cyan disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center">
+                            {isSubmitting ? (
+                                <>
+                                    <SpinnerIcon className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
+                                    Enviando...
+                                </>
+                            ) : (
+                                'Enviar Mensaje'
+                            )}
+                        </button>
+                    </div>
+                </form>
+            );
     }
   };
 
@@ -58,7 +160,7 @@ const Contact: React.FC = () => {
         </motion.div>
 
         <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-12">
-          {/* Form */}
+          {/* Form Container */}
           <motion.div 
             className="md:col-span-3 bg-black/30 backdrop-blur-md p-8 rounded-lg border border-gray-800"
             initial={{ opacity: 0, x: -50 }}
@@ -66,43 +168,17 @@ const Contact: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label htmlFor="name" className={labelStyles}>Nombre</label>
-                  <input type="text" id="name" name="name" className={inputStyles} placeholder="Tu nombre completo" required />
-                </div>
-                <div>
-                  <label htmlFor="contactInfo" className={labelStyles}>Email / WhatsApp</label>
-                  <input type="text" id="contactInfo" name="contactInfo" className={inputStyles} placeholder="Correo o número de teléfono" required />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label htmlFor="serviceType" className={labelStyles}>Tipo de Servicio</label>
-                  <select id="serviceType" name="serviceType" className={inputStyles} defaultValue="Sesión Editorial">
-                    <option>Sesión Editorial</option>
-                    <option>Cobertura de Evento</option>
-                    <option>Dirección de Arte</option>
-                    <option>Producción Personalizada</option>
-                    <option>Otro</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="date" className={labelStyles}>Fecha Sugerida</label>
-                  <input type="date" id="date" name="date" className={inputStyles} />
-                </div>
-              </div>
-              <div className="mb-6">
-                <label htmlFor="details" className={labelStyles}>Detalles del Proyecto</label>
-                <textarea id="details" name="details" rows={5} className={inputStyles} placeholder="Cuéntanos sobre tu visión, referencias, y cualquier detalle importante." required></textarea>
-              </div>
-              <div>
-                <button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:opacity-90 transition-opacity duration-300 transform hover:scale-105 btn-neon-gradient-cyan">
-                  Enviar Mensaje
-                </button>
-              </div>
-            </form>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={submitStatus}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    {renderFormContent()}
+                </motion.div>
+            </AnimatePresence>
           </motion.div>
           
           {/* Info & Map */}
