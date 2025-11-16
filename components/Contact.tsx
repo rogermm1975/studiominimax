@@ -1,149 +1,8 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MailIcon, PhoneIcon, LocationMarkerIcon, CheckCircleIcon, XCircleIcon, RefreshIcon, SpinnerIcon } from '../assets/icons';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { MailIcon, PhoneIcon, LocationMarkerIcon, WhatsAppIcon } from '../assets/icons';
 
 const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    contactInfo: '',
-    serviceType: 'Sesión Editorial',
-    date: '',
-    details: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
-  const inputStyles = "w-full bg-gray-900/50 border border-gray-700 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all";
-  const labelStyles = "block text-sm font-bold mb-2 uppercase tracking-wider text-gray-300";
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate API call to a CRM endpoint like GoHighLevel
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Fake network delay
-        // In a real app, you would post to your CRM webhook:
-        // await fetch('https://your-gohighlevel-webhook.com', {
-        //   method: 'POST',
-        //   body: JSON.stringify(formData),
-        // });
-        console.log("Form data submitted:", formData);
-        setSubmitStatus('success');
-    } catch (error) {
-        console.error("Submission failed:", error);
-        setSubmitStatus('error');
-    } finally {
-        setIsSubmitting(false);
-    }
-  };
-  
-  const handleResetForm = () => {
-    setFormData({
-        name: '',
-        contactInfo: '',
-        serviceType: 'Sesión Editorial',
-        date: '',
-        details: '',
-    });
-    setSubmitStatus('idle');
-  }
-
-  const renderFormContent = () => {
-    switch (submitStatus) {
-        case 'success':
-            return (
-                <div className="text-center flex flex-col items-center justify-center min-h-[500px] md:min-h-0 md:h-full">
-                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }}>
-                        <CheckCircleIcon className="w-20 h-20 text-cyan-400 mb-6" />
-                    </motion.div>
-                    <h3 className="text-3xl font-heading tracking-wider text-white mb-3">¡Mensaje Enviado!</h3>
-                    <p className="text-gray-300 max-w-sm mb-8">
-                        Gracias por contactarnos. Hemos recibido tu solicitud y nuestro equipo se pondrá en contacto contigo en las próximas 24 horas.
-                    </p>
-                    <button
-                        onClick={handleResetForm}
-                        className="border-2 border-cyan-400 text-cyan-400 font-bold py-2 px-6 rounded-full uppercase text-sm tracking-widest hover:bg-cyan-400 hover:text-[#05060d] transition-colors duration-300 transform hover:scale-105 btn-neon-cyan"
-                    >
-                        Enviar otro mensaje
-                    </button>
-                </div>
-            );
-        case 'error':
-             return (
-                <div className="text-center flex flex-col items-center justify-center min-h-[500px] md:min-h-0 md:h-full">
-                    <motion.div initial={{ scale: 0, rotate: -15 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }}>
-                        <XCircleIcon className="w-20 h-20 text-red-500 mb-6" />
-                    </motion.div>
-                    <h3 className="text-3xl font-heading tracking-wider text-white mb-3">Algo Salió Mal</h3>
-                    <p className="text-gray-300 max-w-sm mb-8">
-                        Lo sentimos, no pudimos enviar tu mensaje. Por favor, intenta de nuevo o contáctanos directamente por otra vía.
-                    </p>
-                    <button
-                        onClick={() => handleSubmit(new Event('submit') as any)}
-                        disabled={isSubmitting}
-                        className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:opacity-90 transition-opacity duration-300 transform hover:scale-105 btn-neon-gradient-red flex items-center justify-center disabled:opacity-60"
-                    >
-                        <RefreshIcon className="w-5 h-5 mr-2" />
-                        Intentar de Nuevo
-                    </button>
-                </div>
-            );
-        default:
-            return (
-                <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                        <label htmlFor="name" className={labelStyles}>Nombre</label>
-                        <input type="text" id="name" name="name" className={inputStyles} placeholder="Tu nombre completo" required value={formData.name} onChange={handleChange} />
-                        </div>
-                        <div>
-                        <label htmlFor="contactInfo" className={labelStyles}>Email / WhatsApp</label>
-                        <input type="text" id="contactInfo" name="contactInfo" className={inputStyles} placeholder="Correo o número de teléfono" required value={formData.contactInfo} onChange={handleChange} />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                        <label htmlFor="serviceType" className={labelStyles}>Tipo de Servicio</label>
-                        <select id="serviceType" name="serviceType" className={inputStyles} value={formData.serviceType} onChange={handleChange}>
-                            <option>Sesión Editorial</option>
-                            <option>Cobertura de Evento</option>
-                            <option>Dirección de Arte</option>
-                            <option>Producción Personalizada</option>
-                            <option>Otro</option>
-                        </select>
-                        </div>
-                        <div>
-                        <label htmlFor="date" className={labelStyles}>Fecha Sugerida</label>
-                        <input type="date" id="date" name="date" className={inputStyles} value={formData.date} onChange={handleChange} />
-                        </div>
-                    </div>
-                    <div className="mb-6">
-                        <label htmlFor="details" className={labelStyles}>Detalles del Proyecto</label>
-                        <textarea id="details" name="details" rows={5} className={inputStyles} placeholder="Cuéntanos sobre tu visión, referencias, y cualquier detalle importante." required value={formData.details} onChange={handleChange}></textarea>
-                    </div>
-                    <div>
-                        <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest transition-all duration-300 transform hover:scale-105 btn-neon-gradient-cyan disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center">
-                            {isSubmitting ? (
-                                <>
-                                    <SpinnerIcon className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
-                                    Enviando...
-                                </>
-                            ) : (
-                                'Enviar Mensaje'
-                            )}
-                        </button>
-                    </div>
-                </form>
-            );
-    }
-  };
-
   return (
     <section id="contacto" className="py-16 sm:py-20 md:py-32 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-gradient-to-tr from-red-900/30 to-orange-800/20 rounded-full blur-3xl -z-10"></div>
@@ -160,25 +19,39 @@ const Contact: React.FC = () => {
         </motion.div>
 
         <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-12">
-          {/* Form Container */}
+          {/* Action Buttons Container */}
           <motion.div 
-            className="md:col-span-3 bg-black/30 backdrop-blur-md p-8 rounded-lg border border-gray-800"
+            className="md:col-span-3 bg-black/30 backdrop-blur-md p-8 rounded-lg border border-gray-800 flex flex-col justify-center items-center text-center"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={submitStatus}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                >
-                    {renderFormContent()}
-                </motion.div>
-            </AnimatePresence>
+            <h3 className="text-3xl font-heading tracking-wider text-white mb-4">Inicia la Conversación</h3>
+            <p className="text-gray-400 mb-8 max-w-md">
+              Estamos listos para escucharte. Elige el método que prefieras para contarnos sobre tu proyecto.
+            </p>
+            <div className="w-full max-w-sm space-y-4">
+              <a 
+                href="mailto:contacto@habanaminimax.com?subject=Solicitud%20de%20Cotización%20-%20Habana%20MiniMax&body=Hola,%20quisiera%20más%20información%20sobre%20sus%20servicios.%0D%0A%0D%0ANombre:%0D%0AServicio%20de%20interés:%0D%0ADetalles%20del%20proyecto:"
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-4 px-8 rounded-full uppercase text-sm tracking-widest transition-all duration-300 transform hover:scale-105 btn-neon-gradient-cyan flex items-center justify-center"
+              >
+                <MailIcon className="w-5 h-5 mr-3" />
+                Enviar un Correo
+              </a>
+              <a 
+                href="https://wa.me/5352679828?text=Hola,%20vengo%20de%20su%20página%20web%20y%20quisiera%20más%20información."
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold py-4 px-8 rounded-full uppercase text-sm tracking-widest transition-all duration-300 transform hover:scale-105 btn-neon-gradient-green flex items-center justify-center"
+              >
+                <WhatsAppIcon className="w-5 h-5 mr-3" />
+                Chatear por WhatsApp
+              </a>
+            </div>
+            <p className="text-gray-500 text-sm mt-8">
+              También puedes usar la información de contacto directo que se encuentra a la derecha.
+            </p>
           </motion.div>
           
           {/* Info & Map */}
