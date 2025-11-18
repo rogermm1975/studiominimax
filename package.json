@@ -1,13 +1,14 @@
 {
-  "homepage": "https://rogermm1975.github.io/MiniMax-Studio/",
+  "homepage": "https://rogermm1975.github.io/studiominimax/",
   "name": "habana-minimax-studio",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
@@ -17,6 +18,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/node": "^20.14.2",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

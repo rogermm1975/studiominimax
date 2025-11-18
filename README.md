@@ -28,12 +28,15 @@ Para iniciar el servidor de desarrollo con hot-reloading, ejecuta:
 
 Esto iniciará la aplicación en modo de desarrollo. Abre [http://localhost:5173](http://localhost:5173) (o el puerto que indique la terminal) para verla en tu navegador.
 
-## Compilación para Producción
+## Compilación y Despliegue en GitHub Pages
 
-Para crear una versión optimizada de la aplicación para producción, ejecuta:
+Para desplegar la aplicación en GitHub Pages, simplemente ejecuta el siguiente comando:
 
     ```bash
-    npm run build
+    npm run deploy
     ```
 
-Este comando generará los archivos estáticos en el directorio `dist/`. Estos archivos están listos para ser desplegados en cualquier servicio de hosting estático.
+Este comando hará lo siguiente:
+1.  **Construirá el proyecto**: Ejecutará `npm run build` para generar los archivos optimizados en la carpeta `dist/`.
+2.  **Creará un `404.html`**: Copiará `dist/index.html` a `dist/404.html` para asegurar que el enrutamiento del lado del cliente funcione correctamente.
+3.  **Publicará en GitHub Pages**: Usará `gh-pages` para subir el contenido de la carpeta `dist/` a la rama `gh-pages` de tu repositorio, haciendo que el sitio esté disponible online.
