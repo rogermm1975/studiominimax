@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { MenuIcon, XIcon, LogoIcon } from '../assets/icons';
 
 const Header: React.FC = () => {
@@ -85,22 +85,26 @@ const Header: React.FC = () => {
       </motion.header>
       
       {/* Mobile Menu */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: isMenuOpen ? 1 : 0, y: isMenuOpen ? 0 : -20 }}
-        transition={{ duration: 0.3 }}
-        // Fix: Corrected typo from `isMenuopen` to `isMenuOpen`.
-        className={`fixed top-16 left-0 w-full bg-[#05060d]/90 backdrop-blur-lg p-6 md:hidden z-40 ${isMenuOpen ? 'block' : 'hidden'}`}
-      >
-        <nav className="flex flex-col space-y-6 items-center">
-           {navLinks.map((link) => (
-              <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className="nav-link-neon text-gray-300 uppercase text-lg tracking-widest">{link.name}</a>
-            ))}
-          <a href="#contacto" onClick={(e) => handleNavClick(e, '#contacto')} className="bg-cyan-500 text-[#05060d] font-bold py-3 px-8 rounded-full uppercase text-md tracking-widest hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105 mt-4 btn-neon-cyan">
-            Reserva Ahora
-          </a>
-        </nav>
-      </motion.div>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-16 left-0 w-full bg-[#05060d]/90 backdrop-blur-lg p-6 md:hidden z-40"
+          >
+            <nav className="flex flex-col space-y-6 items-center">
+              {navLinks.map((link) => (
+                  <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className="nav-link-neon text-gray-300 uppercase text-lg tracking-widest">{link.name}</a>
+                ))}
+              <a href="#contacto" onClick={(e) => handleNavClick(e, '#contacto')} className="bg-cyan-500 text-[#05060d] font-bold py-3 px-8 rounded-full uppercase text-md tracking-widest hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105 mt-4 btn-neon-cyan">
+                Reserva Ahora
+              </a>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
