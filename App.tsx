@@ -5,8 +5,9 @@ import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Services from './components/Services';
-import Portfolio from './components/Portfolio'; // Importar el nuevo componente
+import Portfolio from './components/Portfolio';
 import Blog from './components/Blog';
+import LeadMagnet from './components/LeadMagnet'; // Importar nuevo componente
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Contact from './components/Contact';
@@ -30,8 +31,9 @@ const App: React.FC = () => {
       <main>
         <Hero />
         <Services />
-        <Portfolio /> {/* Añadir la nueva sección del portafolio aquí */}
+        <Portfolio />
         <Blog />
+        <LeadMagnet /> {/* Añadir la nueva sección aquí */}
         <Testimonials />
         <FAQ />
         <Contact />
