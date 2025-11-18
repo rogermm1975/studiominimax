@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
   // Cargar variables de entorno de forma segura desde el directorio actual
   // El tercer argumento '' permite cargar variables que no empiecen por VITE_ (como API_KEY)
-  const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, (process as any).cwd(), '');
 
   return {
     plugins: [react()],

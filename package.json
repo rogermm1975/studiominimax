@@ -1,4 +1,3 @@
-
 {
   "homepage": "https://rogermm1975.github.io/MiniMax-Studio/",
   "name": "habana-minimax-studio",
@@ -13,7 +12,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@google/genai": "^0.14.0",
+    "@google/genai": "^0.1.1",
     "framer-motion": "^11.2.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

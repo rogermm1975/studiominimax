@@ -22,7 +22,6 @@
     "hooks",
     "assets",
     "index.tsx",
-    "App.tsx",
-    "vite.config.ts"
+    "App.tsx"
   ]
 }
