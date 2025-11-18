@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { MenuIcon, XIcon, LogoIcon } from '../assets/icons';
@@ -49,6 +50,8 @@ const Header: React.FC = () => {
   const navLinks = [
     { name: 'Inicio', href: '#hero' },
     { name: 'Servicios', href: '#servicios' },
+    { name: 'Portfolio', href: '#portfolio' },
+    { name: 'Blog', href: '#blog' },
     { name: 'Experiencias', href: '#testimonios' },
     { name: 'Preguntas', href: '#faq' },
     { name: 'Contacto', href: '#contacto' },
