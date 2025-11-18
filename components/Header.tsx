@@ -50,6 +50,7 @@ const Header: React.FC = () => {
   const navLinks = [
     { name: 'Inicio', href: '#hero' },
     { name: 'Servicios', href: '#servicios' },
+    { name: 'Ideas IA', href: '#ia-generator' },
     { name: 'Portfolio', href: '#portfolio' },
     { name: 'Blog', href: '#blog' },
     { name: 'Experiencias', href: '#testimonios' },

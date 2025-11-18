@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Services from './components/Services';
+import AIConceptGenerator from './components/AIConceptGenerator';
 import Portfolio from './components/Portfolio';
 import Blog from './components/Blog';
 import LeadMagnet from './components/LeadMagnet'; // Importar nuevo componente
@@ -31,6 +32,7 @@ const App: React.FC = () => {
       <main>
         <Hero />
         <Services />
+        <AIConceptGenerator />
         <Portfolio />
         <Blog />
         <LeadMagnet /> {/* Añadir la nueva sección aquí */}
