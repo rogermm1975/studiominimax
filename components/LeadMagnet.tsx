@@ -27,7 +27,7 @@ const LeadMagnet: React.FC = () => {
 
   return (
     <section id="recursos" className="py-16 sm:py-20 md:py-32 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-6xl max-h-6xl bg-gradient-to-br from-cyan-900/30 to-red-800/20 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] md:w-[90vw] md:h-[90vw] max-w-6xl bg-gradient-to-br from-cyan-900/30 to-red-800/20 rounded-full blur-3xl -z-10"></div>
       <div className="container mx-auto px-6">
         <motion.div
           className="max-w-4xl mx-auto text-center"
