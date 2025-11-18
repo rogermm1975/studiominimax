@@ -35,7 +35,12 @@ const BlogPostCard = ({ image, category, title, excerpt }: typeof blogPosts[0]) 
         <p className="text-cyan-400 text-sm uppercase tracking-widest mb-2">{category}</p>
         <h3 className="text-xl font-heading tracking-wider text-white mb-3 flex-grow">{title}</h3>
         <p className="text-gray-400 font-light mb-4 text-sm">{excerpt}</p>
-        <a href="#" className="nav-link-neon text-cyan-400 font-bold uppercase text-xs tracking-widest mt-auto inline-flex items-center self-start">
+        <a 
+          href="#" 
+          onClick={(e: React.MouseEvent<HTMLAnchorElement>) => e.preventDefault()}
+          title="Próximamente"
+          className="nav-link-neon text-cyan-400 font-bold uppercase text-xs tracking-widest mt-auto inline-flex items-center self-start"
+        >
           Leer Más
           <ArrowRightIcon className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
         </a>
