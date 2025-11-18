@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GiftIcon, BookOpenIcon, ClipboardListIcon, TicketIcon, PhotographIcon, DownloadIcon } from '../assets/icons';
+import { GiftIcon, BookOpenIcon, ClipboardListIcon, TicketIcon, PhotographIcon } from '../assets/icons';
 
 const LeadMagnet: React.FC = () => {
   const [name, setName] = useState('');

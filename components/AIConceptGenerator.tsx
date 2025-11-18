@@ -1,12 +1,18 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 import { SparklesIcon, SpinnerIcon } from '../assets/icons';
+
+interface Concept {
+    creativeTitle: string;
+    concept: string;
+    suggestedLocations: string[];
+    colorPalette: string[];
+}
 
 const AIConceptGenerator: React.FC = () => {
     const [prompt, setPrompt] = useState('');
-    const [result, setResult] = useState('');
+    const [result, setResult] = useState<Concept | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -18,21 +24,35 @@ const AIConceptGenerator: React.FC = () => {
         }
         setIsLoading(true);
         setError('');
-        setResult('');
+        setResult(null);
 
         try {
             const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
             const model = 'gemini-2.5-flash';
             
+            const responseSchema = {
+                type: Type.OBJECT,
+                properties: {
+                    creativeTitle: { type: Type.STRING, description: 'Un título atractivo para la sesión.' },
+                    concept: { type: Type.STRING, description: 'Una descripción de 2-3 frases que capture la esencia y emoción.' },
+                    suggestedLocations: {
+                        type: Type.ARRAY,
+                        description: 'Lista de 2-3 lugares específicos y emblemáticos en La Habana que encajen con el concepto.',
+                        items: { type: Type.STRING }
+                    },
+                    colorPalette: {
+                        type: Type.ARRAY,
+                        description: '3-4 colores que armonicen con la idea.',
+                        items: { type: Type.STRING }
+                    }
+                },
+                required: ['creativeTitle', 'concept', 'suggestedLocations', 'colorPalette']
+            };
+
             const fullPrompt = `
                 Eres un director creativo y fotógrafo experto en La Habana, Cuba.
                 Tu tarea es generar un concepto de sesión de fotos inspirador y detallado basado en la idea del usuario.
-                La respuesta debe ser concisa, profesional y estar formateada de la siguiente manera, usando Markdown simple:
-
-                - **Título Creativo:** [Un título atractivo para la sesión]
-                - **Concepto:** [Una descripción de 2-3 frases que capture la esencia y emoción.]
-                - **Locaciones Sugeridas:** [Lista de 2-3 lugares específicos y emblemáticos en La Habana que encajen con el concepto.]
-                - **Paleta de Colores:** [3-4 colores que armonicen con la idea. Ej: Terracota, Azul Cobalto, Verde Oliva, Blanco Hueso.]
+                Devuelve un objeto JSON que se ajuste al esquema proporcionado.
 
                 Idea del usuario: "${prompt}"
             `;
@@ -40,9 +60,15 @@ const AIConceptGenerator: React.FC = () => {
             const response = await ai.models.generateContent({
                 model: model,
                 contents: fullPrompt,
+                config: {
+                    responseMimeType: 'application/json',
+                    responseSchema: responseSchema,
+                }
             });
             
-            setResult(response.text);
+            const jsonString = response.text.trim();
+            const parsedResult: Concept = JSON.parse(jsonString);
+            setResult(parsedResult);
 
         } catch (err) {
             console.error(err);
@@ -54,21 +80,28 @@ const AIConceptGenerator: React.FC = () => {
     
     const renderResult = () => {
         if (!result) return null;
-        return result.split('\n').map((line, index) => {
-            if (line.startsWith('- **')) {
-                const parts = line.replace('- **', '').split(':**');
-                return (
-                    <p key={index} className="mb-2">
-                        <span className="font-bold text-cyan-400">{parts[0]}:</span>
-                        <span className="text-gray-300"> {parts[1]}</span>
-                    </p>
-                );
-            }
-            if (line.trim().startsWith('- ')) {
-                return <p key={index} className="text-gray-300 ml-4">{line}</p>;
-            }
-            return null; // Ignorar líneas vacías o sin formato
-        }).filter(Boolean);
+        return (
+            <>
+                <p className="mb-3">
+                    <span className="font-bold text-cyan-400">Título Creativo:</span>
+                    <span className="text-gray-300"> {result.creativeTitle}</span>
+                </p>
+                <p className="mb-3">
+                    <span className="font-bold text-cyan-400">Concepto:</span>
+                    <span className="text-gray-300"> {result.concept}</span>
+                </p>
+                <div className="mb-3">
+                    <p className="font-bold text-cyan-400 mb-1">Locaciones Sugeridas:</p>
+                    <ul className="list-disc list-inside text-gray-300 pl-2">
+                        {result.suggestedLocations.map((loc, i) => <li key={i}>{loc}</li>)}
+                    </ul>
+                </div>
+                <div>
+                    <p className="font-bold text-cyan-400">Paleta de Colores:</p>
+                    <p className="text-gray-300"> {result.colorPalette.join(', ')}</p>
+                </div>
+            </>
+        );
     };
 
     return (
