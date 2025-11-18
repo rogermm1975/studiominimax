@@ -41,21 +41,21 @@ const Testimonials: React.FC = () => {
     };
   
   return (
-    <section id="testimonios" className="py-16 sm:py-20 md:py-32">
+    <section id="testimonios" className="py-16 sm:py-20 md:py-28">
       <div className="container mx-auto px-6">
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading tracking-widest text-white">Experiencias que Inspiran</h2>
-          <p className="text-lg text-gray-400 mt-2">Lo que nuestros clientes dicen de nosotros.</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading tracking-widest text-white mb-3">Experiencias</h2>
+          <p className="text-base text-gray-400 max-w-2xl mx-auto font-light">Lo que nuestros clientes dicen de nosotros.</p>
         </motion.div>
 
         <motion.div 
-          className="grid md:grid-cols-2 gap-8"
+          className="grid md:grid-cols-2 gap-6"
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
@@ -67,13 +67,13 @@ const Testimonials: React.FC = () => {
               className="bg-gray-900/40 p-8 rounded-lg border border-gray-800 flex flex-col"
               variants={itemVariants}
             >
-              <QuoteIcon className="w-10 h-10 text-cyan-400 mb-4" />
-              <p className="text-gray-300 italic mb-6 flex-grow">"{testimonial.quote}"</p>
+              <QuoteIcon className="w-8 h-8 text-cyan-400/50 mb-4" />
+              <p className="text-gray-300 italic mb-6 flex-grow text-sm leading-relaxed">"{testimonial.quote}"</p>
               <div className="flex items-center mt-auto">
-                <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover mr-4 border-2 border-cyan-500" />
+                <img src={testimonial.avatar} alt={testimonial.name} className="w-10 h-10 rounded-full object-cover mr-4 border border-cyan-500/50" />
                 <div>
-                  <h4 className="font-bold text-white tracking-wide">{testimonial.name}</h4>
-                  <p className="text-sm text-gray-400">{testimonial.title}</p>
+                  <h4 className="font-bold text-white tracking-wide text-sm">{testimonial.name}</h4>
+                  <p className="text-xs text-gray-500">{testimonial.title}</p>
                 </div>
               </div>
             </motion.div>

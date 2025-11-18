@@ -1,4 +1,3 @@
-
 export type Language = 'es' | 'en';
 
 type Translations = {
@@ -15,11 +14,13 @@ type Translations = {
       cta: string;
     };
     hero: {
+      tagline: string;
       title1: string;
       title2: string;
       title3: string;
       subtitle: string;
       cta: string;
+      cta_secondary: string;
     };
   }
 };
@@ -38,11 +39,13 @@ export const translations: Translations = {
       cta: 'Reserva Ahora',
     },
     hero: {
+      tagline: 'Fotografía & Diseño en La Habana',
       title1: 'Habana ',
       title2: 'MiniMax',
       title3: ' Studio',
       subtitle: 'Capturamos la esencia vibrante de tus historias en La Habana.',
-      cta: 'Contáctanos Ahora',
+      cta: 'Ver Portafolio',
+      cta_secondary: 'Reservar Sesión',
     },
   },
   en: {
@@ -58,11 +61,13 @@ export const translations: Translations = {
       cta: 'Book Now',
     },
     hero: {
+      tagline: 'Photography & Design in Havana',
       title1: 'Havana ',
       title2: 'MiniMax',
       title3: ' Studio',
       subtitle: 'Capturing the vibrant essence of your stories in Havana.',
-      cta: 'Contact Us Now',
+      cta: 'View Portfolio',
+      cta_secondary: 'Book Session',
     },
   }
 };

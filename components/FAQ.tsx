@@ -32,14 +32,15 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
     <div className="border-b border-gray-700/50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center text-left py-6"
+        className="w-full flex justify-between items-center text-left py-5"
       >
-        <h3 className="text-lg md:text-xl font-semibold tracking-wide text-white">{question}</h3>
+        <h3 className="text-lg font-semibold tracking-wide text-white pr-4">{question}</h3>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
+          className="flex-shrink-0"
         >
-          <ChevronDownIcon className="w-6 h-6 text-cyan-400" />
+          <ChevronDownIcon className="w-5 h-5 text-cyan-400" />
         </motion.div>
       </button>
       <AnimatePresence>
@@ -51,7 +52,7 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <p className="pb-6 text-gray-300 font-light">{answer}</p>
+            <p className="pb-5 text-gray-400 font-light text-sm leading-relaxed">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -61,24 +62,24 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
 
 const FAQ: React.FC = () => {
   return (
-    <section id="faq" className="py-16 sm:py-20 md:py-32 bg-black/20">
+    <section id="faq" className="py-16 sm:py-20 md:py-28 bg-black/20">
       <div className="container mx-auto px-6">
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading tracking-widest text-white">Preguntas Frecuentes</h2>
-          <p className="text-lg text-gray-400 mt-2">Resolvemos tus dudas para que solo te preocupes por disfrutar la experiencia.</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading tracking-widest text-white mb-3">Preguntas Frecuentes</h2>
+          <p className="text-base text-gray-400 max-w-2xl mx-auto font-light">Resolvemos tus dudas para que solo te preocupes por disfrutar la experiencia.</p>
         </motion.div>
 
         <div className="max-w-3xl mx-auto">
           {faqData.map((item, index) => (
              <motion.div
               key={index}
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -10 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
