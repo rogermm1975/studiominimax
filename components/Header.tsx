@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { MenuIcon, XIcon, LogoIcon } from '../assets/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const controls = useAnimation();
+  const { t, language, setLanguage } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,7 +51,6 @@ const Header: React.FC = () => {
     e.preventDefault();
     const targetElement = document.querySelector(targetId);
     if (targetElement) {
-        // Pequeño timeout para permitir que el menú se cierre visualmente antes de scrollear
         setTimeout(() => {
            targetElement.scrollIntoView({ behavior: 'smooth' });
         }, 100);
@@ -59,15 +60,19 @@ const Header: React.FC = () => {
     }
   };
 
+  const toggleLanguage = () => {
+    setLanguage(language === 'es' ? 'en' : 'es');
+  };
+
   const navLinks = [
-    { name: 'Inicio', href: '#hero' },
-    { name: 'Servicios', href: '#servicios' },
-    { name: 'Portfolio', href: '#portfolio' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'Recursos', href: '#recursos' },
-    { name: 'Experiencias', href: '#testimonios' },
-    { name: 'Preguntas', href: '#faq' },
-    { name: 'Contacto', href: '#contacto' },
+    { name: t.header.nav_inicio, href: '#hero' },
+    { name: t.header.nav_servicios, href: '#servicios' },
+    { name: t.header.nav_portfolio, href: '#portfolio' },
+    { name: t.header.nav_ia, href: '#ia-generator' }, // Added IA link
+    { name: t.header.nav_blog, href: '#blog' },
+    { name: t.header.nav_testimonios, href: '#testimonios' },
+    { name: t.header.nav_faq, href: '#faq' },
+    { name: t.header.nav_contacto, href: '#contacto' },
   ];
 
   return (
@@ -77,20 +82,19 @@ const Header: React.FC = () => {
         transition={{ duration: 0.4, ease: "easeInOut" }}
         className="fixed top-0 left-0 w-full z-50"
       >
-        {/* Padding reducido en móvil (px-5) para más espacio, aumentado en desktop (px-8) */}
         <div className="container mx-auto px-5 lg:px-8 py-4 lg:py-5 flex justify-between items-center">
           <a href="#hero" onClick={(e) => handleNavClick(e, '#hero')} className="z-50 relative">
             <LogoIcon className="w-9 h-9 lg:w-10 lg:h-10 text-white hover:text-cyan-400 transition-colors duration-300" />
           </a>
           
           {/* Desktop Menu - Minimalist & Neon Blue */}
-          <nav className="hidden lg:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
             {navLinks.map((link) => (
               <a 
                 key={link.name} 
                 href={link.href} 
                 onClick={(e) => handleNavClick(e, link.href)} 
-                className="nav-link-neon text-cyan-400 font-heading font-bold uppercase text-xs tracking-[0.2em]"
+                className="nav-link-neon text-cyan-400 font-heading font-bold uppercase text-[10px] xl:text-xs tracking-[0.2em]"
               >
                 {link.name}
               </a>
@@ -98,6 +102,14 @@ const Header: React.FC = () => {
           </nav>
 
           <div className='hidden lg:flex items-center gap-4'>
+            {/* Language Toggle Desktop */}
+            <button 
+              onClick={toggleLanguage}
+              className="text-xs font-bold text-gray-300 hover:text-white transition-colors uppercase tracking-wider border border-gray-700 px-2 py-1 rounded hover:border-cyan-400"
+            >
+              {language === 'es' ? 'EN' : 'ES'}
+            </button>
+
             <a 
               href="#contacto" 
               onClick={(e) => handleNavClick(e, '#contacto')} 
@@ -108,12 +120,18 @@ const Header: React.FC = () => {
                        hover:-translate-y-1 active:translate-y-0 active:scale-95
                        transition-all duration-300"
             >
-              Reserva
+              {t.header.cta}
             </a>
           </div>
 
-          {/* Mobile Hamburger */}
-          <div className="lg:hidden z-50">
+          {/* Mobile Hamburger & Lang */}
+          <div className="lg:hidden z-50 flex items-center gap-4">
+            <button 
+              onClick={toggleLanguage}
+              className="text-xs font-bold text-gray-300 hover:text-white transition-colors uppercase tracking-wider border border-gray-700 px-2 py-1 rounded bg-black/50"
+            >
+              {language === 'es' ? 'EN' : 'ES'}
+            </button>
             <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)} 
                 className="text-cyan-400 p-1 focus:outline-none"
@@ -141,7 +159,7 @@ const Header: React.FC = () => {
                     key={link.name} 
                     href={link.href} 
                     onClick={(e) => handleNavClick(e, link.href)} 
-                    className="text-cyan-400 font-heading font-bold uppercase text-2xl tracking-[0.1em] hover:text-white transition-colors p-2"
+                    className="text-cyan-400 font-heading font-bold uppercase text-xl tracking-[0.1em] hover:text-white transition-colors p-2"
                   >
                     {link.name}
                   </a>
@@ -151,7 +169,7 @@ const Header: React.FC = () => {
                 onClick={(e) => handleNavClick(e, '#contacto')} 
                 className="mt-8 bg-gradient-to-br from-white to-gray-300 text-black font-bold py-4 px-10 rounded-full uppercase text-sm tracking-[0.2em] shadow-[0_0_20px_rgba(255,255,255,0.5)] active:scale-95 transition-all"
               >
-                Reserva Ahora
+                {t.header.cta}
               </a>
             </div>
           </motion.div>

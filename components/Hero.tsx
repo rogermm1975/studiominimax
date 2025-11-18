@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Hero: React.FC = () => {
+  const { t } = useLanguage();
+
   const scrollTo = (id: string) => {
     const target = document.getElementById(id);
     if (target) {
@@ -28,7 +31,6 @@ const Hero: React.FC = () => {
       y: 0,
       transition: {
         duration: 0.8,
-        // Explicitly type or cast the ease array to avoid TS inference as number[]
         ease: [0.22, 1, 0.36, 1] as const,
       },
     },
@@ -39,9 +41,8 @@ const Hero: React.FC = () => {
   return (
     <section
       id="hero"
-      // Usamos min-h-[100dvh] para móviles modernos, asegurando que la barra del navegador no tape contenido
       className="relative min-h-[100dvh] flex items-center justify-center text-center overflow-hidden pt-16 pb-20"
-      aria-label="Sección principal de bienvenida con foto del Capitolio de La Habana"
+      aria-label="Sección principal de bienvenida"
     >
       {/* Background Layer with Bokeh Effect */}
       <div className="absolute inset-0 z-0">
@@ -52,7 +53,7 @@ const Hero: React.FC = () => {
         />
       </div>
 
-      {/* Gradient Overlay for smoother transition to content */}
+      {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#05060d] via-transparent to-transparent z-10 pointer-events-none"></div>
 
       {/* Content */}
@@ -66,11 +67,11 @@ const Hero: React.FC = () => {
           variants={itemVariants}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold mb-4 tracking-tight leading-[1.1] drop-shadow-2xl"
         >
-          Habana<br />
+          {t.hero.title1}<br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">
-            MiniMax
+            {t.hero.title2}
           </span>
-           Studio
+           {t.hero.title3}
         </motion.h1>
 
         <motion.div variants={itemVariants} className="w-16 h-0.5 bg-cyan-500 mx-auto mb-6 shadow-[0_0_10px_#06b6d4]"></motion.div>
@@ -79,21 +80,21 @@ const Hero: React.FC = () => {
           variants={itemVariants} 
           className="text-[10px] sm:text-xs md:text-sm font-heading font-semibold tracking-[0.2em] md:tracking-[0.3em] uppercase text-cyan-400 mb-8 drop-shadow-md px-2"
         >
-          - Fotografía - Diseño - Edición - Sublimación -
+          {t.hero.tagline}
         </motion.p>
 
         <motion.p
           variants={itemVariants}
           className="text-sm sm:text-base md:text-lg max-w-lg mx-auto mb-10 sm:mb-12 font-medium text-gray-100 drop-shadow-md leading-relaxed px-4"
         >
-          Capturamos la esencia vibrante de tus historias en La Habana.
+          {t.hero.subtitle}
         </motion.p>
 
         <motion.div 
           variants={itemVariants}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full sm:w-auto px-4"
         >
-          {/* Botón Ver Portafolio - Naranja Neón Volumétrico */}
+          {/* Botón Ver Portafolio */}
           <button
             onClick={() => scrollTo('portfolio')}
             className="group relative w-full sm:w-auto font-heading font-bold py-3.5 px-10 rounded-full text-xs uppercase tracking-[0.2em] text-white
@@ -103,10 +104,10 @@ const Hero: React.FC = () => {
                        hover:-translate-y-1 active:translate-y-0 active:scale-95
                        transition-all duration-300 focus:outline-none"
           >
-            Ver Portafolio
+            {t.hero.cta}
           </button>
 
-          {/* Botón Reservar - Cyan Neón Volumétrico */}
+          {/* Botón Reservar */}
           <button
             onClick={() => scrollTo('contacto')}
             className="group relative w-full sm:w-auto font-heading font-bold py-3.5 px-10 rounded-full text-xs uppercase tracking-[0.2em] text-black
@@ -116,7 +117,7 @@ const Hero: React.FC = () => {
                        hover:-translate-y-1 active:translate-y-0 active:scale-95
                        transition-all duration-300 focus:outline-none"
           >
-            Reservar
+            {t.hero.cta_secondary}
           </button>
         </motion.div>
       </motion.div>
