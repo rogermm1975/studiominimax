@@ -1,3 +1,4 @@
+
 {
   "compilerOptions": {
     "target": "ES2020",
@@ -21,6 +22,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["components", "hooks", "assets", "index.tsx", "App.tsx"],
+  "include": ["components", "hooks", "assets", "contexts", "translations", "index.tsx", "App.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

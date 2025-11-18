@@ -1,96 +1,62 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Hero: React.FC = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
+  const { t } = useLanguage();
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.6, ease: 'easeOut' },
-    },
-  };
-
-  const metrics = [
-    { value: '+150', label: 'Sesiones' },
-    { value: '98%', label: 'Clientes Felices' },
-    { value: '4', label: 'Profesionales' },
-  ];
-
-  const smoothScrollTo = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const targetId = e.currentTarget.getAttribute('href');
-    if (!targetId) return;
-    const targetElement = document.querySelector(targetId);
-    if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
+  // Función reusable de scroll suave
+  const scrollTo = (id: string) => {
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <motion.section 
-      id="hero" 
-      className="relative min-h-screen flex items-center justify-center text-center text-white overflow-hidden py-24"
-      initial={{ opacity: 1, filter: 'blur(12px) saturate(0.5)', scale: 1.05 }}
-      animate={{ opacity: 1, filter: 'blur(0px) saturate(1)', scale: 1 }}
-      transition={{ duration: 1.2, ease: 'easeOut' }}
+    <section
+      id="hero"
+      className="relative h-screen flex items-center justify-center text-center bg-cover bg-center"
+      style={{
+        backgroundImage: "url('https://ik.imagekit.io/ilczwuvvn/Quinces/571211098_32317210297924856_8673495078409657093_n.webp')"
+      }}
+      aria-label="Sección principal de bienvenida"
     >
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <img src="https://ik.imagekit.io/ilczwuvvn/Quinces/Capitolio.webp" alt="Capitolio de La Habana al atardecer" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-      </div>
-      
-      <motion.div
-        className="relative z-10 container mx-auto px-6"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-heading tracking-widest leading-tight mb-4">
-          Habana MiniMax Studio
-        </motion.h1>
-        <motion.p variants={itemVariants} className="text-lg md:text-xl text-cyan-400 tracking-widest my-4 font-light">
-          - Fotografía - Edición - Diseño - Sublimación -
-        </motion.p>
-        <motion.p variants={itemVariants} className="text-xl md:text-2xl max-w-3xl mx-auto mb-8 font-light tracking-wider">
-          Capturamos la esencia vibrante de tus historias en La Habana
-        </motion.p>
-        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <a href="#servicios" onClick={smoothScrollTo} className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:opacity-90 transition-opacity duration-300 transform hover:scale-105 btn-neon-gradient-red">
-            Conoce nuestros servicios
-          </a>
-          <a href="#testimonios" onClick={smoothScrollTo} className="w-full sm:w-auto border-2 border-cyan-400 text-cyan-400 font-bold py-3 px-8 rounded-full uppercase text-sm tracking-widest hover:bg-cyan-400 hover:text-[#05060d] transition-colors duration-300 transform hover:scale-105 btn-neon-cyan">
-            Ver inspiración
-          </a>
-        </motion.div>
-        
-        <motion.div 
-          className="mt-16"
-          variants={itemVariants}
+      {/* Overlay oscuro */}
+      <div className="absolute inset-0 bg-black opacity-60"></div>
+
+      {/* Contenido */}
+      <div className="relative z-10 px-4 text-white animate-fadeInUp motion-safe:animate-fadeInUp">
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-4 tracking-tight">
+          {t.hero.title1}
+          <span className="text-blue-500">{t.hero.title2}</span>
+          {t.hero.title3}
+        </h1>
+        <p className="text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto mb-8 font-light">
+          {t.hero.subtitle}
+        </p>
+
+        {/* CTA */}
+        <button
+          onClick={() => scrollTo('contacto')}
+          className="inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg 
+                     hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30
+                     focus:outline-none focus:ring-4 focus:ring-blue-300"
         >
-          <div className="max-w-lg mx-auto flex justify-around items-center p-4 bg-black/30 backdrop-blur-md rounded-lg">
-            {metrics.map((metric, index) => (
-              <div key={index} className="text-center">
-                <p className="text-3xl md:text-4xl font-heading tracking-wider text-cyan-400">{metric.value}</p>
-                <p className="text-xs md:text-sm uppercase tracking-widest text-gray-300">{metric.label}</p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </motion.div>
+          {t.hero.cta}
+        </button>
+      </div>
+
+      {/* Scroll down animado */}
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+        <button
+          aria-label="Desplazar hacia la sección de Servicios"
+          onClick={() => scrollTo('servicios')}
+          className="flex justify-center items-start w-6 h-10 border-2 border-white rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-white"
+        >
+          <div className="w-1 h-2 bg-white rounded-full animate-bounce"></div>
+        </button>
+      </div>
     </section>
   );
 };
