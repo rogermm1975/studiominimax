@@ -43,9 +43,9 @@ const Hero: React.FC = () => {
     <motion.section 
       id="hero" 
       className="relative min-h-screen flex items-center justify-center text-center text-white overflow-hidden py-24"
-      initial={{ opacity: 0, filter: 'blur(8px) saturate(0.2)' }}
-      animate={{ opacity: 1, filter: 'blur(0px) saturate(1)' }}
-      transition={{ duration: 1.5, ease: 'easeOut' }}
+      initial={{ opacity: 1, filter: 'blur(12px) saturate(0.5)', scale: 1.05 }}
+      animate={{ opacity: 1, filter: 'blur(0px) saturate(1)', scale: 1 }}
+      transition={{ duration: 1.2, ease: 'easeOut' }}
     >
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
@@ -91,7 +91,7 @@ const Hero: React.FC = () => {
           </div>
         </motion.div>
       </motion.div>
-    </motion.section>
+    </section>
   );
 };
 
