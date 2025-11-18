@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -8,6 +7,7 @@ import Services from './components/Services';
 import Portfolio from './components/Portfolio';
 import Blog from './components/Blog';
 import LeadMagnet from './components/LeadMagnet';
+import AIConceptGenerator from './components/AIConceptGenerator';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Contact from './components/Contact';
@@ -32,6 +32,7 @@ const App: React.FC = () => {
         <Hero />
         <Services />
         <Portfolio />
+        <AIConceptGenerator />
         <Blog />
         <LeadMagnet />
         <Testimonials />
