@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MailIcon, PhoneIcon, LocationMarkerIcon, WhatsAppIcon, ClipboardCopyIcon, CheckIcon } from '../assets/icons';
@@ -26,15 +27,24 @@ const Contact: React.FC = () => {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const whatsappNumber = '5352679828';
+    
+    // WhatsApp no soporta colores reales ni texto parpadeante.
+    // Usamos emojis rojos y negritas para destacar el encabezado de forma elegante.
     const formattedMessage = `
-Hola, vengo de su página web y quisiera solicitar un servicio.
----
+🚨 *SERVICIO DE LA WEB* 🚨
+
+✨ *Nueva Solicitud de Cliente* ✨
+━━━━━━━━━━━━━━━━━━━━
+
 👤 *Nombre:* ${name}
 📧 *Correo:* ${email}
-🛠️ *Servicio de Interés:* ${service}
----
-💬 *Mensaje:*
+🛠️ *Interés:* ${service}
+━━━━━━━━━━━━━━━━━━━━
+
+📝 *Mensaje:*
 ${message}
+
+🚀 *Enviado desde Habana MiniMax Studio*
     `.trim();
     
     const encodedMessage = encodeURIComponent(formattedMessage);
