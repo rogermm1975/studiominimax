@@ -24,18 +24,22 @@ const AIConceptGenerator: React.FC = () => {
     const [hasKey, setHasKey] = useState(true);
 
     useEffect(() => {
-        // Verificación segura de la API Key
+        // Depuración en consola para verificar qué está llegando realmente
         const key = process.env.API_KEY;
         
-        if (!key || key === '' || key === 'undefined') {
-            console.error("API Key missing in frontend.");
-            setHasKey(false);
-            setError('⚠️ API Key no detectada. Asegúrate de haber hecho REDEPLOY en Vercel después de configurar la variable.');
-        } else {
-            console.log("API Key detected correctly.");
+        console.log("--- DEBUG API KEY ---");
+        if (key) {
+            console.log("Key status: Presente");
+            console.log("Key length:", key.length);
+            console.log("Key preview:", key.substring(0, 5) + "...");
             setHasKey(true);
             setError('');
+        } else {
+            console.error("Key status: MISSING / UNDEFINED");
+            setHasKey(false);
+            setError('⚠️ API Key no detectada. Asegúrate de haber hecho REDEPLOY en Vercel después de actualizar vite.config.ts');
         }
+        console.log("---------------------");
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
