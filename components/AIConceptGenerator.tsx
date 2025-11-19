@@ -182,9 +182,9 @@ const AIConceptGenerator: React.FC = () => {
                                 <div>
                                     <h4 className="text-orange-300 font-bold text-sm uppercase">Configuración Pendiente</h4>
                                     <p className="text-orange-200/80 text-xs mt-1 leading-relaxed">
-                                        La variable <code>API_KEY</code> no se detectó en el despliegue.
+                                        La variable <code>NEXT_PUBLIC_API_KEY</code> no se detectó.
                                         <br/>
-                                        Asegúrate de añadirla en <strong>Vercel &gt; Settings &gt; Environment Variables</strong> y hacer un <strong>Redeploy</strong>.
+                                        Asegúrate de crear el archivo <code>.env</code> con tu clave o configurarla en las variables de entorno.
                                     </p>
                                 </div>
                             </div>
