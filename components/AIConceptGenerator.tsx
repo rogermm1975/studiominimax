@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
-import { SparklesIcon, SpinnerIcon, LocationMarkerIcon, CheckCircleIcon } from '../assets/icons';
+import { SparklesIcon, SpinnerIcon, LocationMarkerIcon } from '../assets/icons';
 
 interface Color {
   name: string;
@@ -105,7 +105,6 @@ const AIConceptGenerator: React.FC = () => {
     const [result, setResult] = useState<AIConceptResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    // Quitamos la dependencia estricta de hasKey para permitir el modo offline
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -184,14 +183,17 @@ const AIConceptGenerator: React.FC = () => {
                 setResult(offlineResult);
                 setIsLoading(false);
             }, 1500);
-            return; // Salimos para no ejecutar el finally con doble setIsLoading(false) si usamos timeout
+            return; 
         } 
         
         setIsLoading(false);
     };
 
+    // Determinar si mostramos el área de resultados (solo si hay un resultado, no mientras carga)
+    const showResult = result !== null;
+
     return (
-        <section id="ia-generator" className="py-16 sm:py-20 md:py-32 relative">
+        <section id="ia-generator" className="py-16 sm:py-20 md:py-32 relative overflow-hidden">
              {/* Background decoration */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-b from-cyan-900/10 to-transparent -z-10 blur-3xl"></div>
 
@@ -212,10 +214,11 @@ const AIConceptGenerator: React.FC = () => {
                     </p>
                 </motion.div>
                 
-                <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
+                <div className={`grid gap-12 items-start max-w-6xl mx-auto transition-all duration-500 ease-in-out ${showResult ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
                     {/* Input Area */}
                     <motion.div
-                        className="bg-gray-900/60 p-6 md:p-8 rounded-2xl border border-gray-800 backdrop-blur-sm"
+                        layout
+                        className={`bg-gray-900/60 p-6 md:p-8 rounded-2xl border border-gray-800 backdrop-blur-sm w-full ${!showResult ? 'max-w-2xl mx-auto' : ''}`}
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
@@ -268,80 +271,73 @@ const AIConceptGenerator: React.FC = () => {
                     </motion.div>
                     
                     {/* Result Area */}
-                    <motion.div
-                         className="relative min-h-[300px]"
-                         initial={{ opacity: 0, x: 20 }}
-                         whileInView={{ opacity: 1, x: 0 }}
-                         viewport={{ once: true }}
-                         transition={{ duration: 0.7, delay: 0.2 }}
-                    >
-                        {!result && !isLoading && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-600 border-2 border-dashed border-gray-800 rounded-2xl">
-                                <SparklesIcon className="w-12 h-12 mb-3 opacity-20" />
-                                <p className="text-sm uppercase tracking-widest opacity-50">El resultado aparecerá aquí</p>
-                            </div>
-                        )}
-
-                        {result && !isLoading && (
-                            <motion.div 
-                                className="bg-gradient-to-br from-gray-900 to-gray-800 p-1 rounded-2xl shadow-2xl"
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
+                    <AnimatePresence>
+                        {showResult && result && (
+                            <motion.div
+                                layout
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 50 }}
                                 transition={{ duration: 0.5 }}
+                                className="relative min-h-[300px] w-full"
                             >
-                                <div className="bg-[#05060d] rounded-xl p-6 md:p-8 h-full relative overflow-hidden">
-                                    {/* Decorative sheen */}
-                                    <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl"></div>
+                                <motion.div 
+                                    className="bg-gradient-to-br from-gray-900 to-gray-800 p-1 rounded-2xl shadow-2xl"
+                                >
+                                    <div className="bg-[#05060d] rounded-xl p-6 md:p-8 h-full relative overflow-hidden">
+                                        {/* Decorative sheen */}
+                                        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl"></div>
 
-                                    <div className="flex justify-between items-start mb-4">
-                                        <h3 className="text-2xl md:text-3xl font-heading text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white">
-                                            {result.title}
-                                        </h3>
-                                        {/* Badge de Origen */}
-                                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded border ${result.source === 'AI' ? 'border-cyan-500/50 text-cyan-400' : 'border-purple-500/50 text-purple-400'}`}>
-                                            {result.source === 'AI' ? 'AI Generated' : 'Studio Pick'}
-                                        </span>
-                                    </div>
-                                    
-                                    <p className="text-gray-300 leading-relaxed mb-6 text-sm md:text-base italic border-l-2 border-cyan-500/30 pl-4">
-                                        "{result.concept}"
-                                    </p>
-
-                                    <div className="space-y-6">
-                                        <div>
-                                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center">
-                                                <LocationMarkerIcon className="w-4 h-4 mr-2" /> Locaciones Sugeridas
-                                            </h4>
-                                            <ul className="space-y-2">
-                                                {result.locations.map((loc, idx) => (
-                                                    <li key={idx} className="text-gray-300 text-sm flex items-start">
-                                                        <span className="text-cyan-500 mr-2">•</span> {loc}
-                                                    </li>
-                                                ))}
-                                            </ul>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <h3 className="text-2xl md:text-3xl font-heading text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white">
+                                                {result.title}
+                                            </h3>
+                                            {/* Badge de Origen */}
+                                            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded border ${result.source === 'AI' ? 'border-cyan-500/50 text-cyan-400' : 'border-purple-500/50 text-purple-400'}`}>
+                                                {result.source === 'AI' ? 'AI Generated' : 'Studio Pick'}
+                                            </span>
                                         </div>
+                                        
+                                        <p className="text-gray-300 leading-relaxed mb-6 text-sm md:text-base italic border-l-2 border-cyan-500/30 pl-4">
+                                            "{result.concept}"
+                                        </p>
 
-                                        <div>
-                                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
-                                                Paleta de Color
-                                            </h4>
-                                            <div className="flex flex-wrap gap-3">
-                                                {result.colors.map((color, idx) => (
-                                                    <div key={idx} className="flex items-center bg-gray-800/50 rounded-full pr-3 pl-1 py-1 border border-gray-700">
-                                                        <div 
-                                                            className="w-6 h-6 rounded-full shadow-sm border border-white/10 mr-2" 
-                                                            style={{ backgroundColor: color.hex }}
-                                                        ></div>
-                                                        <span className="text-xs text-gray-300 font-medium">{color.name}</span>
-                                                    </div>
-                                                ))}
+                                        <div className="space-y-6">
+                                            <div>
+                                                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center">
+                                                    <LocationMarkerIcon className="w-4 h-4 mr-2" /> Locaciones Sugeridas
+                                                </h4>
+                                                <ul className="space-y-2">
+                                                    {result.locations.map((loc, idx) => (
+                                                        <li key={idx} className="text-gray-300 text-sm flex items-start">
+                                                            <span className="text-cyan-500 mr-2">•</span> {loc}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
+                                            <div>
+                                                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
+                                                    Paleta de Color
+                                                </h4>
+                                                <div className="flex flex-wrap gap-3">
+                                                    {result.colors.map((color, idx) => (
+                                                        <div key={idx} className="flex items-center bg-gray-800/50 rounded-full pr-3 pl-1 py-1 border border-gray-700">
+                                                            <div 
+                                                                className="w-6 h-6 rounded-full shadow-sm border border-white/10 mr-2" 
+                                                                style={{ backgroundColor: color.hex }}
+                                                            ></div>
+                                                            <span className="text-xs text-gray-300 font-medium">{color.name}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </motion.div>
                             </motion.div>
                         )}
-                    </motion.div>
+                    </AnimatePresence>
                 </div>
             </div>
         </section>
