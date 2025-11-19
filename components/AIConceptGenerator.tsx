@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
@@ -30,7 +31,7 @@ const AIConceptGenerator: React.FC = () => {
 
         const apiKey = process.env.API_KEY;
         if (!apiKey) {
-             setError('Falta la API Key. Asegúrate de configurar el archivo .env correctamente.');
+             setError('Falta la API Key. En Vercel: Configura API_KEY en Settings > Environment Variables. En local: revisa tu archivo .env.');
              return;
         }
 
