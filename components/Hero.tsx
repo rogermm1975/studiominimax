@@ -71,7 +71,7 @@ const Hero: React.FC = () => {
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">
             {t.hero.title2}
           </span>
-           {t.hero.title3}
+           {t.hero.title3}<sup className="text-lg sm:text-2xl lg:text-3xl align-top relative top-[-0.2em] md:top-[-0.3em] opacity-80">®</sup>
         </motion.h1>
 
         <motion.div variants={itemVariants} className="w-16 h-0.5 bg-cyan-500 mx-auto mb-6 shadow-[0_0_10px_#06b6d4]"></motion.div>

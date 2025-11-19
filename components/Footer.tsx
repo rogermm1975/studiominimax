@@ -15,7 +15,9 @@ const Footer: React.FC = () => {
         <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
           {/* Brand Info */}
           <div className="md:col-span-1">
-            <h3 className="text-3xl font-heading tracking-wider text-white mb-2">Habana MiniMax Studio</h3>
+            <h3 className="text-3xl font-heading tracking-wider text-white mb-2">
+              Habana MiniMax Studio<sup className="text-sm align-top relative top-[-0.2em]">®</sup>
+            </h3>
             <p className="text-gray-400 text-sm">Fotografía y diseño con alma cubana. Contamos tu historia con una mirada única y vanguardista desde el corazón de La Habana.</p>
           </div>
           

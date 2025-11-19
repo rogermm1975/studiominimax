@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
 import { SparklesIcon, SpinnerIcon, LocationMarkerIcon } from '../assets/icons';
 
@@ -214,131 +214,130 @@ const AIConceptGenerator: React.FC = () => {
                     </p>
                 </motion.div>
                 
-                <div className={`grid gap-12 items-start max-w-6xl mx-auto transition-all duration-500 ease-in-out ${showResult ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
-                    {/* Input Area */}
-                    <motion.div
-                        layout
-                        className={`bg-gray-900/60 p-6 md:p-8 rounded-2xl border border-gray-800 backdrop-blur-sm w-full ${!showResult ? 'max-w-2xl mx-auto' : ''}`}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.7 }}
-                    >
-                        <form onSubmit={handleSubmit}>
-                            <label className="block text-cyan-400 text-sm font-bold uppercase tracking-wider mb-3">
-                                Tu Inspiración
-                            </label>
-                            <textarea
-                                value={prompt}
-                                onChange={(e) => setPrompt(e.target.value)}
-                                placeholder="Ej: Una sesión de 15 años en la playa al atardecer..."
-                                rows={4}
-                                className="w-full bg-black/40 border border-gray-700 rounded-xl py-4 px-5 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all resize-none"
-                                disabled={isLoading}
-                            />
-                            <div className="mt-6">
-                                <button
-                                    type="submit"
-                                    className="w-full group relative overflow-hidden bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold py-4 px-8 rounded-xl uppercase text-sm tracking-[0.15em] transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                <LayoutGroup>
+                    <div className={`grid gap-12 items-start max-w-6xl mx-auto ${showResult ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
+                        {/* Input Area */}
+                        <motion.div
+                            layout
+                            transition={{ type: "spring", bounce: 0, duration: 0.6 }}
+                            className={`bg-gray-900/60 p-6 md:p-8 rounded-2xl border border-gray-800 backdrop-blur-sm w-full ${!showResult ? 'max-w-2xl mx-auto' : ''}`}
+                        >
+                            <form onSubmit={handleSubmit}>
+                                <label className="block text-cyan-400 text-sm font-bold uppercase tracking-wider mb-3">
+                                    Tu Inspiración
+                                </label>
+                                <textarea
+                                    value={prompt}
+                                    onChange={(e) => setPrompt(e.target.value)}
+                                    placeholder="Ej: Una sesión de 15 años en la playa al atardecer..."
+                                    rows={4}
+                                    className="w-full bg-black/40 border border-gray-700 rounded-xl py-4 px-5 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all resize-none"
                                     disabled={isLoading}
+                                />
+                                <div className="mt-6">
+                                    <button
+                                        type="submit"
+                                        className="w-full group relative overflow-hidden bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold py-4 px-8 rounded-xl uppercase text-sm tracking-[0.15em] transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled={isLoading}
+                                    >
+                                        <span className="relative z-10 flex items-center justify-center">
+                                            {isLoading ? (
+                                                <>
+                                                    <SpinnerIcon className="animate-spin w-5 h-5 mr-3" />
+                                                    Diseñando...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <SparklesIcon className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                                                    Generar Concepto
+                                                </>
+                                            )}
+                                        </span>
+                                        <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-600 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            {error && (
+                                <motion.p 
+                                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                                    className="mt-4 text-center text-red-400 text-sm bg-red-900/20 py-2 rounded border border-red-900/50"
                                 >
-                                    <span className="relative z-10 flex items-center justify-center">
-                                        {isLoading ? (
-                                            <>
-                                                <SpinnerIcon className="animate-spin w-5 h-5 mr-3" />
-                                                Diseñando...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <SparklesIcon className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
-                                                Generar Concepto
-                                            </>
-                                        )}
-                                    </span>
-                                    <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-600 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                </button>
-                            </div>
-                        </form>
+                                    {error}
+                                </motion.p>
+                            )}
+                        </motion.div>
                         
-                        {error && (
-                            <motion.p 
-                                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                                className="mt-4 text-center text-red-400 text-sm bg-red-900/20 py-2 rounded border border-red-900/50"
-                            >
-                                {error}
-                            </motion.p>
-                        )}
-                    </motion.div>
-                    
-                    {/* Result Area */}
-                    <AnimatePresence>
-                        {showResult && result && (
-                            <motion.div
-                                layout
-                                initial={{ opacity: 0, x: 50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: 50 }}
-                                transition={{ duration: 0.5 }}
-                                className="relative min-h-[300px] w-full"
-                            >
-                                <motion.div 
-                                    className="bg-gradient-to-br from-gray-900 to-gray-800 p-1 rounded-2xl shadow-2xl"
+                        {/* Result Area */}
+                        <AnimatePresence mode="popLayout">
+                            {showResult && result && (
+                                <motion.div
+                                    layout
+                                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 20, scale: 0.9, transition: { duration: 0.2 } }}
+                                    transition={{ type: "spring", bounce: 0, duration: 0.6 }}
+                                    className="w-full"
                                 >
-                                    <div className="bg-[#05060d] rounded-xl p-6 md:p-8 h-full relative overflow-hidden">
-                                        {/* Decorative sheen */}
-                                        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl"></div>
+                                    <motion.div 
+                                        className="bg-gradient-to-br from-gray-900 to-gray-800 p-1 rounded-2xl shadow-2xl"
+                                    >
+                                        <div className="bg-[#05060d] rounded-xl p-6 md:p-8 h-full relative overflow-hidden">
+                                            {/* Decorative sheen */}
+                                            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl"></div>
 
-                                        <div className="flex justify-between items-start mb-4">
-                                            <h3 className="text-2xl md:text-3xl font-heading text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white">
-                                                {result.title}
-                                            </h3>
-                                            {/* Badge de Origen */}
-                                            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded border ${result.source === 'AI' ? 'border-cyan-500/50 text-cyan-400' : 'border-purple-500/50 text-purple-400'}`}>
-                                                {result.source === 'AI' ? 'AI Generated' : 'Studio Pick'}
-                                            </span>
-                                        </div>
-                                        
-                                        <p className="text-gray-300 leading-relaxed mb-6 text-sm md:text-base italic border-l-2 border-cyan-500/30 pl-4">
-                                            "{result.concept}"
-                                        </p>
-
-                                        <div className="space-y-6">
-                                            <div>
-                                                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center">
-                                                    <LocationMarkerIcon className="w-4 h-4 mr-2" /> Locaciones Sugeridas
-                                                </h4>
-                                                <ul className="space-y-2">
-                                                    {result.locations.map((loc, idx) => (
-                                                        <li key={idx} className="text-gray-300 text-sm flex items-start">
-                                                            <span className="text-cyan-500 mr-2">•</span> {loc}
-                                                        </li>
-                                                    ))}
-                                                </ul>
+                                            <div className="flex justify-between items-start mb-4">
+                                                <h3 className="text-2xl md:text-3xl font-heading text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white">
+                                                    {result.title}
+                                                </h3>
+                                                {/* Badge de Origen */}
+                                                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded border ${result.source === 'AI' ? 'border-cyan-500/50 text-cyan-400' : 'border-purple-500/50 text-purple-400'}`}>
+                                                    {result.source === 'AI' ? 'AI Generated' : 'Studio Pick'}
+                                                </span>
                                             </div>
+                                            
+                                            <p className="text-gray-300 leading-relaxed mb-6 text-sm md:text-base italic border-l-2 border-cyan-500/30 pl-4">
+                                                "{result.concept}"
+                                            </p>
 
-                                            <div>
-                                                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
-                                                    Paleta de Color
-                                                </h4>
-                                                <div className="flex flex-wrap gap-3">
-                                                    {result.colors.map((color, idx) => (
-                                                        <div key={idx} className="flex items-center bg-gray-800/50 rounded-full pr-3 pl-1 py-1 border border-gray-700">
-                                                            <div 
-                                                                className="w-6 h-6 rounded-full shadow-sm border border-white/10 mr-2" 
-                                                                style={{ backgroundColor: color.hex }}
-                                                            ></div>
-                                                            <span className="text-xs text-gray-300 font-medium">{color.name}</span>
-                                                        </div>
-                                                    ))}
+                                            <div className="space-y-6">
+                                                <div>
+                                                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center">
+                                                        <LocationMarkerIcon className="w-4 h-4 mr-2" /> Locaciones Sugeridas
+                                                    </h4>
+                                                    <ul className="space-y-2">
+                                                        {result.locations.map((loc, idx) => (
+                                                            <li key={idx} className="text-gray-300 text-sm flex items-start">
+                                                                <span className="text-cyan-500 mr-2">•</span> {loc}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+
+                                                <div>
+                                                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
+                                                        Paleta de Color
+                                                    </h4>
+                                                    <div className="flex flex-wrap gap-3">
+                                                        {result.colors.map((color, idx) => (
+                                                            <div key={idx} className="flex items-center bg-gray-800/50 rounded-full pr-3 pl-1 py-1 border border-gray-700">
+                                                                <div 
+                                                                    className="w-6 h-6 rounded-full shadow-sm border border-white/10 mr-2" 
+                                                                    style={{ backgroundColor: color.hex }}
+                                                                ></div>
+                                                                <span className="text-xs text-gray-300 font-medium">{color.name}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 </motion.div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                </LayoutGroup>
             </div>
         </section>
     );

@@ -1,3 +1,4 @@
+
 export type Language = 'es' | 'en';
 
 type Translations = {
@@ -39,11 +40,11 @@ export const translations: Translations = {
       cta: 'Reserva Ahora',
     },
     hero: {
-      tagline: 'Fotografía & Diseño en La Habana',
+      tagline: '- Fotografía - Diseño - Edición - Sublimación -',
       title1: 'Habana ',
       title2: 'MiniMax',
       title3: ' Studio',
-      subtitle: 'Capturamos la esencia vibrante de tus historias en La Habana.',
+      subtitle: 'La vida está hecha de momentos irrepetibles. Nuestra misión es que nunca se pierdan en el tiempo.',
       cta: 'Ver Portafolio',
       cta_secondary: 'Reservar Sesión',
     },
@@ -61,11 +62,11 @@ export const translations: Translations = {
       cta: 'Book Now',
     },
     hero: {
-      tagline: 'Photography & Design in Havana',
+      tagline: '- Photography - Design - Editing - Sublimation -',
       title1: 'Havana ',
       title2: 'MiniMax',
       title3: ' Studio',
-      subtitle: 'Capturing the vibrant essence of your stories in Havana.',
+      subtitle: 'Life is made of unrepeatable moments. Our mission is that they never get lost in time.',
       cta: 'View Portfolio',
       cta_secondary: 'Book Session',
     },
