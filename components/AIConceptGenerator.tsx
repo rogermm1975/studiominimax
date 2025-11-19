@@ -24,22 +24,21 @@ const AIConceptGenerator: React.FC = () => {
     const [hasKey, setHasKey] = useState(true);
 
     useEffect(() => {
-        // Depuración en consola para verificar qué está llegando realmente
+        // Verificación inicial de la clave
         const key = process.env.API_KEY;
-        
-        console.log("--- DEBUG API KEY ---");
-        if (key) {
-            console.log("Key status: Presente");
-            console.log("Key length:", key.length);
-            console.log("Key preview:", key.substring(0, 5) + "...");
+        const isKeyPresent = key && key.length > 0;
+
+        console.log("[AI Setup] Checking API Key...");
+        if (isKeyPresent) {
+            console.log("[AI Setup] Key present (Length: " + key.length + ")");
             setHasKey(true);
             setError('');
         } else {
-            console.error("Key status: MISSING / UNDEFINED");
+            console.warn("[AI Setup] Key MISSING or EMPTY.");
             setHasKey(false);
-            setError('⚠️ API Key no detectada. Asegúrate de haber hecho REDEPLOY en Vercel después de actualizar vite.config.ts');
+            // Mensaje específico para configuración faltante
+            setError('MISSING_CONFIG'); 
         }
-        console.log("---------------------");
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -51,7 +50,7 @@ const AIConceptGenerator: React.FC = () => {
 
         const apiKey = process.env.API_KEY;
         if (!apiKey) {
-             setError('Error de Configuración: API Key no encontrada.');
+             setError('Error crítico: La API Key desapareció. Recarga la página.');
              return;
         }
 
@@ -112,7 +111,7 @@ const AIConceptGenerator: React.FC = () => {
             
             if (response.text) {
                 let jsonString = response.text.trim();
-                // Clean potential markdown formatting if the model adds it
+                // Clean potential markdown formatting
                 if (jsonString.startsWith('```json')) {
                     jsonString = jsonString.replace(/^```json\n?/, '').replace(/\n?```$/, '');
                 } else if (jsonString.startsWith('```')) {
@@ -130,9 +129,16 @@ const AIConceptGenerator: React.FC = () => {
                 throw new Error("No se pudo generar el concepto.");
             }
 
-        } catch (err) {
-            console.error(err);
-            setError('Hubo un error al conectar con la IA. Verifica tu conexión o intenta de nuevo.');
+        } catch (err: any) {
+            console.error("API Error:", err);
+            // Detección de errores específicos de Google API
+            if (err.message && (err.message.includes('400') || err.message.includes('API key') || err.message.includes('expired'))) {
+                setError('API_ERROR_KEY: La API Key parece ser inválida o ha expirado. Verifica en Google AI Studio.');
+            } else if (err.message && err.message.includes('429')) {
+                setError('Has excedido el límite de cuota de la API. Intenta más tarde.');
+            } else {
+                setError('Hubo un error al conectar con la IA. Verifica tu conexión o intenta de nuevo.');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -169,13 +175,29 @@ const AIConceptGenerator: React.FC = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.7 }}
                     >
-                        {!hasKey && (
+                        {/* Mensaje de Error de Configuración (Falta la Key) */}
+                        {(!hasKey || error === 'MISSING_CONFIG') && (
                             <div className="mb-6 bg-orange-900/30 border border-orange-500/50 rounded-lg p-4 flex items-start gap-3">
                                 <div className="text-orange-400 mt-1">⚠️</div>
                                 <div>
                                     <h4 className="text-orange-300 font-bold text-sm uppercase">Configuración Pendiente</h4>
                                     <p className="text-orange-200/80 text-xs mt-1 leading-relaxed">
-                                        La API Key no se detectó. Asegúrate de que la variable de entorno <code>API_KEY</code> esté configurada en Vercel y haz un <strong>Redeploy</strong>.
+                                        La variable <code>API_KEY</code> no se detectó en el despliegue.
+                                        <br/>
+                                        Asegúrate de añadirla en <strong>Vercel &gt; Settings &gt; Environment Variables</strong> y hacer un <strong>Redeploy</strong>.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Mensaje de Error de API (Key Inválida/Expirada) */}
+                        {error && error.startsWith('API_ERROR_KEY') && (
+                             <div className="mb-6 bg-red-900/30 border border-red-500/50 rounded-lg p-4 flex items-start gap-3">
+                                <div className="text-red-400 mt-1">🚫</div>
+                                <div>
+                                    <h4 className="text-red-300 font-bold text-sm uppercase">API Key Inválida</h4>
+                                    <p className="text-red-200/80 text-xs mt-1 leading-relaxed">
+                                        La configuración existe, pero Google rechazó la clave. Es posible que haya expirado o sea incorrecta.
                                     </p>
                                 </div>
                             </div>
@@ -216,7 +238,9 @@ const AIConceptGenerator: React.FC = () => {
                                 </button>
                             </div>
                         </form>
-                        {error && !error.includes('Configuración') && (
+                        
+                        {/* Mensajes de error genéricos (sin caja especial) */}
+                        {error && !error.startsWith('MISSING_CONFIG') && !error.startsWith('API_ERROR_KEY') && (
                             <motion.p 
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                                 className="mt-4 text-center text-red-400 text-sm bg-red-900/20 py-2 rounded border border-red-900/50"
