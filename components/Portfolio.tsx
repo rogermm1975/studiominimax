@@ -48,19 +48,13 @@ const Portfolio: React.FC = () => {
           <p className="text-base text-gray-400 max-w-2xl mx-auto font-light">Explora una selección de nuestros trabajos más recientes.</p>
         </motion.div>
 
-        {/* Barra de Filtros: Scroll horizontal en móvil, centrado en desktop */}
-        <motion.div
-            className="flex md:flex-wrap md:justify-center gap-3 mb-8 md:mb-10 overflow-x-auto pb-4 md:pb-0 -mx-5 px-5 md:mx-0 md:px-0 no-scrollbar snap-x"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-        >
+        {/* Barra de Filtros */}
+        <div className="flex md:flex-wrap md:justify-center gap-3 mb-8 md:mb-10 overflow-x-auto pb-4 md:pb-0 -mx-5 px-5 md:mx-0 md:px-0 no-scrollbar snap-x">
           {filterCategories.map((category) => (
             <button
               key={category.value}
               onClick={() => setActiveFilter(category.value)}
-              className={`flex-shrink-0 snap-center px-5 py-2.5 text-xs font-semibold uppercase tracking-widest rounded-full md:rounded-none border transition-all duration-300 whitespace-nowrap ${
+              className={`flex-shrink-0 snap-center px-5 py-2.5 text-xs font-semibold uppercase tracking-widest rounded-full md:rounded-none border transition-colors duration-300 whitespace-nowrap ${
                 activeFilter === category.value
                   ? 'border-cyan-500 text-cyan-400 bg-cyan-900/20 shadow-[0_0_10px_rgba(6,182,212,0.2)]'
                   : 'border-gray-700 text-gray-400 hover:border-cyan-400 hover:text-white'
@@ -69,9 +63,9 @@ const Portfolio: React.FC = () => {
               {category.name}
             </button>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Contenedor Relativo para posicionar la flecha indicadora */}
+        {/* Contenedor Relativo */}
         <div className="relative group/portfolio">
             
             {/* Flecha Indicadora de Scroll (Solo Móvil) */}
@@ -81,29 +75,41 @@ const Portfolio: React.FC = () => {
                  </div>
             </div>
 
-            <motion.div
-              layout
+            {/* 
+               OPTIMIZACIÓN DE RENDIMIENTO:
+               1. Se eliminó 'motion.div' del contenedor padre para evitar recálculos de layout en scroll.
+               2. Se eliminó la prop 'layout' de los hijos. Esto elimina el "temblor" o movimientos involuntarios.
+               3. Se usa 'will-change-transform' para aceleración por hardware.
+            */}
+            <div
               className="
                 flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar 
                 md:grid md:grid-cols-3 lg:grid-cols-4 md:pb-0 md:overflow-visible
+                will-change-scroll
               "
             >
-              <AnimatePresence>
+              <AnimatePresence mode="popLayout">
                 {filteredItems.map((item) => (
                   <motion.div
                     key={item.id}
-                    layout
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
                     className="
                         relative overflow-hidden rounded-lg flex-shrink-0 
                         w-[45%] xs:w-[45%] sm:w-[40%] md:w-auto
                         snap-center group
+                        transform-gpu
                     "
                   >
-                    <img src={item.src} alt={item.alt} className="w-full h-full object-cover aspect-[3/4] transition-transform duration-700 group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0" />
+                    <img 
+                        src={item.src} 
+                        alt={item.alt} 
+                        loading="lazy" 
+                        decoding="async"
+                        className="w-full h-full object-cover aspect-[3/4] transition-transform duration-700 group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0 bg-gray-900" 
+                    />
                     
                     {/* Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
@@ -112,7 +118,7 @@ const Portfolio: React.FC = () => {
                   </motion.div>
                 ))}
               </AnimatePresence>
-            </motion.div>
+            </div>
         </div>
       </div>
       <style>{`
@@ -122,6 +128,9 @@ const Portfolio: React.FC = () => {
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+        .will-change-scroll {
+            will-change: scroll-position;
         }
       `}</style>
     </section>
