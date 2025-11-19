@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRightIcon } from '../assets/icons';
 
 const portfolioItems = [
   { id: 1, category: 'quinces', src: 'https://picsum.photos/seed/port1/500/700', alt: 'Sesión de Quinceañera 1' },
@@ -70,31 +71,49 @@ const Portfolio: React.FC = () => {
           ))}
         </motion.div>
 
-        <motion.div
-          layout
-          className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-        >
-          <AnimatePresence>
-            {filteredItems.map((item) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4, ease: 'easeInOut' }}
-                className="group relative overflow-hidden rounded-lg"
-              >
-                <img src={item.src} alt={item.alt} className="w-full h-full object-cover aspect-[3/4] transition-transform duration-700 group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0" />
-                
-                {/* Overlay: En móvil siempre visible el título (opcional) o solo touch. Aquí mantenemos hover/touch */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <p className="text-white text-sm font-bold tracking-wide transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">{item.alt}</p>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        {/* Contenedor Relativo para posicionar la flecha indicadora */}
+        <div className="relative group/portfolio">
+            
+            {/* Flecha Indicadora de Scroll (Solo Móvil) */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 md:hidden pointer-events-none pr-1 animate-pulse">
+                 <div className="bg-black/50 rounded-full p-1 backdrop-blur-sm border border-white/10">
+                    <ArrowRightIcon className="w-5 h-5 text-cyan-400 drop-shadow-[0_0_5px_rgba(0,0,0,1)]" />
+                 </div>
+            </div>
+
+            <motion.div
+              layout
+              className="
+                flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar 
+                md:grid md:grid-cols-3 lg:grid-cols-4 md:pb-0 md:overflow-visible
+              "
+            >
+              <AnimatePresence>
+                {filteredItems.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    className="
+                        relative overflow-hidden rounded-lg flex-shrink-0 
+                        w-[45%] xs:w-[45%] sm:w-[40%] md:w-auto
+                        snap-center group
+                    "
+                  >
+                    <img src={item.src} alt={item.alt} className="w-full h-full object-cover aspect-[3/4] transition-transform duration-700 group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0" />
+                    
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                      <p className="text-white text-sm font-bold tracking-wide transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">{item.alt}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+        </div>
       </div>
       <style>{`
         .no-scrollbar::-webkit-scrollbar {
