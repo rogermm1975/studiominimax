@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
 import { SparklesIcon, SpinnerIcon, LocationMarkerIcon } from '../assets/icons';
@@ -21,6 +21,19 @@ const AIConceptGenerator: React.FC = () => {
     const [result, setResult] = useState<AIConceptResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [hasKey, setHasKey] = useState(true);
+
+    useEffect(() => {
+        const key = process.env.API_KEY;
+        if (!key) {
+            setHasKey(false);
+            setError('⚠️ API Key no detectada. Si estás en Vercel: 1. Configura la variable "API_KEY". 2. Realiza un REDEPLOY para aplicar los cambios.');
+        } else {
+            setHasKey(true);
+            // Clear error if key is present (in case it was persistent)
+            if (error.includes('API Key')) setError('');
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -31,7 +44,7 @@ const AIConceptGenerator: React.FC = () => {
 
         const apiKey = process.env.API_KEY;
         if (!apiKey) {
-             setError('Falta la API Key. En Vercel: Configura API_KEY en Settings > Environment Variables. En local: revisa tu archivo .env.');
+             setError('Falta la API Key. Asegúrate de configurar el archivo .env o las variables de Vercel y REDESPLEGAR.');
              return;
         }
 
@@ -149,6 +162,18 @@ const AIConceptGenerator: React.FC = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.7 }}
                     >
+                        {!hasKey && (
+                            <div className="mb-6 bg-orange-900/30 border border-orange-500/50 rounded-lg p-4 flex items-start gap-3">
+                                <div className="text-orange-400 mt-1">⚠️</div>
+                                <div>
+                                    <h4 className="text-orange-300 font-bold text-sm uppercase">Configuración Pendiente</h4>
+                                    <p className="text-orange-200/80 text-xs mt-1 leading-relaxed">
+                                        La API Key no está activa en esta versión. Si ya la añadiste en Vercel, necesitas hacer un <strong>Redeploy</strong> (reconstruir el sitio) para que se aplique.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
                         <form onSubmit={handleSubmit}>
                             <label className="block text-cyan-400 text-sm font-bold uppercase tracking-wider mb-3">
                                 Tu Inspiración
@@ -158,14 +183,14 @@ const AIConceptGenerator: React.FC = () => {
                                 onChange={(e) => setPrompt(e.target.value)}
                                 placeholder="Ej: Quiero una sesión de 15 años estilo 'Reina del Trópico' con mucha vegetación, luz dorada y un toque moderno..."
                                 rows={4}
-                                className="w-full bg-black/40 border border-gray-700 rounded-xl py-4 px-5 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all resize-none"
-                                disabled={isLoading}
+                                className="w-full bg-black/40 border border-gray-700 rounded-xl py-4 px-5 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all resize-none disabled:opacity-50"
+                                disabled={isLoading || !hasKey}
                             />
                             <div className="mt-6">
                                 <button
                                     type="submit"
-                                    className="w-full group relative overflow-hidden bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold py-4 px-8 rounded-xl uppercase text-sm tracking-[0.15em] transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] disabled:opacity-70 disabled:cursor-not-allowed"
-                                    disabled={isLoading}
+                                    className="w-full group relative overflow-hidden bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold py-4 px-8 rounded-xl uppercase text-sm tracking-[0.15em] transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={isLoading || !hasKey}
                                 >
                                     <span className="relative z-10 flex items-center justify-center">
                                         {isLoading ? (
@@ -184,7 +209,7 @@ const AIConceptGenerator: React.FC = () => {
                                 </button>
                             </div>
                         </form>
-                        {error && (
+                        {error && !error.includes('reconstruir') && (
                             <motion.p 
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                                 className="mt-4 text-center text-red-400 text-sm bg-red-900/20 py-2 rounded border border-red-900/50"
