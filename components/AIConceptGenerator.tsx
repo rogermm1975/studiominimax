@@ -24,14 +24,17 @@ const AIConceptGenerator: React.FC = () => {
     const [hasKey, setHasKey] = useState(true);
 
     useEffect(() => {
+        // Verificación segura de la API Key
         const key = process.env.API_KEY;
-        if (!key) {
+        
+        if (!key || key === '' || key === 'undefined') {
+            console.error("API Key missing in frontend.");
             setHasKey(false);
-            setError('⚠️ API Key no detectada. Si estás en Vercel: 1. Configura la variable "API_KEY". 2. Realiza un REDEPLOY para aplicar los cambios.');
+            setError('⚠️ API Key no detectada. Asegúrate de haber hecho REDEPLOY en Vercel después de configurar la variable.');
         } else {
+            console.log("API Key detected correctly.");
             setHasKey(true);
-            // Clear error if key is present (in case it was persistent)
-            if (error.includes('API Key')) setError('');
+            setError('');
         }
     }, []);
 
@@ -44,7 +47,7 @@ const AIConceptGenerator: React.FC = () => {
 
         const apiKey = process.env.API_KEY;
         if (!apiKey) {
-             setError('Falta la API Key. Asegúrate de configurar el archivo .env o las variables de Vercel y REDESPLEGAR.');
+             setError('Error de Configuración: API Key no encontrada.');
              return;
         }
 
@@ -168,7 +171,7 @@ const AIConceptGenerator: React.FC = () => {
                                 <div>
                                     <h4 className="text-orange-300 font-bold text-sm uppercase">Configuración Pendiente</h4>
                                     <p className="text-orange-200/80 text-xs mt-1 leading-relaxed">
-                                        La API Key no está activa en esta versión. Si ya la añadiste en Vercel, necesitas hacer un <strong>Redeploy</strong> (reconstruir el sitio) para que se aplique.
+                                        La API Key no se detectó. Asegúrate de que la variable de entorno <code>API_KEY</code> esté configurada en Vercel y haz un <strong>Redeploy</strong>.
                                     </p>
                                 </div>
                             </div>
@@ -209,7 +212,7 @@ const AIConceptGenerator: React.FC = () => {
                                 </button>
                             </div>
                         </form>
-                        {error && !error.includes('reconstruir') && (
+                        {error && !error.includes('Configuración') && (
                             <motion.p 
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                                 className="mt-4 text-center text-red-400 text-sm bg-red-900/20 py-2 rounded border border-red-900/50"
