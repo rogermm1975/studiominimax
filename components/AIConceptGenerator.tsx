@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
@@ -99,8 +98,13 @@ const AIConceptGenerator: React.FC = () => {
                     jsonString = jsonString.replace(/^```\n?/, '').replace(/\n?```$/, '');
                 }
                 
-                const data = JSON.parse(jsonString) as AIConceptResponse;
-                setResult(data);
+                try {
+                    const data = JSON.parse(jsonString) as AIConceptResponse;
+                    setResult(data);
+                } catch (e) {
+                    console.error("JSON Parse Error:", e);
+                    throw new Error("La respuesta de la IA no tuvo un formato válido.");
+                }
             } else {
                 throw new Error("No se pudo generar el concepto.");
             }
