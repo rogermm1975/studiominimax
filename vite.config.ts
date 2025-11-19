@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
   // Carga las variables de entorno desde el archivo .env
   // El tercer parámetro '' permite cargar todas las variables
-  const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, (process as any).cwd(), '');
 
   // Prioriza la variable del sistema, luego busca NEXT_PUBLIC_API_KEY o API_KEY en el archivo .env
   const apiKey = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY || env.API_KEY || env.NEXT_PUBLIC_API_KEY;

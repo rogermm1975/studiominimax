@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
-import { SparklesIcon, SpinnerIcon, LocationMarkerIcon } from '../assets/icons';
+import { SparklesIcon, SpinnerIcon, LocationMarkerIcon, CheckCircleIcon } from '../assets/icons';
 
 interface Color {
   name: string;
@@ -14,33 +14,99 @@ interface AIConceptResponse {
   concept: string;
   locations: string[];
   colors: Color[];
+  source?: 'AI' | 'LOCAL';
 }
+
+// --- BASE DE DATOS DE RESPALDO (OFFLINE/RESTRICTED REGIONS) ---
+const FALLBACK_CONCEPTS: Record<string, AIConceptResponse> = {
+  quinces: {
+    title: "Quinces: Glamour Habanero",
+    concept: "Una fusión entre la arquitectura colonial decadente y la moda contemporánea de alta costura. Buscamos contrastar la textura de las paredes antiguas con telas brillantes y vaporosas, utilizando la luz dorada del atardecer para crear un ambiente de realeza moderna.",
+    locations: ["Escalera de los Guardianes (Centro Habana)", "Jardines de la Tropical", "Interiores del Palacio de los Capitanes Generales"],
+    colors: [
+      { name: "Dorado Vintage", hex: "#D4AF37" },
+      { name: "Rojo Carmesí", hex: "#DC143C" },
+      { name: "Beige Piedra", hex: "#F5F5DC" },
+      { name: "Negro Profundo", hex: "#000000" }
+    ],
+    source: 'LOCAL'
+  },
+  boda: {
+    title: "Romance en el Malecón",
+    concept: "Capturamos la intimidad de la pareja frente a la inmensidad del mar. Un estilo cinematográfico, con desenfoques artísticos y una paleta suave que evoca nostalgia y amor eterno, aprovechando la hora azul para siluetas dramáticas.",
+    locations: ["El Malecón al atardecer", "Callejón de los Peluqueros", "La Guarida (Azotea)"],
+    colors: [
+      { name: "Blanco Perla", hex: "#EAE0C8" },
+      { name: "Azul Acero", hex: "#4682B4" },
+      { name: "Rosa Polvo", hex: "#D8BFD8" },
+      { name: "Gris Pizarra", hex: "#708090" }
+    ],
+    source: 'LOCAL'
+  },
+  urbano: {
+    title: "Street Style Havana",
+    concept: "Energía cruda y vibrante. Utilizamos los grafitis, los autos clásicos y el movimiento de la ciudad como telón de fondo. Poses dinámicas, ángulos contrapicados y una edición con alto contraste para resaltar la personalidad rebelde y moderna.",
+    locations: ["Calles de San Isidro", "Barrio Chino", "Parque de la Maestranza (Entorno industrial)"],
+    colors: [
+      { name: "Neón Cian", hex: "#00FFFF" },
+      { name: "Magenta Urbano", hex: "#FF00FF" },
+      { name: "Asfalto", hex: "#2F4F4F" },
+      { name: "Amarillo Taxi", hex: "#FFD700" }
+    ],
+    source: 'LOCAL'
+  },
+  playa: {
+    title: "Sirena del Caribe",
+    concept: "Etéreo, suave y natural. Sesión al amanecer para capturar tonos pasteles y la calma del mar. Uso de telas mojadas, reflejos en el agua y luz natural difusa para una estética de ensueño y libertad.",
+    locations: ["Playas del Este (Dunas)", "Santa María del Mar", "Costa rocosa de Cojímar"],
+    colors: [
+      { name: "Turquesa Mar", hex: "#40E0D0" },
+      { name: "Coral Suave", hex: "#F08080" },
+      { name: "Arena Blanca", hex: "#F5F5F5" },
+      { name: "Azul Cielo", hex: "#87CEEB" }
+    ],
+    source: 'LOCAL'
+  },
+  default: {
+    title: "Esencia MiniMax",
+    concept: "El sello distintivo de nuestro estudio: iluminación dramática tipo Rembrandt en estudio o exteriores nocturnos. Centrado en la expresión facial y la conexión con la cámara, creando retratos atemporales y poderosos.",
+    locations: ["Estudio MiniMax (Interiores)", "El Cristo de La Habana (Vistas nocturnas)", "Paseo del Prado"],
+    colors: [
+      { name: "Negro Mate", hex: "#1C1C1C" },
+      { name: "Plata", hex: "#C0C0C0" },
+      { name: "Azul Medianoche", hex: "#191970" },
+      { name: "Blanco Puro", hex: "#FFFFFF" }
+    ],
+    source: 'LOCAL'
+  }
+};
+
+const getOfflineConcept = (prompt: string): AIConceptResponse => {
+    const lowerPrompt = prompt.toLowerCase();
+    
+    if (lowerPrompt.includes('quince') || lowerPrompt.includes('15') || lowerPrompt.includes('vestido') || lowerPrompt.includes('princesa')) {
+        return FALLBACK_CONCEPTS.quinces;
+    }
+    if (lowerPrompt.includes('boda') || lowerPrompt.includes('novios') || lowerPrompt.includes('amor') || lowerPrompt.includes('pareja')) {
+        return FALLBACK_CONCEPTS.boda;
+    }
+    if (lowerPrompt.includes('urbano') || lowerPrompt.includes('calle') || lowerPrompt.includes('moderno') || lowerPrompt.includes('rebelde')) {
+        return FALLBACK_CONCEPTS.urbano;
+    }
+    if (lowerPrompt.includes('playa') || lowerPrompt.includes('mar') || lowerPrompt.includes('agua') || lowerPrompt.includes('verano')) {
+        return FALLBACK_CONCEPTS.playa;
+    }
+    
+    return FALLBACK_CONCEPTS.default;
+};
 
 const AIConceptGenerator: React.FC = () => {
     const [prompt, setPrompt] = useState('');
     const [result, setResult] = useState<AIConceptResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [hasKey, setHasKey] = useState(true);
-
-    useEffect(() => {
-        // Verificación inicial de la clave
-        const key = process.env.API_KEY;
-        const isKeyPresent = key && key.length > 0;
-
-        console.log("[AI Setup] Checking API Key...");
-        if (isKeyPresent) {
-            console.log("[AI Setup] Key present (Length: " + key.length + ")");
-            setHasKey(true);
-            setError('');
-        } else {
-            console.warn("[AI Setup] Key MISSING or EMPTY.");
-            setHasKey(false);
-            // Mensaje específico para configuración faltante
-            setError('MISSING_CONFIG'); 
-        }
-    }, []);
-
+    // Quitamos la dependencia estricta de hasKey para permitir el modo offline
+    
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!prompt.trim()) {
@@ -48,56 +114,41 @@ const AIConceptGenerator: React.FC = () => {
             return;
         }
 
-        const apiKey = process.env.API_KEY;
-        if (!apiKey) {
-             setError('Error crítico: La API Key desapareció. Recarga la página.');
-             return;
-        }
-
         setIsLoading(true);
         setError('');
         setResult(null);
 
+        const apiKey = process.env.API_KEY;
+
+        // INTENTO 1: Conexión API
         try {
+            if (!apiKey) throw new Error("No API Key");
+
             const ai = new GoogleGenAI({ apiKey: apiKey });
             const model = 'gemini-2.5-flash';
             
             const schema = {
                 type: Type.OBJECT,
                 properties: {
-                    title: { 
-                        type: Type.STRING,
-                        description: "Un título creativo, corto y atractivo para la sesión de fotos." 
-                    },
-                    concept: { 
-                        type: Type.STRING,
-                        description: "Una descripción inspiradora de 2-3 frases que capture la esencia, iluminación y emoción." 
-                    },
-                    locations: {
-                        type: Type.ARRAY,
-                        items: { type: Type.STRING },
-                        description: "Lista de 2-3 lugares específicos y reales en La Habana que encajen con el concepto."
-                    },
+                    title: { type: Type.STRING },
+                    concept: { type: Type.STRING },
+                    locations: { type: Type.ARRAY, items: { type: Type.STRING } },
                     colors: {
                         type: Type.ARRAY,
                         items: {
                             type: Type.OBJECT,
                             properties: {
-                                name: { type: Type.STRING, description: "Nombre artístico del color" },
-                                hex: { type: Type.STRING, description: "Código HEX válido del color (ej. #FF5733)" }
+                                name: { type: Type.STRING },
+                                hex: { type: Type.STRING }
                             },
                             required: ["name", "hex"]
-                        },
-                        description: "Paleta de 4 colores armónicos para la sesión."
+                        }
                     }
                 },
                 required: ["title", "concept", "locations", "colors"]
             };
 
-            const fullPrompt = `
-                Eres un director creativo de clase mundial y fotógrafo experto en La Habana, Cuba.
-                Genera un concepto de sesión de fotos único basado en: "${prompt}".
-            `;
+            const fullPrompt = `Genera un concepto de sesión de fotos en La Habana para: "${prompt}".`;
 
             const response = await ai.models.generateContent({
                 model: model,
@@ -111,37 +162,32 @@ const AIConceptGenerator: React.FC = () => {
             
             if (response.text) {
                 let jsonString = response.text.trim();
-                // Clean potential markdown formatting
                 if (jsonString.startsWith('```json')) {
                     jsonString = jsonString.replace(/^```json\n?/, '').replace(/\n?```$/, '');
                 } else if (jsonString.startsWith('```')) {
                     jsonString = jsonString.replace(/^```\n?/, '').replace(/\n?```$/, '');
                 }
                 
-                try {
-                    const data = JSON.parse(jsonString) as AIConceptResponse;
-                    setResult(data);
-                } catch (e) {
-                    console.error("JSON Parse Error:", e);
-                    throw new Error("La respuesta de la IA no tuvo un formato válido.");
-                }
+                const data = JSON.parse(jsonString) as AIConceptResponse;
+                data.source = 'AI';
+                setResult(data);
             } else {
-                throw new Error("No se pudo generar el concepto.");
+                throw new Error("Empty response");
             }
 
         } catch (err: any) {
-            console.error("API Error:", err);
-            // Detección de errores específicos de Google API
-            if (err.message && (err.message.includes('400') || err.message.includes('API key') || err.message.includes('expired'))) {
-                setError('API_ERROR_KEY: La API Key parece ser inválida o ha expirado. Verifica en Google AI Studio.');
-            } else if (err.message && err.message.includes('429')) {
-                setError('Has excedido el límite de cuota de la API. Intenta más tarde.');
-            } else {
-                setError('Hubo un error al conectar con la IA. Verifica tu conexión o intenta de nuevo.');
-            }
-        } finally {
-            setIsLoading(false);
-        }
+            console.warn("API Fallback Triggered:", err.message);
+            // FALLBACK AUTOMÁTICO: Si falla la API (VPN, bloqueo, cuota), usamos el generador local
+            // Simulamos un pequeño delay para que parezca que "pensó"
+            setTimeout(() => {
+                const offlineResult = getOfflineConcept(prompt);
+                setResult(offlineResult);
+                setIsLoading(false);
+            }, 1500);
+            return; // Salimos para no ejecutar el finally con doble setIsLoading(false) si usamos timeout
+        } 
+        
+        setIsLoading(false);
     };
 
     return (
@@ -159,10 +205,10 @@ const AIConceptGenerator: React.FC = () => {
                 >
                     <div className="flex justify-center items-center gap-3 mb-2">
                        <SparklesIcon className="w-8 h-8 md:w-10 md:h-10 text-cyan-400 animate-pulse" />
-                       <h2 className="text-3xl md:text-5xl font-heading tracking-widest text-white">IA Concept Lab</h2>
+                       <h2 className="text-3xl md:text-5xl font-heading tracking-widest text-white">Concept Lab</h2>
                     </div>
                     <p className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto font-light">
-                        Describe tu visión y nuestra Inteligencia Artificial diseñará el moodboard perfecto para tu sesión en La Habana.
+                        Describe tu visión y diseñaremos el moodboard perfecto para tu sesión en La Habana.
                     </p>
                 </motion.div>
                 
@@ -175,34 +221,6 @@ const AIConceptGenerator: React.FC = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.7 }}
                     >
-                        {/* Mensaje de Error de Configuración (Falta la Key) */}
-                        {(!hasKey || error === 'MISSING_CONFIG') && (
-                            <div className="mb-6 bg-orange-900/30 border border-orange-500/50 rounded-lg p-4 flex items-start gap-3">
-                                <div className="text-orange-400 mt-1">⚠️</div>
-                                <div>
-                                    <h4 className="text-orange-300 font-bold text-sm uppercase">Configuración Pendiente</h4>
-                                    <p className="text-orange-200/80 text-xs mt-1 leading-relaxed">
-                                        La variable <code>NEXT_PUBLIC_API_KEY</code> no se detectó.
-                                        <br/>
-                                        Asegúrate de crear el archivo <code>.env</code> con tu clave o configurarla en las variables de entorno.
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Mensaje de Error de API (Key Inválida/Expirada) */}
-                        {error && error.startsWith('API_ERROR_KEY') && (
-                             <div className="mb-6 bg-red-900/30 border border-red-500/50 rounded-lg p-4 flex items-start gap-3">
-                                <div className="text-red-400 mt-1">🚫</div>
-                                <div>
-                                    <h4 className="text-red-300 font-bold text-sm uppercase">API Key Inválida</h4>
-                                    <p className="text-red-200/80 text-xs mt-1 leading-relaxed">
-                                        La configuración existe, pero Google rechazó la clave. Es posible que haya expirado o sea incorrecta.
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
                         <form onSubmit={handleSubmit}>
                             <label className="block text-cyan-400 text-sm font-bold uppercase tracking-wider mb-3">
                                 Tu Inspiración
@@ -210,16 +228,16 @@ const AIConceptGenerator: React.FC = () => {
                             <textarea
                                 value={prompt}
                                 onChange={(e) => setPrompt(e.target.value)}
-                                placeholder="Ej: Quiero una sesión de 15 años estilo 'Reina del Trópico' con mucha vegetación, luz dorada y un toque moderno..."
+                                placeholder="Ej: Una sesión de 15 años en la playa al atardecer..."
                                 rows={4}
-                                className="w-full bg-black/40 border border-gray-700 rounded-xl py-4 px-5 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all resize-none disabled:opacity-50"
-                                disabled={isLoading || !hasKey}
+                                className="w-full bg-black/40 border border-gray-700 rounded-xl py-4 px-5 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all resize-none"
+                                disabled={isLoading}
                             />
                             <div className="mt-6">
                                 <button
                                     type="submit"
                                     className="w-full group relative overflow-hidden bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold py-4 px-8 rounded-xl uppercase text-sm tracking-[0.15em] transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
-                                    disabled={isLoading || !hasKey}
+                                    disabled={isLoading}
                                 >
                                     <span className="relative z-10 flex items-center justify-center">
                                         {isLoading ? (
@@ -239,8 +257,7 @@ const AIConceptGenerator: React.FC = () => {
                             </div>
                         </form>
                         
-                        {/* Mensajes de error genéricos (sin caja especial) */}
-                        {error && !error.startsWith('MISSING_CONFIG') && !error.startsWith('API_ERROR_KEY') && (
+                        {error && (
                             <motion.p 
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                                 className="mt-4 text-center text-red-400 text-sm bg-red-900/20 py-2 rounded border border-red-900/50"
@@ -276,9 +293,15 @@ const AIConceptGenerator: React.FC = () => {
                                     {/* Decorative sheen */}
                                     <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl"></div>
 
-                                    <h3 className="text-2xl md:text-3xl font-heading text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white mb-4">
-                                        {result.title}
-                                    </h3>
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h3 className="text-2xl md:text-3xl font-heading text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white">
+                                            {result.title}
+                                        </h3>
+                                        {/* Badge de Origen */}
+                                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded border ${result.source === 'AI' ? 'border-cyan-500/50 text-cyan-400' : 'border-purple-500/50 text-purple-400'}`}>
+                                            {result.source === 'AI' ? 'AI Generated' : 'Studio Pick'}
+                                        </span>
+                                    </div>
                                     
                                     <p className="text-gray-300 leading-relaxed mb-6 text-sm md:text-base italic border-l-2 border-cyan-500/30 pl-4">
                                         "{result.concept}"
