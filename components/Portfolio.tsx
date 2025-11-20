@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRightIcon } from '../assets/icons';
+import { ArrowRightIcon, SpinnerIcon } from '../assets/icons';
 
 // Definimos tipos para mejor control
 interface PortfolioItem {
@@ -55,6 +55,58 @@ const filterCategories = [
   { name: 'Artísticas', value: 'artisticas' },
   { name: 'Diseño', value: 'diseno' },
 ];
+
+// Componente interno para manejar la carga individual de cada imagen
+const PortfolioImageCard = ({ item }: { item: PortfolioItem }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className={`
+          relative overflow-hidden rounded-lg flex-shrink-0 
+          snap-center group transform-gpu bg-gray-900
+          ${/* Clases para móvil (scroll horizontal) - Anchos diferenciados */ ''}
+          ${item.orientation === 'horizontal' 
+            ? 'w-[85vw] xs:w-[75vw] sm:w-[60vw]' 
+            : 'w-[70vw] xs:w-[60vw] sm:w-[45vw]'}
+          
+          ${/* Clases para desktop (grid) y Aspect Ratio Global */ ''}
+          md:w-auto 
+          ${item.orientation === 'horizontal' ? 'md:col-span-2 aspect-[3/2]' : 'md:col-span-1 aspect-[2/3]'}
+      `}
+    >
+      {/* Skeleton Loader / Placeholder */}
+      <div 
+        className={`absolute inset-0 bg-gray-800 flex items-center justify-center transition-opacity duration-500 ${isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+      >
+        <div className="animate-pulse w-full h-full bg-gray-800" />
+        <SpinnerIcon className="w-8 h-8 text-cyan-500/50 animate-spin absolute" />
+      </div>
+
+      <img 
+          src={item.src} 
+          alt={item.alt} 
+          loading="lazy" 
+          decoding="async"
+          onLoad={() => setIsLoaded(true)}
+          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 filter group-hover:grayscale-0
+            ${isLoaded ? 'opacity-100 grayscale-[20%]' : 'opacity-0'}
+          `} 
+      />
+      
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+        <p className="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">{item.category}</p>
+        <p className="text-white text-sm font-bold tracking-wide translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{item.alt}</p>
+      </div>
+    </motion.div>
+  );
+};
 
 const Portfolio: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -123,40 +175,7 @@ const Portfolio: React.FC = () => {
             >
               <AnimatePresence mode="popLayout">
                 {filteredItems.map((item) => (
-                  <motion.div
-                    key={item.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className={`
-                        relative overflow-hidden rounded-lg flex-shrink-0 
-                        snap-center group transform-gpu bg-gray-900
-                        ${/* Clases para móvil (scroll horizontal) - Anchos diferenciados */ ''}
-                        ${item.orientation === 'horizontal' 
-                          ? 'w-[85vw] xs:w-[75vw] sm:w-[60vw]' 
-                          : 'w-[70vw] xs:w-[60vw] sm:w-[45vw]'}
-                        
-                        ${/* Clases para desktop (grid) y Aspect Ratio Global */ ''}
-                        md:w-auto 
-                        ${item.orientation === 'horizontal' ? 'md:col-span-2 aspect-[3/2]' : 'md:col-span-1 aspect-[2/3]'}
-                    `}
-                  >
-                    <img 
-                        src={item.src} 
-                        alt={item.alt} 
-                        loading="lazy" 
-                        decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0" 
-                    />
-                    
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                      <p className="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">{item.category}</p>
-                      <p className="text-white text-sm font-bold tracking-wide translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{item.alt}</p>
-                    </div>
-                  </motion.div>
+                   <PortfolioImageCard key={item.id} item={item} />
                 ))}
               </AnimatePresence>
             </div>
