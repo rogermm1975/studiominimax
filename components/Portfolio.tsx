@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRightIcon, SpinnerIcon, RefreshIcon } from '../assets/icons';
+import { SpinnerIcon, RefreshIcon } from '../assets/icons';
 
 // Definimos tipos para mejor control
 interface PortfolioItem {
@@ -57,7 +57,8 @@ const filterCategories = [
 ];
 
 // Configuración de paginación
-const INITIAL_ITEMS_TO_SHOW = 9;
+// Reducimos a 6 para asegurar carga rápida y acceso al botón "Ver Más"
+const INITIAL_ITEMS_TO_SHOW = 6;
 const ITEMS_PER_LOAD = 6;
 
 // Componente interno para manejar la carga individual de cada imagen
@@ -72,16 +73,15 @@ const PortfolioImageCard = ({ item }: { item: PortfolioItem }) => {
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
       className={`
-          relative overflow-hidden rounded-lg flex-shrink-0 
-          snap-center group transform-gpu bg-gray-900
-          ${/* Clases para móvil (scroll horizontal) - Anchos diferenciados */ ''}
-          ${item.orientation === 'horizontal' 
-            ? 'w-[85vw] xs:w-[75vw] sm:w-[60vw]' 
-            : 'w-[70vw] xs:w-[60vw] sm:w-[45vw]'}
+          relative overflow-hidden rounded-lg bg-gray-900 group w-full
           
-          ${/* Clases para desktop (grid) y Aspect Ratio Global */ ''}
-          md:w-auto 
-          ${item.orientation === 'horizontal' ? 'md:col-span-2 aspect-[3/2]' : 'md:col-span-1 aspect-[2/3]'}
+          /* LÓGICA MOSAICO MÓVIL */
+          /* Por defecto (Móvil): Grid de 2 columnas */
+          /* Las verticales ocupan 1 col (col-span-1) */
+          /* Las horizontales ocupan 2 cols (col-span-2) para verse grandes */
+          
+          col-span-1 
+          ${item.orientation === 'horizontal' ? 'col-span-2 md:col-span-2 aspect-[3/2]' : 'aspect-[2/3]'}
       `}
     >
       {/* Skeleton Loader / Placeholder */}
@@ -136,7 +136,7 @@ const Portfolio: React.FC = () => {
 
   return (
     <section id="portfolio" className="py-16 sm:py-20 md:py-28 bg-black/20">
-      <div className="container mx-auto px-5 lg:px-6">
+      <div className="container mx-auto px-3 sm:px-6">
         <motion.div
           className="text-center mb-8 md:mb-12"
           initial={{ opacity: 0, y: -20 }}
@@ -149,7 +149,7 @@ const Portfolio: React.FC = () => {
         </motion.div>
 
         {/* Barra de Filtros */}
-        <div className="flex md:flex-wrap md:justify-center gap-3 mb-8 md:mb-10 overflow-x-auto pb-4 md:pb-0 -mx-5 px-5 md:mx-0 md:px-0 no-scrollbar snap-x">
+        <div className="flex md:flex-wrap md:justify-center gap-3 mb-8 md:mb-10 overflow-x-auto pb-4 md:pb-0 -mx-3 px-3 md:mx-0 md:px-0 no-scrollbar snap-x">
           {filterCategories.map((category) => (
             <button
               key={category.value}
@@ -165,22 +165,16 @@ const Portfolio: React.FC = () => {
           ))}
         </div>
 
-        {/* Contenedor Relativo */}
-        <div className="relative group/portfolio min-h-[300px]">
-            
-            {/* Flecha Indicadora de Scroll (Solo Móvil) - Ocultar si ya se mostraron todas o no hay scroll */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 md:hidden pointer-events-none pr-1 animate-pulse">
-                 <div className="bg-black/50 rounded-full p-1 backdrop-blur-sm border border-white/10">
-                    <ArrowRightIcon className="w-5 h-5 text-cyan-400 drop-shadow-[0_0_5px_rgba(0,0,0,1)]" />
-                 </div>
-            </div>
-
-            {/* Grid System */}
+        {/* Contenedor Grid Responsivo */}
+        <div className="min-h-[300px]">
+            {/* 
+              Grid Configuration:
+              - Mobile: 2 columns (Grid Mosaico) - Mayor densidad, menos scroll.
+              - Desktop: 3-4 columns.
+            */}
             <div
               className="
-                flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar items-center
-                md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-4 md:pb-0 md:overflow-visible md:items-stretch
-                will-change-scroll
+                grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 items-start
               "
             >
               <AnimatePresence mode="popLayout">
@@ -200,11 +194,11 @@ const Portfolio: React.FC = () => {
           >
             <button 
               onClick={handleLoadMore}
-              className="group relative flex items-center gap-3 px-8 py-3 bg-gray-900 border border-gray-700 rounded-full text-sm uppercase tracking-widest text-white hover:border-cyan-500 hover:text-cyan-400 transition-all duration-300"
+              className="group relative flex items-center gap-3 px-8 py-3 bg-gray-900 border border-gray-700 rounded-full text-sm uppercase tracking-widest text-white hover:border-cyan-500 hover:text-cyan-400 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]"
             >
               <RefreshIcon className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
               <span>Ver Más Trabajos</span>
-              <span className="absolute -bottom-8 text-[10px] text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="absolute -bottom-8 text-[10px] text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 Mostrando {visibleCount} de {filteredItems.length}
               </span>
             </button>
@@ -219,9 +213,6 @@ const Portfolio: React.FC = () => {
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
-        }
-        .will-change-scroll {
-            will-change: scroll-position;
         }
       `}</style>
     </section>
