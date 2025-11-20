@@ -12,22 +12,40 @@ interface PortfolioItem {
   orientation: 'vertical' | 'horizontal';
 }
 
-// Imágenes reales proporcionadas (Categoría: Bodas)
-// Verticales: 800x1200 (Ratio 2:3)
-// Horizontales: 1200x800 (Ratio 3:2)
+// Imágenes reales proporcionadas
+// Bodas: Verticales (2:3), Horizontales (3:2)
+// Quinces: Verticales (2:3)
 const portfolioItems: PortfolioItem[] = [
+  // --- BODAS ---
   // Verticales
   { id: 1, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/06.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Retrato Elegante', orientation: 'vertical' },
   { id: 2, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Momento Especial', orientation: 'vertical' },
   { id: 3, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Detalles', orientation: 'vertical' },
   { id: 4, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/09.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Emoción', orientation: 'vertical' },
-  
   // Horizontales
   { id: 5, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/05.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Paisaje', orientation: 'horizontal' },
   { id: 6, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/01.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Ceremonia', orientation: 'horizontal' },
   { id: 7, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/04.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Pareja', orientation: 'horizontal' },
   { id: 8, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/02.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Exteriores', orientation: 'horizontal' },
   { id: 9, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/03.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Atardecer', orientation: 'horizontal' },
+
+  // --- QUINCES ---
+  // Verticales (Todas las proporcionadas son 800x1200)
+  { id: 10, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces01.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 01', orientation: 'vertical' },
+  { id: 11, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces02.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 02', orientation: 'vertical' },
+  { id: 12, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces03.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 03', orientation: 'vertical' },
+  { id: 13, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces04.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 04', orientation: 'vertical' },
+  { id: 14, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces05.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 05', orientation: 'vertical' },
+  { id: 15, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 06', orientation: 'vertical' },
+  { id: 16, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces06.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 07', orientation: 'vertical' },
+  { id: 17, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 08', orientation: 'vertical' },
+  { id: 18, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces10.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 09', orientation: 'vertical' },
+  { id: 19, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces11.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 10', orientation: 'vertical' },
+  { id: 20, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces09.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 11', orientation: 'vertical' },
+  { id: 21, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces13.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 12', orientation: 'vertical' },
+  { id: 22, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces14.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 13', orientation: 'vertical' },
+  { id: 23, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces15.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 14', orientation: 'vertical' },
+  { id: 24, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces28.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 15', orientation: 'vertical' },
 ];
 
 const filterCategories = [
