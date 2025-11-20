@@ -1,289 +1,285 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRightIcon, XIcon, CalendarIcon, UserIcon, ClockIcon } from '../assets/icons';
+import { XIcon, ArrowRightIcon } from '../assets/icons';
 
-interface BlogPost {
-  id: number;
-  image: string;
-  category: string;
-  title: string;
-  excerpt: string;
-  date: string;
-  author: string;
-  readTime: string;
-  content: string[]; // Array de párrafos para simular contenido rico
-}
-
-const blogPosts: BlogPost[] = [
+// --- DATA EDITORIAL ---
+const blogPosts = [
   {
     id: 1,
-    image: 'https://picsum.photos/seed/blog1/800/600',
-    category: 'Consejos',
-    title: '6 Lugares Secretos en La Habana para una Sesión de Fotos Inolvidable',
-    excerpt: 'Descubre rincones mágicos y perspectivas únicas. Te llevamos a locaciones que harán tus fotos espectaculares, desde el mar hasta la arquitectura monumental.',
-    date: '15 Oct, 2023',
-    author: 'Equipo MiniMax',
-    readTime: '6 min',
-    content: [
-        "La Habana es un lienzo infinito. Todos conocemos el encanto del Malecón al atardecer, pero la verdadera magia de la ciudad a menudo se esconde en los detalles, en esos rincones donde la luz juega con la arquitectura de formas inesperadas.",
-        "1. **La Azotea de los Sueños (Centro Habana):** No nos referimos a la famosa Guarida, sino a las azoteas vecinas menos transitadas. Aquí, entre sábanas tendidas al sol y antenas antiguas, se consigue una vista del skyline habanero cruda y auténtica. La luz de la tarde crea siluetas perfectas para un estilo editorial.",
-        "2. **El Bosque de La Habana:** Un clásico que nunca falla, pero el secreto está en adentrarse más allá de los senderos principales. Los inmensos árboles Jagüey con sus raíces aéreas crean túneles naturales que filtran la luz de manera mística. Es el escenario ideal para sesiones de Quinces con temática de fantasía o bodas bohemias.",
-        "3. **Callejones de San Isidro:** Si buscas color y arte urbano, este es el lugar. Las paredes llenas de grafitis vibrantes ofrecen un contraste moderno y rebelde, perfecto para outfits atrevidos. Aquí la clave es interactuar con el entorno, no solo posar frente a él.",
-        "4. **Marina Hemingway:** Cambiamos las rocas por el glamour náutico. Los canales de la Marina, con sus yates y arquitectura de los años 50, ofrecen un escenario sofisticado y diferente. Es ideal para capturar atardeceres con un toque de exclusividad, reflejos en el agua tranquila y una elegancia veraniega única.",
-        "5. **Mansiones del Vedado:** Muchas casas coloniales permiten sesiones en sus jardines y portales. Buscamos aquellas con vitrales de colores y pisos de mosaico originales. La luz que atraviesa estos cristales pinta la piel de colores suaves, creando retratos íntimos y llenos de historia.",
-        "6. **Capitolio de La Habana:** El gigante de la ciudad. Aunque es el ícono más conocido, el secreto para una foto única está en la perspectiva. Olvida la foto frontal típica llena de turistas; nosotros buscamos los ángulos laterales, el juego de sombras dramáticas entre sus inmensas columnas o el encuadre desde las calles aledañas, donde la vida cotidiana contrasta con su cúpula majestuosa."
-    ]
+    title: "La Guía Esencial: Planificación de Quinceañeras",
+    excerpt: "Claves para coordinar una sesión fotográfica exitosa, desde la selección del vestuario hasta la gestión del tiempo.",
+    date: "12 OCT 2023",
+    category: "GUÍAS",
+    readTime: "5 MIN",
+    image: "https://ik.imagekit.io/ilczwuvvn/Quinces/Capitolio.webp?tr=w-800,h-600,fo-auto",
+    content: (
+      <div className="space-y-6 text-gray-300 leading-relaxed font-light">
+        <p>
+          La celebración de los quince años marca una transición fundamental. Más allá de la fiesta, el registro fotográfico permanece como el testimonio tangible de esta etapa. Una sesión exitosa no es producto del azar, sino de una planificación meticulosa y una visión artística clara.
+        </p>
+        
+        <h3 className="text-xl font-heading text-white mt-8 mb-4">1. Conceptualización y Estilismo</h3>
+        <p>
+          Antes de seleccionar la primera locación, es imperativo definir la narrativa visual. ¿Buscamos una estética etérea y romántica o un enfoque urbano y editorial? El vestuario debe dialogar con el entorno, no competir con él. Recomendamos una paleta de colores que complemente la arquitectura de La Habana: tonos ocres, blancos puros o rojos saturados para generar contraste.
+        </p>
+
+        <h3 className="text-xl font-heading text-white mt-8 mb-4">2. La Importancia de la Hora Dorada</h3>
+        <p>
+          La luz es el elemento que define la calidad de la imagen. Programamos nuestras sesiones principales durante el amanecer o el atardecer. Esta luz suave y direccional suaviza las texturas de la piel y aporta una atmósfera cinematográfica que es imposible de replicar con iluminación artificial dura.
+        </p>
+
+        <h3 className="text-xl font-heading text-white mt-8 mb-4">3. Logística y Tiempos</h3>
+        <p>
+          El estrés es el enemigo de la naturalidad. Sugerimos limitar los cambios de vestuario a un máximo de tres o cuatro para optimizar el tiempo de rodaje. Un itinerario holgado permite a la quinceañera relajarse, lo que se traduce directamente en expresiones más genuinas y poses fluidas.
+        </p>
+
+        <div className="bg-gray-900 border-l-2 border-cyan-500 p-6 mt-8">
+          <p className="text-sm italic text-gray-400">
+            "La elegancia no consiste en llamar la atención, sino en ser recordada. Nuestro objetivo es crear imágenes atemporales que mantengan su impacto visual a través de las décadas."
+          </p>
+        </div>
+      </div>
+    )
   },
   {
     id: 2,
-    image: 'https://picsum.photos/seed/blog2/800/600',
-    category: 'Historias de Bodas',
-    title: 'La Boda de Ana y Javier: Amor y Magia en el Corazón de La Habana',
-    excerpt: 'Revive con nosotros la emotiva historia de una boda que capturamos en las calles coloniales, un testimonio del amor eterno en La Habana.',
-    date: '02 Nov, 2025',
-    author: 'Carlos E.',
-    readTime: '4 min',
-    content: [
-        "Cuando Ana y Javier tomaron un avión desde España con rumbo a Cuba, no solo viajaban a una isla caribeña. Venían a cumplir un sueño: unir sus vidas en la tierra donde comenzó la historia de su familia. Y querían que La Habana, con toda su esencia y nostalgia, fuera una invitada de honor en su boda.",
-        "**✨ La magia de comenzar el día en un lugar con historia**",
-        "La mañana despertó en una casa colonial del Paseo del Prado. La luz suave entraba por los grandes ventanales iluminando cada detalle: el encaje delicado del vestido, los gemelos del novio, los nervios, las risas, los abrazos eternos. Cada emoción tenía una fotografía esperándola.",
-        "**🌿 Un “sí, acepto” en un jardín escondido**",
-        "La ceremonia se celebró en un jardín secreto del Vedado, rodeado de vegetación tropical y aire a romance. Todo fue íntimo, auténtico, perfecto. Pero la verdadera aventura comenzó después.",
-        "**🚶 Amor en movimiento por La Habana Vieja**",
-        "Caminamos sin prisa, dejando que la ciudad nos guiara. Sin poses forzadas. Sin guiones. Solo ellos dos, enamorados, recibiendo felicitaciones espontáneas de los habaneros que celebran el amor como si fuera suyo. Cada calle, cada arco, cada color… se volvió parte de su historia.",
-        "**🌅 El beso eterno en el Malecón**",
-        "Llegamos al Malecón justo en la hora azul. El mar, el cielo y la ciudad se unieron en un solo cuadro cinematográfico. En ese instante, un almendrón clásico pasó detrás de ellos y su beso quedó suspendido en el tiempo. Es por momentos así que amamos lo que hacemos: congelar la eternidad en un segundo.",
-        "**🎉 Una noche que nunca se olvida**",
-        "La fiesta terminó con mojitos, salsa y sonrisas desbordando alegría. Las fotos están llenas de movimiento, luces de neón, emoción pura. El reflejo perfecto de lo que significa casarse en La Habana: celebrar la vida y el amor con el corazón abierto.",
-        "**❤️ Porque tu amor también merece una historia así**",
-        "Cada pareja es un universo. Nosotros nos encargamos de convertirlo en arte. Queremos que, dentro de 20 años, revivas cada nervio, cada risa y cada latido del día más especial de tu vida.",
-        "📩 Si sueñas con una boda destino en Cuba, hablemos. Estaremos felices de capturar tu historia en esta ciudad mágica."
-    ]
+    title: "Dirección de Posing: Naturalidad vs. Técnica",
+    excerpt: "Cómo lograr retratos auténticos superando la rigidez frente a la cámara. Consejos profesionales de dirección.",
+    date: "28 NOV 2023",
+    category: "TÉCNICA",
+    readTime: "4 MIN",
+    image: "https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces11.webp?tr=w-800,h-600,fo-auto",
+    content: (
+      <div className="space-y-6 text-gray-300 leading-relaxed font-light">
+        <p>
+          Uno de los desafíos más comunes en la fotografía de retrato es la rigidez del sujeto. La mayoría de nuestros clientes no son modelos profesionales, y es nuestra responsabilidad como directores creativos guiar la sesión hacia la naturalidad y la elegancia.
+        </p>
+
+        <h3 className="text-xl font-heading text-white mt-8 mb-4">La Geometría del Cuerpo</h3>
+        <p>
+          El posing funciona a través de la creación de espacios negativos. Evitamos la simetría total, buscando ángulos que generen triángulos con los brazos y las piernas. Esto estiliza la figura y aporta dinamismo a la composición. Una ligera inclinación de hombros o la transferencia del peso hacia una pierna puede transformar una postura estática en una silueta elegante.
+        </p>
+
+        <h3 className="text-xl font-heading text-white mt-8 mb-4">La Mirada y la Conexión</h3>
+        <p>
+          Los ojos son el punto focal de cualquier retrato. Instruimos sobre cómo relajar la mandíbula y suavizar la mirada. No siempre es necesario mirar al lente; la mirada perdida o dirigida hacia una fuente de luz puede evocar introspección y sofisticación.
+        </p>
+
+        <h3 className="text-xl font-heading text-white mt-8 mb-4">Movimiento Continuo</h3>
+        <p>
+          La fotografía estática ha evolucionado hacia el "posing en movimiento". Pedimos a nuestros clientes que caminen, giren o interactúen con elementos del entorno. Capturar el movimiento congela la energía del momento, resultando en imágenes que parecen fotogramas de una película.
+        </p>
+      </div>
+    )
   },
   {
     id: 3,
-    image: 'https://picsum.photos/seed/blog3/800/600',
-    category: 'Quinceañeras',
-    title: 'La Guía Definitiva para una Sesión de Fotos de Quinceañera Perfecta en La Habana',
-    excerpt: 'Cumplir 15 no es solo cambiar de número. Descubre nuestros secretos para una sesión inolvidable en La Habana: vestuario, maquillaje, posing y locaciones de película.',
-    date: '20 Nov, 2025',
-    author: 'MiniMax Studio',
-    readTime: '5 min',
-    content: [
-        "Cumplir 15 no es solo cambiar de número. Es ese instante mágico donde una niña mira hacia el futuro y descubre a la mujer que está comenzando a ser. Y qué mejor escenario para capturar esa transformación que La Habana, ciudad que hace que todo se sienta eterno.",
-        "En MiniMax Studio hemos fotografiado cientos de quinceañeras, ayudándolas a contar su historia con luz, color y emoción. Hoy te compartimos nuestros mejores secretos… para que tu sesión sea inolvidable y de revista. 📸✨",
-        "**✨ El Vestuario: Tu personalidad es la protagonista**",
-        "Dicen que “menos es más”… pero la variedad también es clave. Recomendamos 3 looks principales: 1️⃣ Vestido de gala – Para ese momento princesa que tu familia atesorará. 2️⃣ Look urbano/chic – Natural, divertido… ¡muy tú! 3️⃣ Tu pasión hecha moda – Danza, música, deporte… tu esencia. Aquí no seguimos tendencias. Las creamos contigo.",
-        "**💄 Maquillaje que resiste el Caribe**",
-        "Cuba = calor + humedad 🌞. Por eso: ✔ Productos waterproof. ✔ Larga duración. ✔ Cero brillo en zona T. ✔ Retoques rápidos (papel absorbente + polvos). Tu piel debe lucir radiante en cada foto… sin perder tu belleza natural.",
-        "**🌅 La Hora Mágica: Cuando la luz enamora**",
-        "La luz lo es todo en fotografía. 📌 Evitamos el sol del mediodía (sombras duras). 📌 Aprovechamos: Amanecer → playas vacías y luz suave de película. Atardecer → esa “Golden Hour” que hace brillar tu piel. Hora Azul → glamour cinematográfico cerca del mar. Cuando te pedimos madrugar… es para que tu álbum sea épico.",
-        "**🎬 Posing 101: Más movimiento, menos rigidez**",
-        "Olvida todo lo que has visto en fotos posadas del pasado. El mundo actual quiere actitud y naturalidad: Camina hacia la cámara. Juega con tu vestido. Ríe aunque sea por nuestros chistes malísimos 😅. Espalda recta, hombros relajados. Y confía: si pedimos algo raro, es arte.",
-        "**📍 La Habana: Tu escenario de película**",
-        "Aquí cada calle cuenta una historia: Habana Vieja: colores, texturas y nostalgia cubana. El Malecón: belleza, libertad y brisa del mar. Vedado: elegancia moderna + jardines secretos. Azoteas urbanas: frescura y moda actual. Autos clásicos: fotos que atrapan miradas en redes. Tu sesión debe sentirse como una película. Y tú eres la protagonista. 💃✨",
-        "**💖 Disfrútalo: Las mejores fotos nacen de la felicidad**",
-        "Lo decimos siempre: “Si te sientes hermosa, la cámara lo refleja.” La sesión es tu día para celebrar quién eres. Ríe, sueña, juega… Nosotros nos encargamos del resto.",
-        "**🎁 Bonus: Lo que hace especial a MiniMax Studio**",
-        "✨ Dirección profesional que te hace sentir segura. ✨ Asesoría personalizada en vestuario y maquillaje. ✨ Locaciones exclusivas y spots secretos de La Habana. ✨ Edición artística con sello cinematográfico. Nada es improvisado. Todo está diseñado para que brillen tus 15.",
-        "**🌟 Tus 15 son únicos… y tú también**",
-        "Queremos que dentro de muchos años cuando vuelvas a abrir tu álbum recuerdes exactamente cómo te sentías hoy: fuerte, hermosa, lista para el mundo.",
-        "📩 Agenda tu sesión de quince con nosotros y hagamos que tu cuento se vuelva realidad."
-    ]
-  },
+    title: "Arquitectura y Luz: Locaciones en La Habana",
+    excerpt: "Un análisis de los escenarios más icónicos de la ciudad y cómo aprovecharlos para una narrativa visual potente.",
+    date: "15 ENE 2024",
+    category: "LOCACIONES",
+    readTime: "6 MIN",
+    image: "https://ik.imagekit.io/ilczwuvvn/05.webp?tr=w-800,h-600,fo-auto",
+    content: (
+      <div className="space-y-6 text-gray-300 leading-relaxed font-light">
+        <p>
+          La Habana no es solo un fondo; es un personaje más en nuestras historias. Su arquitectura ecléctica, que mezcla el barroco colonial con el art déco y el modernismo, ofrece un lienzo inigualable para la fotografía editorial.
+        </p>
+
+        <h3 className="text-xl font-heading text-white mt-8 mb-4">La Habana Vieja: Texturas e Historia</h3>
+        <p>
+          Las calles empedradas y las fachadas desgastadas del casco histórico aportan una textura rica y profunda. Buscamos el contraste entre la decadencia arquitectónica y la sofisticación del vestuario de gala. Lugares como el Palacio de los Capitanes Generales ofrecen patios interiores con una luz difusa excepcional.
+        </p>
+
+        <h3 className="text-xl font-heading text-white mt-8 mb-4">El Vedado: Modernidad y Verdor</h3>
+        <p>
+          Para sesiones con un aire más contemporáneo o señorial, las mansiones del Vedado son ideales. Las escalinatas de mármol, las columnas jónicas y la vegetación exuberante permiten composiciones más limpias y monumentales. La Avenida de los Presidentes ofrece perspectivas lineales perfectas para planos generales.
+        </p>
+
+        <h3 className="text-xl font-heading text-white mt-8 mb-4">El Litoral: Minimalismo Azul</h3>
+        <p>
+          El Malecón y las playas del este ofrecen el escenario más minimalista: cielo y mar. Aquí, la composición se reduce a lo esencial. Trabajamos con la línea del horizonte y el espacio negativo para centrar toda la atención en el sujeto, utilizando la luz dorada del atardecer para siluetas dramáticas.
+        </p>
+      </div>
+    )
+  }
 ];
 
-const BlogPostCard: React.FC<{ post: BlogPost, onClick: (post: BlogPost) => void }> = ({ post, onClick }) => {
+const Blog: React.FC = () => {
+  const [selectedPost, setSelectedPost] = useState<typeof blogPosts[0] | null>(null);
+
   return (
-    <motion.div
-      className="bg-gray-900/50 rounded-lg overflow-hidden border border-gray-700/50 flex flex-col h-full group cursor-pointer"
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      onClick={() => onClick(post)}
-    >
-      <div className="relative h-48 overflow-hidden">
-          <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
-      </div>
-      <div className="p-6 flex flex-col flex-grow">
-        <div className="flex justify-between items-center mb-3">
-            <p className="text-cyan-400 text-xs uppercase tracking-widest font-bold">{post.category}</p>
-            <span className="text-gray-500 text-[10px] flex items-center">
-                <ClockIcon className="w-3 h-3 mr-1" /> {post.readTime}
-            </span>
+    <section id="blog" className="py-20 md:py-32 bg-[#05060d]">
+      <div className="container mx-auto px-6">
+        
+        {/* Header Sección */}
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-gray-800 pb-8">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-2xl"
+          >
+            <h2 className="text-4xl md:text-6xl font-heading font-bold tracking-tight text-white mb-4">
+              Journal
+            </h2>
+            <p className="text-gray-400 font-light text-sm md:text-base max-w-md leading-relaxed">
+              Pensamientos sobre fotografía, dirección de arte y la estética visual que define a MiniMax Studio.
+            </p>
+          </motion.div>
+
+          <motion.div
+             initial={{ opacity: 0 }}
+             whileInView={{ opacity: 1 }}
+             viewport={{ once: true }}
+             className="hidden md:block"
+          >
+             <span className="text-xs font-bold tracking-[0.2em] text-cyan-500 uppercase">Editorial & Insights</span>
+          </motion.div>
         </div>
-        <h3 className="text-xl font-heading tracking-wider text-white mb-3 flex-grow group-hover:text-cyan-300 transition-colors">{post.title}</h3>
-        <p className="text-gray-400 font-light mb-4 text-sm line-clamp-3">{post.excerpt}</p>
-        <button 
-          className="nav-link-neon text-cyan-400 font-bold uppercase text-xs tracking-widest mt-auto inline-flex items-center self-start"
-        >
-          Leer Artículo
-          <ArrowRightIcon className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-        </button>
+
+        {/* Grid de Artículos */}
+        <div className="grid md:grid-cols-3 gap-x-8 gap-y-12">
+          {blogPosts.map((post, index) => (
+            <motion.article
+              key={post.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="group cursor-pointer flex flex-col h-full"
+              onClick={() => setSelectedPost(post)}
+            >
+              {/* Imagen Card - Vanguardista: Aspecto estricto, filtro sutil */}
+              <div className="relative w-full aspect-[3/2] overflow-hidden bg-gray-900 mb-6">
+                <img 
+                  src={post.image} 
+                  alt={post.title}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale-[30%] group-hover:grayscale-0"
+                />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
+              </div>
+
+              {/* Meta Info Minimalista */}
+              <div className="flex items-center space-x-3 text-[10px] font-bold tracking-[0.15em] text-cyan-500 mb-3 uppercase">
+                <span>{post.category}</span>
+                <span className="w-0.5 h-2 bg-gray-700"></span>
+                <span className="text-gray-500">{post.date}</span>
+              </div>
+
+              {/* Título y Extracto */}
+              <h3 className="text-xl md:text-2xl font-heading font-medium text-white leading-tight mb-3 group-hover:text-cyan-200 transition-colors">
+                {post.title}
+              </h3>
+              <p className="text-sm text-gray-400 font-light leading-relaxed mb-6 line-clamp-3 flex-grow">
+                {post.excerpt}
+              </p>
+
+              {/* Link Sutil */}
+              <div className="flex items-center text-xs font-bold uppercase tracking-widest text-white group-hover:text-cyan-400 transition-colors mt-auto">
+                <span>Leer Artículo</span>
+                <ArrowRightIcon className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.article>
+          ))}
+        </div>
       </div>
-    </motion.div>
-  );
-};
 
-const BlogModal: React.FC<{ post: BlogPost | null, onClose: () => void }> = ({ post, onClose }) => {
-    // Bloquear scroll del body cuando el modal está abierto
-    useEffect(() => {
-        if (post) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => { document.body.style.overflow = 'unset'; };
-    }, [post]);
-
-    if (!post) return null;
-
-    return (
-        <motion.div
+      {/* Modal de Lectura Full Screen / Minimalista */}
+      <AnimatePresence>
+        {selectedPost && (
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6"
-        >
-            {/* Backdrop */}
+            className="fixed inset-0 z-50 flex items-center justify-center px-4 py-4 md:py-8"
+          >
+            {/* Backdrop Blur */}
             <div 
-                className="absolute inset-0 bg-black/80 backdrop-blur-md"
-                onClick={onClose}
+              className="absolute inset-0 bg-black/90 backdrop-blur-xl"
+              onClick={() => setSelectedPost(null)}
             ></div>
 
-            {/* Modal Content */}
             <motion.div
-                initial={{ y: 50, opacity: 0, scale: 0.95 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                exit={{ y: 50, opacity: 0, scale: 0.95 }}
-                transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                className="relative bg-[#0a0b14] w-full max-w-3xl max-h-[90vh] rounded-2xl border border-gray-700 shadow-2xl overflow-hidden flex flex-col"
+              layoutId={`post-${selectedPost.id}`}
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="relative w-full max-w-4xl h-full md:h-auto md:max-h-[90vh] bg-[#0a0a0a] border border-gray-800 overflow-hidden shadow-2xl flex flex-col"
             >
-                {/* Close Button */}
-                <button 
-                    onClick={onClose}
-                    className="absolute top-4 right-4 z-20 p-2 bg-black/50 rounded-full text-white hover:bg-cyan-500 hover:text-black transition-colors duration-300"
-                >
-                    <XIcon className="w-6 h-6" />
-                </button>
+              {/* Botón Cerrar */}
+              <button
+                onClick={() => setSelectedPost(null)}
+                className="absolute top-6 right-6 z-20 p-2 bg-black/50 hover:bg-white hover:text-black rounded-full text-white transition-colors duration-300 backdrop-blur-sm"
+              >
+                <XIcon className="w-6 h-6" />
+              </button>
 
-                {/* Scrollable Area */}
-                <div className="overflow-y-auto custom-scrollbar">
-                    {/* Header Image */}
-                    <div className="relative h-64 sm:h-80 w-full">
-                         <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
-                         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0b14] to-transparent"></div>
-                         <div className="absolute bottom-0 left-0 p-6 sm:p-8 w-full">
-                            <span className="inline-block px-3 py-1 bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 text-xs font-bold uppercase tracking-wider rounded-full mb-3">
-                                {post.category}
-                            </span>
-                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading text-white font-bold leading-tight text-shadow">
-                                {post.title}
-                            </h2>
-                         </div>
-                    </div>
-
-                    {/* Content Body */}
-                    <div className="p-6 sm:p-8">
-                        {/* Metadata */}
-                        <div className="flex flex-wrap gap-4 sm:gap-6 text-sm text-gray-400 mb-8 border-b border-gray-800 pb-6">
-                            <div className="flex items-center">
-                                <CalendarIcon className="w-4 h-4 mr-2 text-cyan-500" />
-                                {post.date}
-                            </div>
-                            <div className="flex items-center">
-                                <UserIcon className="w-4 h-4 mr-2 text-cyan-500" />
-                                Por {post.author}
-                            </div>
-                            <div className="flex items-center">
-                                <ClockIcon className="w-4 h-4 mr-2 text-cyan-500" />
-                                Lectura: {post.readTime}
-                            </div>
-                        </div>
-
-                        {/* Text Content */}
-                        <div className="prose prose-invert prose-lg max-w-none text-gray-300 font-light leading-relaxed space-y-6">
-                            {post.content.map((paragraph, index) => (
-                                <p key={index} dangerouslySetInnerHTML={{ 
-                                    // Permitimos negritas básicas dentro del texto
-                                    __html: paragraph.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>') 
-                                }}></p>
-                            ))}
-                        </div>
-
-                         {/* Call to Action inside Blog */}
-                         <div className="mt-12 p-6 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl border border-gray-700 text-center">
-                             <h4 className="text-xl font-heading text-white mb-2">¿Te inspiraste con este artículo?</h4>
-                             <p className="text-gray-400 text-sm mb-4">Reserva tu sesión hoy y creemos algo mágico juntos.</p>
-                             <a 
-                                href="#contacto" 
-                                onClick={(e) => { e.preventDefault(); onClose(); document.getElementById('contacto')?.scrollIntoView({behavior: 'smooth'}); }}
-                                className="inline-block bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-full text-xs uppercase tracking-widest transition-colors"
-                             >
-                                 Reservar Ahora
-                             </a>
-                         </div>
-                    </div>
+              {/* Scrollable Content Area */}
+              <div className="overflow-y-auto custom-scrollbar h-full">
+                {/* Hero Image del Modal */}
+                <div className="relative h-[40vh] w-full">
+                  <img 
+                    src={selectedPost.image} 
+                    alt={selectedPost.title} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
                 </div>
+
+                <div className="px-6 md:px-12 py-10 md:py-14 max-w-3xl mx-auto -mt-20 relative z-10">
+                  
+                  {/* Meta Data Header - Pure Text */}
+                  <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold tracking-[0.2em] text-cyan-400 uppercase mb-8">
+                    <span>{selectedPost.date}</span>
+                    <span className="text-gray-600">•</span>
+                    <span>{selectedPost.category}</span>
+                    <span className="text-gray-600">•</span>
+                    <span>{selectedPost.readTime} LECTURA</span>
+                  </div>
+
+                  <h2 className="text-3xl md:text-5xl font-heading font-bold text-white text-center leading-tight mb-12">
+                    {selectedPost.title}
+                  </h2>
+
+                  {/* Contenido del Artículo */}
+                  <div className="prose prose-invert prose-lg mx-auto prose-p:text-gray-300 prose-headings:font-heading prose-a:text-cyan-400">
+                    {selectedPost.content}
+                  </div>
+
+                  {/* Footer del Artículo */}
+                  <div className="mt-16 pt-8 border-t border-gray-800 flex justify-between items-center">
+                    <span className="text-xs text-gray-500 uppercase tracking-widest">Escrito por MiniMax Studio</span>
+                    
+                    {/* Call to Action Sutil */}
+                    <a href="#contacto" onClick={() => setSelectedPost(null)} className="text-sm font-bold text-white hover:text-cyan-400 transition-colors uppercase tracking-widest border-b border-transparent hover:border-cyan-400 pb-1">
+                      Reservar Sesión
+                    </a>
+                  </div>
+                </div>
+              </div>
             </motion.div>
-            <style>{`
-                .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: #0a0b14; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
-            `}</style>
-        </motion.div>
-    );
-};
-
-const Blog: React.FC = () => {
-    const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-
-    const sectionVariants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { staggerChildren: 0.2, duration: 0.5 } },
-    };
-
-    const itemVariants = {
-        hidden: { y: 20, opacity: 0 },
-        visible: { y: 0, opacity: 1, transition: { duration: 0.6 } },
-    };
-
-  return (
-    <section id="blog" className="py-16 sm:py-20 md:py-32">
-      <div className="container mx-auto px-6">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading tracking-widest text-white">Desde el Lente</h2>
-          <p className="text-lg text-gray-400 mt-2 max-w-3xl mx-auto">Consejos, historias y el arte detrás de cada disparo.</p>
-        </motion.div>
-
-        <motion.div
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {blogPosts.map((post) => (
-            <motion.div key={post.id} variants={itemVariants}>
-              <BlogPostCard post={post} onClick={setSelectedPost} />
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Modal Overlay */}
-      <AnimatePresence>
-          {selectedPost && (
-              <BlogModal post={selectedPost} onClose={() => setSelectedPost(null)} />
-          )}
+          </motion.div>
+        )}
       </AnimatePresence>
+      
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #0a0a0a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #333;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #00f0ff;
+        }
+      `}</style>
     </section>
   );
 };
