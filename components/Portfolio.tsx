@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRightIcon, SpinnerIcon } from '../assets/icons';
+import { ArrowRightIcon, SpinnerIcon, RefreshIcon } from '../assets/icons';
 
 // Definimos tipos para mejor control
 interface PortfolioItem {
@@ -55,6 +55,10 @@ const filterCategories = [
   { name: 'Artísticas', value: 'artisticas' },
   { name: 'Diseño', value: 'diseno' },
 ];
+
+// Configuración de paginación
+const INITIAL_ITEMS_TO_SHOW = 9;
+const ITEMS_PER_LOAD = 6;
 
 // Componente interno para manejar la carga individual de cada imagen
 const PortfolioImageCard = ({ item }: { item: PortfolioItem }) => {
@@ -111,14 +115,24 @@ const PortfolioImageCard = ({ item }: { item: PortfolioItem }) => {
 const Portfolio: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [filteredItems, setFilteredItems] = useState(portfolioItems);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_ITEMS_TO_SHOW);
 
   useEffect(() => {
+    // Resetear conteo y filtrar
+    setVisibleCount(INITIAL_ITEMS_TO_SHOW);
     if (activeFilter === 'all') {
       setFilteredItems(portfolioItems);
     } else {
       setFilteredItems(portfolioItems.filter(item => item.category === activeFilter));
     }
   }, [activeFilter]);
+
+  const handleLoadMore = () => {
+    setVisibleCount(prev => prev + ITEMS_PER_LOAD);
+  };
+
+  const visibleItems = filteredItems.slice(0, visibleCount);
+  const hasMoreItems = visibleCount < filteredItems.length;
 
   return (
     <section id="portfolio" className="py-16 sm:py-20 md:py-28 bg-black/20">
@@ -152,20 +166,16 @@ const Portfolio: React.FC = () => {
         </div>
 
         {/* Contenedor Relativo */}
-        <div className="relative group/portfolio">
+        <div className="relative group/portfolio min-h-[300px]">
             
-            {/* Flecha Indicadora de Scroll (Solo Móvil) */}
+            {/* Flecha Indicadora de Scroll (Solo Móvil) - Ocultar si ya se mostraron todas o no hay scroll */}
             <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 md:hidden pointer-events-none pr-1 animate-pulse">
                  <div className="bg-black/50 rounded-full p-1 backdrop-blur-sm border border-white/10">
                     <ArrowRightIcon className="w-5 h-5 text-cyan-400 drop-shadow-[0_0_5px_rgba(0,0,0,1)]" />
                  </div>
             </div>
 
-            {/* 
-               Grid System:
-               - Mobile: Horizontal Scroll (Snap) -> Updated to items-center to avoid stretching
-               - Desktop: Masonry-style Grid using col-span
-            */}
+            {/* Grid System */}
             <div
               className="
                 flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar items-center
@@ -174,12 +184,33 @@ const Portfolio: React.FC = () => {
               "
             >
               <AnimatePresence mode="popLayout">
-                {filteredItems.map((item) => (
+                {visibleItems.map((item) => (
                    <PortfolioImageCard key={item.id} item={item} />
                 ))}
               </AnimatePresence>
             </div>
         </div>
+
+        {/* Botón Cargar Más (Load More) */}
+        {hasMoreItems && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex justify-center mt-10"
+          >
+            <button 
+              onClick={handleLoadMore}
+              className="group relative flex items-center gap-3 px-8 py-3 bg-gray-900 border border-gray-700 rounded-full text-sm uppercase tracking-widest text-white hover:border-cyan-500 hover:text-cyan-400 transition-all duration-300"
+            >
+              <RefreshIcon className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+              <span>Ver Más Trabajos</span>
+              <span className="absolute -bottom-8 text-[10px] text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                Mostrando {visibleCount} de {filteredItems.length}
+              </span>
+            </button>
+          </motion.div>
+        )}
+
       </div>
       <style>{`
         .no-scrollbar::-webkit-scrollbar {
