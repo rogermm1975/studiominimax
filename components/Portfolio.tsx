@@ -3,21 +3,37 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRightIcon } from '../assets/icons';
 
-const portfolioItems = [
-  { id: 1, category: 'quinces', src: 'https://picsum.photos/seed/port1/500/700', alt: 'Sesión de Quinceañera 1' },
-  { id: 2, category: 'bodas', src: 'https://picsum.photos/seed/port2/700/500', alt: 'Fotografía de Boda 1' },
-  { id: 3, category: 'artisticas', src: 'https://picsum.photos/seed/port3/500/500', alt: 'Fotografía Artística 1' },
-  { id: 4, category: 'quinces', src: 'https://picsum.photos/seed/port4/500/600', alt: 'Sesión de Quinceañera 2' },
-  { id: 5, category: 'diseno', src: 'https://picsum.photos/seed/port5/600/500', alt: 'Diseño Gráfico 1' },
-  { id: 6, category: 'bodas', src: 'https://picsum.photos/seed/port6/500/750', alt: 'Fotografía de Boda 2' },
-  { id: 7, category: 'quinces', src: 'https://picsum.photos/seed/port7/700/500', alt: 'Sesión de Quinceañera 3' },
-  { id: 8, category: 'artisticas', src: 'https://picsum.photos/seed/port8/500/700', alt: 'Fotografía Artística 2' },
+// Definimos tipos para mejor control
+interface PortfolioItem {
+  id: number;
+  category: string;
+  src: string;
+  alt: string;
+  orientation: 'vertical' | 'horizontal';
+}
+
+// Imágenes reales proporcionadas (Categoría: Bodas)
+// Verticales: 800x1200 (Ratio 2:3)
+// Horizontales: 1200x800 (Ratio 3:2)
+const portfolioItems: PortfolioItem[] = [
+  // Verticales
+  { id: 1, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/06.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Retrato Elegante', orientation: 'vertical' },
+  { id: 2, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Momento Especial', orientation: 'vertical' },
+  { id: 3, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Detalles', orientation: 'vertical' },
+  { id: 4, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/09.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Emoción', orientation: 'vertical' },
+  
+  // Horizontales
+  { id: 5, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/05.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Paisaje', orientation: 'horizontal' },
+  { id: 6, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/01.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Ceremonia', orientation: 'horizontal' },
+  { id: 7, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/04.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Pareja', orientation: 'horizontal' },
+  { id: 8, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/02.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Exteriores', orientation: 'horizontal' },
+  { id: 9, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/03.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Atardecer', orientation: 'horizontal' },
 ];
 
 const filterCategories = [
   { name: 'Todos', value: 'all' },
-  { name: 'Quinces', value: 'quinces' },
   { name: 'Bodas', value: 'bodas' },
+  { name: 'Quinces', value: 'quinces' },
   { name: 'Artísticas', value: 'artisticas' },
   { name: 'Diseño', value: 'diseno' },
 ];
@@ -76,15 +92,14 @@ const Portfolio: React.FC = () => {
             </div>
 
             {/* 
-               OPTIMIZACIÓN DE RENDIMIENTO:
-               1. Se eliminó 'motion.div' del contenedor padre para evitar recálculos de layout en scroll.
-               2. Se eliminó la prop 'layout' de los hijos. Esto elimina el "temblor" o movimientos involuntarios.
-               3. Se usa 'will-change-transform' para aceleración por hardware.
+               Grid System:
+               - Mobile: Horizontal Scroll (Snap)
+               - Desktop: Masonry-style Grid using col-span
             */}
             <div
               className="
                 flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar 
-                md:grid md:grid-cols-3 lg:grid-cols-4 md:pb-0 md:overflow-visible
+                md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-4 md:pb-0 md:overflow-visible
                 will-change-scroll
               "
             >
@@ -92,28 +107,33 @@ const Portfolio: React.FC = () => {
                 {filteredItems.map((item) => (
                   <motion.div
                     key={item.id}
+                    layout
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className="
+                    className={`
                         relative overflow-hidden rounded-lg flex-shrink-0 
-                        w-[45%] xs:w-[45%] sm:w-[40%] md:w-auto
-                        snap-center group
-                        transform-gpu
-                    "
+                        snap-center group transform-gpu bg-gray-900
+                        ${/* Clases para móvil (scroll horizontal) */ ''}
+                        w-[70vw] xs:w-[60vw] sm:w-[45vw]
+                        ${/* Clases para desktop (grid) */ ''}
+                        md:w-auto 
+                        ${item.orientation === 'horizontal' ? 'md:col-span-2 aspect-[3/2]' : 'md:col-span-1 aspect-[2/3]'}
+                    `}
                   >
                     <img 
                         src={item.src} 
                         alt={item.alt} 
                         loading="lazy" 
                         decoding="async"
-                        className="w-full h-full object-cover aspect-[3/4] transition-transform duration-700 group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0 bg-gray-900" 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0" 
                     />
                     
                     {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                      <p className="text-white text-sm font-bold tracking-wide transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">{item.alt}</p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                      <p className="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">{item.category}</p>
+                      <p className="text-white text-sm font-bold tracking-wide translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{item.alt}</p>
                     </div>
                   </motion.div>
                 ))}
