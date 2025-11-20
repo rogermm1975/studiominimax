@@ -46,12 +46,31 @@ const portfolioItems: PortfolioItem[] = [
   { id: 22, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces14.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 13', orientation: 'vertical' },
   { id: 23, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces15.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 14', orientation: 'vertical' },
   { id: 24, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces28.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 15', orientation: 'vertical' },
+
+  // --- NIÑOS ---
+  { id: 25, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os01.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 01', orientation: 'vertical' },
+  { id: 26, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os02.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 02', orientation: 'vertical' },
+  { id: 27, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os03.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 03', orientation: 'vertical' },
+  { id: 28, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os04.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 04', orientation: 'vertical' },
+  { id: 29, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os05.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 05', orientation: 'vertical' },
+  { id: 30, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os06.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Niños - Horizontal 01', orientation: 'horizontal' },
+  { id: 31, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 06', orientation: 'vertical' },
+  { id: 32, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 07', orientation: 'vertical' },
+  { id: 33, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os11.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Niños - Horizontal 02', orientation: 'horizontal' },
+  { id: 34, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os13.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 08', orientation: 'vertical' },
+  { id: 35, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os14.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 09', orientation: 'vertical' },
+  { id: 36, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os15.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 10', orientation: 'vertical' },
+  { id: 37, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os17.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 11', orientation: 'vertical' },
+  { id: 38, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os18.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 12', orientation: 'vertical' },
+  { id: 39, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os19.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 13', orientation: 'vertical' },
+  { id: 40, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os20.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 14', orientation: 'vertical' },
 ];
 
 const filterCategories = [
   { name: 'Todos', value: 'all' },
   { name: 'Bodas', value: 'bodas' },
   { name: 'Quinces', value: 'quinces' },
+  { name: 'Niños', value: 'ninos' },
   { name: 'Artísticas', value: 'artisticas' },
   { name: 'Diseño', value: 'diseno' },
 ];
@@ -62,7 +81,7 @@ const INITIAL_ITEMS_TO_SHOW = 6;
 const ITEMS_PER_LOAD = 6;
 
 // Componente interno para manejar la carga individual de cada imagen
-const PortfolioImageCard = ({ item }: { item: PortfolioItem }) => {
+const PortfolioImageCard: React.FC<{ item: PortfolioItem }> = ({ item }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
