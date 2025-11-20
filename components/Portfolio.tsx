@@ -93,13 +93,13 @@ const Portfolio: React.FC = () => {
 
             {/* 
                Grid System:
-               - Mobile: Horizontal Scroll (Snap)
+               - Mobile: Horizontal Scroll (Snap) -> Updated to items-center to avoid stretching
                - Desktop: Masonry-style Grid using col-span
             */}
             <div
               className="
-                flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar 
-                md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-4 md:pb-0 md:overflow-visible
+                flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar items-center
+                md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-4 md:pb-0 md:overflow-visible md:items-stretch
                 will-change-scroll
               "
             >
@@ -115,9 +115,12 @@ const Portfolio: React.FC = () => {
                     className={`
                         relative overflow-hidden rounded-lg flex-shrink-0 
                         snap-center group transform-gpu bg-gray-900
-                        ${/* Clases para móvil (scroll horizontal) */ ''}
-                        w-[70vw] xs:w-[60vw] sm:w-[45vw]
-                        ${/* Clases para desktop (grid) */ ''}
+                        ${/* Clases para móvil (scroll horizontal) - Anchos diferenciados */ ''}
+                        ${item.orientation === 'horizontal' 
+                          ? 'w-[85vw] xs:w-[75vw] sm:w-[60vw]' 
+                          : 'w-[70vw] xs:w-[60vw] sm:w-[45vw]'}
+                        
+                        ${/* Clases para desktop (grid) y Aspect Ratio Global */ ''}
                         md:w-auto 
                         ${item.orientation === 'horizontal' ? 'md:col-span-2 aspect-[3/2]' : 'md:col-span-1 aspect-[2/3]'}
                     `}
