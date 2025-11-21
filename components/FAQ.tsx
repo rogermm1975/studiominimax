@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDownIcon } from '../assets/icons';
@@ -5,7 +6,7 @@ import { ChevronDownIcon } from '../assets/icons';
 const faqData = [
   {
     question: '¿Qué tipo de sesiones fotográficas ofrecen?',
-    answer: 'Ofrecemos una amplia gama: sesiones editoriales para moda y marcas, retratos profesionales, fotografía de producto, cobertura de eventos y experiencias fotográficas personalizadas en La Habana. ¡Cuéntanos tu idea y la hacemos realidad!',
+    answer: 'Ofrecemos una amplia gama de sesiones fotográficas: Quinces, bodas, niños, embarazadas, retratos profesionales, fotografía de producto, cobertura de evento y deportes, experiencias fotográficas personalizadas en La Habana. ¡Cuéntanos tu idea y la hacemos realidad!',
   },
   {
     question: '¿Cómo puedo reservar una sesión?',
@@ -13,7 +14,7 @@ const faqData = [
   },
   {
     question: '¿Qué incluyen los entregables finales?',
-    answer: 'Cada paquete es diferente, pero generalmente incluye una cantidad acordada de fotografías digitales en alta resolución, editadas profesionalmente. Se entregan a través de una galería online privada, desde donde podrás descargarlas y compartirlas.',
+    answer: 'Cada paquete es diferente, pero generalmente incluye una cantidad acordada de fotografías digitales en alta resolución, editadas profesionalmente, que podrás descargar y compartir. También ofrecemos productos impresos como fotos convencionales, photobooks, revistas, lonas, lienzos, gigantografías y souvenirs personalizados.',
   },
   {
     question: '¿Trabajan solo en La Habana o también en otras locaciones?',
