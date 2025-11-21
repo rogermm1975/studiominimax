@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CameraIcon, EditIcon, StarIcon, CheckCircleIcon, TshirtIcon } from '../assets/icons';
@@ -29,7 +30,7 @@ const ProcessStep = ({ title, description }: { title: string, description: strin
 
 const Services: React.FC = () => {
   const servicesData = [
-    { icon: <CameraIcon className="w-10 h-10" />, title: 'Fotografía', description: 'Sesiones para quinceañeras, bodas, banquetes, infantes, embarazadas, artísticas y más. Capturamos tus momentos inolvidables.' },
+    { icon: <CameraIcon className="w-10 h-10" />, title: 'Fotografía', description: 'Sesiones para quinceañeras, bodas, banquetes, niños, embarazadas, artísticas y más. Capturamos tus momentos inolvidables.' },
     { icon: <EditIcon className="w-10 h-10" />, title: 'Edición Web', description: 'Creación de estilos únicos para páginas web, landing pages y proyectos empresariales que reflejen tu visión.' },
     { icon: <StarIcon className="w-10 h-10" />, title: 'Diseño Gráfico', description: 'Diseño profesional de posters, libros, revistas, gigantografías y cualquier pieza visual que necesites.' },
     { icon: <TshirtIcon className="w-10 h-10" />, title: 'Sublimación', description: 'Personalizamos pullovers, cuadros, tazas, gorras y todo tipo de souvenirs con la más alta calidad.' },
