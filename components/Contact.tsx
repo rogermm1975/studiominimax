@@ -131,8 +131,7 @@ ${message}
                     <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">Flujo de Trabajo</h3>
                     <p className="text-gray-300 mb-4">1. Contacto inicial y briefing.</p>
                     <p className="text-gray-300 mb-4">2. Propuesta personalizada y reserva.</p>
-                    <p className="text-gray-300 mb-4">3. Sesión de pre-producción creativa.</p>
-                    <p className="text-gray-300">4. ¡Día de rodaje! La magia sucede.</p>
+                    <p className="text-gray-300">3. ¡Día de rodaje! La magia sucede.</p>
                 </div>
                  <div>
                     <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">Contacto Directo</h3>
