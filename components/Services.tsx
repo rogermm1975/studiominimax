@@ -2,6 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CameraIcon, EditIcon, StarIcon, CheckCircleIcon, TshirtIcon } from '../assets/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const ServiceCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => {
   return (
@@ -16,25 +17,20 @@ const ServiceCard = ({ icon, title, description }: { icon: React.ReactNode, titl
   );
 };
 
-const ProcessStep = ({ title, description }: { title: string, description: string }) => {
-  return (
-    <div className="flex flex-col items-center text-center">
-      <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gray-800 border-2 border-cyan-500 mb-4">
-        <CheckCircleIcon className="w-6 h-6 text-cyan-500" />
-      </div>
-      <h4 className="text-lg font-heading tracking-wider text-white mb-2">{title}</h4>
-      <p className="text-gray-400 text-sm font-light">{description}</p>
-    </div>
-  );
-}
-
 const Services: React.FC = () => {
-  const servicesData = [
-    { icon: <CameraIcon className="w-10 h-10" />, title: 'Fotografía', description: 'Sesiones para quinceañeras, bodas, banquetes, niños, embarazadas, artísticas y más. Capturamos tus momentos inolvidables.' },
-    { icon: <EditIcon className="w-10 h-10" />, title: 'Edición Web', description: 'Creación de estilos únicos para páginas web, landing pages y proyectos empresariales que reflejen tu visión.' },
-    { icon: <StarIcon className="w-10 h-10" />, title: 'Diseño Gráfico', description: 'Diseño profesional de posters, libros, revistas, gigantografías y cualquier pieza visual que necesites.' },
-    { icon: <TshirtIcon className="w-10 h-10" />, title: 'Sublimación', description: 'Personalizamos pullovers, cuadros, tazas, gorras y todo tipo de souvenirs con la más alta calidad.' },
+  const { t } = useLanguage();
+  
+  const icons = [
+    <CameraIcon className="w-10 h-10" />,
+    <EditIcon className="w-10 h-10" />,
+    <StarIcon className="w-10 h-10" />,
+    <TshirtIcon className="w-10 h-10" />
   ];
+
+  const servicesData = t.services.items.map((item, index) => ({
+    ...item,
+    icon: icons[index]
+  }));
 
   const sectionVariants = {
     hidden: { opacity: 0 },
@@ -56,8 +52,8 @@ const Services: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading tracking-widest text-white mb-3">Nuestros Servicios</h2>
-          <p className="text-base text-gray-400 max-w-2xl mx-auto font-light">Creamos experiencias visuales que trascienden lo convencional.</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading tracking-widest text-white mb-3">{t.services.title}</h2>
+          <p className="text-base text-gray-400 max-w-2xl mx-auto font-light">{t.services.subtitle}</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8 items-center">

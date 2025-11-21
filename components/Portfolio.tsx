@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SpinnerIcon, RefreshIcon } from '../assets/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // Definimos tipos para mejor control
 interface PortfolioItem {
@@ -66,20 +67,6 @@ const portfolioItems: PortfolioItem[] = [
   { id: 40, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os20.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 14', orientation: 'vertical' },
 ];
 
-const filterCategories = [
-  { name: 'Todos', value: 'all' },
-  { name: 'Bodas', value: 'bodas' },
-  { name: 'Quinces', value: 'quinces' },
-  { name: 'Niños', value: 'ninos' },
-  { name: 'Artísticas', value: 'artisticas' },
-  { name: 'Diseño', value: 'diseno' },
-];
-
-// Configuración de paginación
-// Reducimos a 6 para asegurar carga rápida y acceso al botón "Ver Más"
-const INITIAL_ITEMS_TO_SHOW = 6;
-const ITEMS_PER_LOAD = 6;
-
 // Componente interno para manejar la carga individual de cada imagen
 const PortfolioImageCard: React.FC<{ item: PortfolioItem }> = ({ item }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -93,12 +80,6 @@ const PortfolioImageCard: React.FC<{ item: PortfolioItem }> = ({ item }) => {
       transition={{ duration: 0.3, ease: 'easeOut' }}
       className={`
           relative overflow-hidden rounded-lg bg-gray-900 group w-full
-          
-          /* LÓGICA MOSAICO MÓVIL */
-          /* Por defecto (Móvil): Grid de 2 columnas */
-          /* Las verticales ocupan 1 col (col-span-1) */
-          /* Las horizontales ocupan 2 cols (col-span-2) para verse grandes */
-          
           col-span-1 
           ${item.orientation === 'horizontal' ? 'col-span-2 md:col-span-2 aspect-[3/2]' : 'aspect-[2/3]'}
       `}
@@ -132,13 +113,24 @@ const PortfolioImageCard: React.FC<{ item: PortfolioItem }> = ({ item }) => {
 };
 
 const Portfolio: React.FC = () => {
+  const { t } = useLanguage();
   const [activeFilter, setActiveFilter] = useState('all');
   const [filteredItems, setFilteredItems] = useState(portfolioItems);
-  const [visibleCount, setVisibleCount] = useState(INITIAL_ITEMS_TO_SHOW);
+  const [visibleCount, setVisibleCount] = useState(6);
+  const ITEMS_PER_LOAD = 6;
+
+  const filterCategories = [
+    { name: t.portfolio.filters.all, value: 'all' },
+    { name: t.portfolio.filters.bodas, value: 'bodas' },
+    { name: t.portfolio.filters.quinces, value: 'quinces' },
+    { name: t.portfolio.filters.ninos, value: 'ninos' },
+    { name: t.portfolio.filters.artisticas, value: 'artisticas' },
+    { name: t.portfolio.filters.diseno, value: 'diseno' },
+  ];
 
   useEffect(() => {
     // Resetear conteo y filtrar
-    setVisibleCount(INITIAL_ITEMS_TO_SHOW);
+    setVisibleCount(6);
     if (activeFilter === 'all') {
       setFilteredItems(portfolioItems);
     } else {
@@ -163,8 +155,8 @@ const Portfolio: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading tracking-widest text-white mb-3">Nuestro Portafolio</h2>
-          <p className="text-base text-gray-400 max-w-2xl mx-auto font-light">Explora una selección de nuestros trabajos más recientes.</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading tracking-widest text-white mb-3">{t.portfolio.title}</h2>
+          <p className="text-base text-gray-400 max-w-2xl mx-auto font-light">{t.portfolio.subtitle}</p>
         </motion.div>
 
         {/* Barra de Filtros */}
@@ -186,11 +178,6 @@ const Portfolio: React.FC = () => {
 
         {/* Contenedor Grid Responsivo */}
         <div className="min-h-[300px]">
-            {/* 
-              Grid Configuration:
-              - Mobile: 2 columns (Grid Mosaico) - Mayor densidad, menos scroll.
-              - Desktop: 3-4 columns.
-            */}
             <div
               className="
                 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 items-start
@@ -216,9 +203,9 @@ const Portfolio: React.FC = () => {
               className="group relative flex items-center gap-3 px-8 py-3 bg-gray-900 border border-gray-700 rounded-full text-sm uppercase tracking-widest text-white hover:border-cyan-500 hover:text-cyan-400 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]"
             >
               <RefreshIcon className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
-              <span>Ver Más Trabajos</span>
+              <span>{t.portfolio.loadMore}</span>
               <span className="absolute -bottom-8 text-[10px] text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Mostrando {visibleCount} de {filteredItems.length}
+                {t.portfolio.showing} {visibleCount} {t.portfolio.of} {filteredItems.length}
               </span>
             </button>
           </motion.div>

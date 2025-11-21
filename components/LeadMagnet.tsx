@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpenIcon, StarIcon, TicketIcon, PhotographIcon, CheckCircleIcon } from '../assets/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const LeadMagnet: React.FC = () => {
+  const { t } = useLanguage();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
@@ -19,12 +21,17 @@ const LeadMagnet: React.FC = () => {
     }, 1500);
   };
   
-  const resources = [
-    { name: 'The Style Guide: Quinces Edition', description: 'Manual de estilismo y locaciones.', icon: <BookOpenIcon className="w-5 h-5" /> },
-    { name: 'Planner Cronológico', description: 'Timeline de preparación paso a paso.', icon: <CheckCircleIcon className="w-5 h-5" /> },
-    { name: 'Access Pass: 15% Off', description: 'Beneficio exclusivo para primera sesión.', icon: <TicketIcon className="w-5 h-5" /> },
-    { name: 'Havana Art Wallpapers', description: 'Curaduría visual para tus dispositivos.', icon: <PhotographIcon className="w-5 h-5" /> },
+  const icons = [
+    <BookOpenIcon className="w-5 h-5" />,
+    <CheckCircleIcon className="w-5 h-5" />,
+    <TicketIcon className="w-5 h-5" />,
+    <PhotographIcon className="w-5 h-5" />
   ];
+
+  const resources = t.leadMagnet.items.map((item, index) => ({
+    ...item,
+    icon: icons[index]
+  }));
 
   const inputClasses = "w-full bg-transparent border-b border-gray-700 py-3 px-2 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500 transition-colors text-sm tracking-wider font-light";
 
@@ -45,16 +52,16 @@ const LeadMagnet: React.FC = () => {
           >
             <div className="flex items-center gap-2 text-cyan-500 mb-6">
               <StarIcon className="w-4 h-4" />
-              <span className="text-xs font-bold tracking-[0.3em] uppercase">Insider Access</span>
+              <span className="text-xs font-bold tracking-[0.3em] uppercase">{t.leadMagnet.badge}</span>
             </div>
             
             <h2 className="text-4xl md:text-6xl font-heading text-white mb-6 leading-tight">
-              Eleva tu <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Visión Creativa</span>
+              {t.leadMagnet.title1} <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">{t.leadMagnet.title2}</span>
             </h2>
             
             <p className="text-gray-400 font-light leading-relaxed mb-10 max-w-md">
-              Únete a nuestra lista privada y recibe inmediatamente herramientas de planificación profesional y beneficios reservados para nuestra comunidad.
+              {t.leadMagnet.description}
             </p>
 
             <div className="space-y-6">
@@ -94,29 +101,29 @@ const LeadMagnet: React.FC = () => {
                     className="space-y-8"
                   >
                     <div className="text-center mb-8">
-                      <h3 className="text-xl font-heading text-white mb-2">Solicitar Acceso</h3>
-                      <p className="text-xs text-gray-500 uppercase tracking-widest">Gratuito & Instantáneo</p>
+                      <h3 className="text-xl font-heading text-white mb-2">{t.leadMagnet.formTitle}</h3>
+                      <p className="text-xs text-gray-500 uppercase tracking-widest">{t.leadMagnet.formSubtitle}</p>
                     </div>
 
                     <div className="space-y-6">
                       <div>
-                        <label className="text-[10px] uppercase tracking-widest text-gray-500 mb-1 block">Nombre Completo</label>
+                        <label className="text-[10px] uppercase tracking-widest text-gray-500 mb-1 block">{t.leadMagnet.labelName}</label>
                         <input 
                           type="text" 
                           value={name} 
                           onChange={(e) => setName(e.target.value)} 
-                          placeholder="Tu nombre" 
+                          placeholder={t.leadMagnet.placeholderName} 
                           required 
                           className={inputClasses} 
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] uppercase tracking-widest text-gray-500 mb-1 block">Correo Electrónico</label>
+                        <label className="text-[10px] uppercase tracking-widest text-gray-500 mb-1 block">{t.leadMagnet.labelEmail}</label>
                         <input 
                           type="email" 
                           value={email} 
                           onChange={(e) => setEmail(e.target.value)} 
-                          placeholder="tucorreo@ejemplo.com" 
+                          placeholder={t.leadMagnet.placeholderEmail} 
                           required 
                           className={inputClasses} 
                         />
@@ -128,11 +135,11 @@ const LeadMagnet: React.FC = () => {
                       disabled={status === 'submitting'}
                       className="w-full bg-white text-black font-bold py-4 px-8 mt-4 text-xs uppercase tracking-[0.2em] hover:bg-cyan-400 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {status === 'submitting' ? 'Procesando...' : 'Desbloquear Contenido'}
+                      {status === 'submitting' ? t.leadMagnet.buttonProcessing : t.leadMagnet.button}
                     </button>
                     
                     <p className="text-[10px] text-center text-gray-600 mt-6">
-                      Respetamos tu privacidad. Sin spam, solo arte.
+                      {t.leadMagnet.privacy}
                     </p>
                   </motion.form>
                 ) : (
@@ -145,18 +152,18 @@ const LeadMagnet: React.FC = () => {
                     <div className="w-16 h-16 border-2 border-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6">
                       <CheckCircleIcon className="w-8 h-8 text-cyan-400" />
                     </div>
-                    <h3 className="text-2xl font-heading text-white mb-4">¡Bienvenido!</h3>
+                    <h3 className="text-2xl font-heading text-white mb-4">{t.leadMagnet.successTitle}</h3>
                     <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                      Hemos enviado el enlace de descarga y tu código de acceso a <strong>{email}</strong>.
+                      {t.leadMagnet.successMsg} <strong>{email}</strong>.
                     </p>
                     <p className="text-xs text-gray-600">
-                      Por favor revisa tu bandeja de entrada (o spam) en los próximos minutos.
+                      {t.leadMagnet.successFooter}
                     </p>
                     <button 
                       onClick={() => setStatus('idle')}
                       className="mt-8 text-xs font-bold text-white border-b border-white pb-1 hover:text-cyan-400 hover:border-cyan-400 transition-colors"
                     >
-                      Volver al formulario
+                      {t.leadMagnet.backButton}
                     </button>
                   </motion.div>
                 )}

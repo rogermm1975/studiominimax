@@ -1,35 +1,24 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { QuoteIcon } from '../assets/icons';
-
-const testimonials = [
-  {
-    name: 'Ana de Armas',
-    title: 'Actriz, Sesión Editorial',
-    quote: 'El equipo de Habana MiniMax no solo toma fotos, cuenta historias. Lograron capturar una faceta de mí que pocas veces se ve. Profesionalidad y arte puro.',
-    avatar: 'https://picsum.photos/seed/avatar1/100/100',
-  },
-  {
-    name: 'Carlos Acosta',
-    title: 'Bailarín, Cobertura de Evento',
-    quote: 'Su cobertura del evento fue impecable. Discretos, atentos y con una sensibilidad única para captar la emoción del momento. El resultado superó mis expectativas.',
-    avatar: 'https://picsum.photos/seed/avatar2/100/100',
-  },
-  {
-    name: 'Camila Arteche',
-    title: 'Influencer, Producción Personalizada',
-    quote: '¡La mejor experiencia! Desde la idea inicial hasta la entrega final, todo fue perfecto. Entendieron mi visión y la elevaron a otro nivel. ¡Tremendo equipo!',
-    avatar: 'https://picsum.photos/seed/avatar3/100/100',
-  },
-  {
-    name: 'Havana Club',
-    title: 'Marca, Dirección de Arte',
-    quote: 'Colaborar con ellos en nuestra última campaña fue un acierto. Su dirección de arte aportó frescura y autenticidad, reflejando perfectamente el espíritu de nuestra marca.',
-    avatar: 'https://picsum.photos/seed/avatar4/100/100',
-  },
-];
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Testimonials: React.FC = () => {
+    const { t } = useLanguage();
+    
+    const avatars = [
+        'https://picsum.photos/seed/avatar1/100/100',
+        'https://picsum.photos/seed/avatar2/100/100',
+        'https://picsum.photos/seed/avatar3/100/100',
+        'https://picsum.photos/seed/avatar4/100/100'
+    ];
+
+    const testimonials = t.testimonials.items.map((item, index) => ({
+        ...item,
+        avatar: avatars[index]
+    }));
+
     const sectionVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1, transition: { staggerChildren: 0.2, duration: 0.5 } },
@@ -50,8 +39,8 @@ const Testimonials: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading tracking-widest text-white mb-3">Experiencias</h2>
-          <p className="text-base text-gray-400 max-w-2xl mx-auto font-light">Lo que nuestros clientes dicen de nosotros.</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading tracking-widest text-white mb-3">{t.testimonials.title}</h2>
+          <p className="text-base text-gray-400 max-w-2xl mx-auto font-light">{t.testimonials.subtitle}</p>
         </motion.div>
 
         <motion.div 

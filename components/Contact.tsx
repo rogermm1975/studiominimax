@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MailIcon, PhoneIcon, LocationMarkerIcon, WhatsAppIcon, ClipboardCopyIcon, CheckIcon } from '../assets/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Contact: React.FC = () => {
+  const { t } = useLanguage();
   const displayEmail = 'contacto@habanaminimax.com';
   const actualEmail = 'carlose6074@gmail.com';
   
@@ -27,24 +29,23 @@ const Contact: React.FC = () => {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const whatsappNumber = '5352679828';
+    const wm = t.contact.whatsappMessage;
     
-    // WhatsApp no soporta colores reales ni texto parpadeante.
-    // Usamos emojis rojos y negritas para destacar el encabezado de forma elegante.
     const formattedMessage = `
-🚨 *SERVICIO DE LA WEB* 🚨
+${wm.header}
 
-✨ *Nueva Solicitud de Cliente* ✨
+${wm.subheader}
 ━━━━━━━━━━━━━━━━━━━━
 
-👤 *Nombre:* ${name}
-📧 *Correo:* ${email}
-🛠️ *Interés:* ${service}
+${wm.name} ${name}
+${wm.email} ${email}
+${wm.interest} ${service}
 ━━━━━━━━━━━━━━━━━━━━
 
-📝 *Mensaje:*
+${wm.message}
 ${message}
 
-🚀 *Enviado desde Habana MiniMax Studio*
+${wm.footer}
     `.trim();
     
     const encodedMessage = encodeURIComponent(formattedMessage);
@@ -67,8 +68,8 @@ ${message}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading tracking-widest text-white">Hagamos Algo Increíble</h2>
-          <p className="text-lg text-gray-400 mt-2 max-w-2xl mx-auto">¿Listo para dar vida a tu proyecto? Contáctanos y empecemos a crear.</p>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading tracking-widest text-white">{t.contact.title}</h2>
+          <p className="text-lg text-gray-400 mt-2 max-w-2xl mx-auto">{t.contact.subtitle}</p>
         </motion.div>
 
         <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-12">
@@ -80,40 +81,38 @@ ${message}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-3xl font-heading tracking-wider text-white mb-4 text-center">Inicia la Conversación</h3>
+            <h3 className="text-3xl font-heading tracking-wider text-white mb-4 text-center">{t.contact.formTitle}</h3>
             <p className="text-gray-400 mb-8 text-center max-w-md mx-auto">
-              Completa el formulario y envíanos los detalles de tu proyecto directamente por WhatsApp.
+              {t.contact.formSubtitle}
             </p>
             <form onSubmit={handleFormSubmit} className="w-full space-y-6">
               <div>
-                <label htmlFor="name" className={formLabelStyles}>Tu Nombre</label>
-                <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej: Ana de Armas" required className={formInputStyles} />
+                <label htmlFor="name" className={formLabelStyles}>{t.contact.labelName}</label>
+                <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.contact.placeholderName} required className={formInputStyles} />
               </div>
                <div>
-                <label htmlFor="email" className={formLabelStyles}>Tu Correo</label>
-                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ana@email.com" required className={formInputStyles} />
+                <label htmlFor="email" className={formLabelStyles}>{t.contact.labelEmail}</label>
+                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t.contact.placeholderEmail} required className={formInputStyles} />
               </div>
               <div>
-                <label htmlFor="service" className={formLabelStyles}>Servicio de Interés</label>
+                <label htmlFor="service" className={formLabelStyles}>{t.contact.labelService}</label>
                 <select id="service" value={service} onChange={(e) => setService(e.target.value)} required className={`${formInputStyles} appearance-none`}>
-                  <option value="" disabled>Selecciona una opción...</option>
-                  <option>Fotografía</option>
-                  <option>Edición Web</option>
-                  <option>Diseño Gráfico</option>
-                  <option>Sublimación</option>
-                  <option>Otro</option>
+                  <option value="" disabled>{t.contact.selectDefault}</option>
+                  {t.contact.serviceOptions.map((opt, i) => (
+                    <option key={i}>{opt}</option>
+                  ))}
                 </select>
               </div>
               <div>
-                <label htmlFor="message" className={formLabelStyles}>Cuéntanos tu idea</label>
-                <textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Describe brevemente tu proyecto, fechas importantes, etc." rows={4} required className={formInputStyles}></textarea>
+                <label htmlFor="message" className={formLabelStyles}>{t.contact.labelMessage}</label>
+                <textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)} placeholder={t.contact.placeholderMessage} rows={4} required className={formInputStyles}></textarea>
               </div>
               <button
                 type="submit"
                 className="w-full bg-gradient-to-r from-green-600 to-teal-500 text-white font-bold py-4 px-8 rounded-full uppercase text-sm tracking-widest transition-all duration-300 transform hover:scale-105 btn-neon-gradient-green flex items-center justify-center"
               >
                 <WhatsAppIcon className="w-5 h-5 mr-3" />
-                Enviar por WhatsApp
+                {t.contact.button}
               </button>
             </form>
           </motion.div>
@@ -128,13 +127,13 @@ ${message}
           >
             <div className="space-y-8">
                 <div>
-                    <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">Flujo de Trabajo</h3>
-                    <p className="text-gray-300 mb-4">1. Contacto inicial y briefing.</p>
-                    <p className="text-gray-300 mb-4">2. Propuesta personalizada y reserva.</p>
-                    <p className="text-gray-300">3. ¡Día de rodaje! La magia sucede.</p>
+                    <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">{t.contact.workflowTitle}</h3>
+                    {t.contact.workflowSteps.map((step, i) => (
+                        <p key={i} className="text-gray-300 mb-4">{step}</p>
+                    ))}
                 </div>
                  <div>
-                    <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">Contacto Directo</h3>
+                    <h3 className="text-3xl font-heading tracking-wider mb-4 text-cyan-400">{t.contact.contactTitle}</h3>
                     <div className="space-y-4">
                         <div className="flex items-center group">
                             <a
@@ -160,9 +159,9 @@ ${message}
                         <div className="flex items-start text-gray-300">
                             <LocationMarkerIcon className="w-5 h-5 mr-3 mt-1 flex-shrink-0" />
                             <span>
-                                Calle 48 entre 247 y 245, Punta Brava, La Lisa, La Habana, Cuba
+                                {t.contact.address}
                                 <br/>
-                                <span className="text-cyan-400 text-xs italic opacity-80">(Solo con cita previa)</span>
+                                <span className="text-cyan-400 text-xs italic opacity-80">{t.contact.addressNote}</span>
                             </span>
                         </div>
                     </div>

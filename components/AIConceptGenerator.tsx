@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { GoogleGenAI, Type } from '@google/genai';
 import { SparklesIcon, SpinnerIcon, LocationMarkerIcon } from '../assets/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface Color {
   name: string;
@@ -18,6 +19,8 @@ interface AIConceptResponse {
 }
 
 // --- BASE DE DATOS DE RESPALDO (OFFLINE/RESTRICTED REGIONS) ---
+// Los textos aquí son técnicos o de emergencia, pero idealmente también podrían traducirse.
+// Para este ejemplo, mantendremos la estructura local pero usamos el hook para los labels de UI.
 const FALLBACK_CONCEPTS: Record<string, AIConceptResponse> = {
   quinces: {
     title: "Quinces: Glamour Habanero",
@@ -101,6 +104,7 @@ const getOfflineConcept = (prompt: string): AIConceptResponse => {
 };
 
 const AIConceptGenerator: React.FC = () => {
+    const { t, language } = useLanguage();
     const [prompt, setPrompt] = useState('');
     const [result, setResult] = useState<AIConceptResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -109,7 +113,7 @@ const AIConceptGenerator: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!prompt.trim()) {
-            setError('Por favor, describe tu idea para la sesión.');
+            setError(t.ai.error);
             return;
         }
 
@@ -147,7 +151,9 @@ const AIConceptGenerator: React.FC = () => {
                 required: ["title", "concept", "locations", "colors"]
             };
 
-            const fullPrompt = `Genera un concepto de sesión de fotos en La Habana para: "${prompt}".`;
+            // Se puede ajustar el prompt según el idioma, pero la IA suele entender.
+            // Forzamos la respuesta en el idioma actual del usuario.
+            const fullPrompt = `Genera un concepto de sesión de fotos en La Habana para: "${prompt}". Response in ${language === 'es' ? 'Spanish' : 'English'}.`;
 
             const response = await ai.models.generateContent({
                 model: model,
@@ -207,10 +213,10 @@ const AIConceptGenerator: React.FC = () => {
                 >
                     <div className="flex justify-center items-center gap-3 mb-2">
                        <SparklesIcon className="w-8 h-8 md:w-10 md:h-10 text-cyan-400 animate-pulse" />
-                       <h2 className="text-3xl md:text-5xl font-heading tracking-widest text-white">Concept Lab</h2>
+                       <h2 className="text-3xl md:text-5xl font-heading tracking-widest text-white">{t.ai.title}</h2>
                     </div>
                     <p className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto font-light">
-                        Describe tu visión y diseñaremos el moodboard perfecto para tu sesión en La Habana.
+                        {t.ai.subtitle}
                     </p>
                 </motion.div>
                 
@@ -224,12 +230,12 @@ const AIConceptGenerator: React.FC = () => {
                         >
                             <form onSubmit={handleSubmit}>
                                 <label className="block text-cyan-400 text-sm font-bold uppercase tracking-wider mb-3">
-                                    Tu Inspiración
+                                    {t.ai.inputLabel}
                                 </label>
                                 <textarea
                                     value={prompt}
                                     onChange={(e) => setPrompt(e.target.value)}
-                                    placeholder="Ej: Una sesión de 15 años en la playa al atardecer..."
+                                    placeholder={t.ai.placeholder}
                                     rows={4}
                                     className="w-full bg-black/40 border border-gray-700 rounded-xl py-4 px-5 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all resize-none"
                                     disabled={isLoading}
@@ -244,12 +250,12 @@ const AIConceptGenerator: React.FC = () => {
                                             {isLoading ? (
                                                 <>
                                                     <SpinnerIcon className="animate-spin w-5 h-5 mr-3" />
-                                                    Diseñando...
+                                                    {t.ai.buttonLoading}
                                                 </>
                                             ) : (
                                                 <>
                                                     <SparklesIcon className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
-                                                    Generar Concepto
+                                                    {t.ai.button}
                                                 </>
                                             )}
                                         </span>
@@ -292,7 +298,7 @@ const AIConceptGenerator: React.FC = () => {
                                                 </h3>
                                                 {/* Badge de Origen */}
                                                 <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded border ${result.source === 'AI' ? 'border-cyan-500/50 text-cyan-400' : 'border-purple-500/50 text-purple-400'}`}>
-                                                    {result.source === 'AI' ? 'AI Generated' : 'Studio Pick'}
+                                                    {result.source === 'AI' ? t.ai.badgeAI : t.ai.badgeLocal}
                                                 </span>
                                             </div>
                                             
@@ -303,7 +309,7 @@ const AIConceptGenerator: React.FC = () => {
                                             <div className="space-y-6">
                                                 <div>
                                                     <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center">
-                                                        <LocationMarkerIcon className="w-4 h-4 mr-2" /> Locaciones Sugeridas
+                                                        <LocationMarkerIcon className="w-4 h-4 mr-2" /> {t.ai.locationsLabel}
                                                     </h4>
                                                     <ul className="space-y-2">
                                                         {result.locations.map((loc, idx) => (
@@ -316,7 +322,7 @@ const AIConceptGenerator: React.FC = () => {
 
                                                 <div>
                                                     <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
-                                                        Paleta de Color
+                                                        {t.ai.colorsLabel}
                                                     </h4>
                                                     <div className="flex flex-wrap gap-3">
                                                         {result.colors.map((color, idx) => (
