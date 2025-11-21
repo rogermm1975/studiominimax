@@ -3,6 +3,11 @@ export type Language = 'es' | 'en';
 
 type Translations = {
   [key in Language]: {
+    meta: {
+      title: string;
+      description: string;
+      keywords: string;
+    };
     header: {
       nav_inicio: string;
       nav_servicios: string;
@@ -28,6 +33,11 @@ type Translations = {
 
 export const translations: Translations = {
   es: {
+    meta: {
+      title: 'Habana MiniMax Studio | Fotografía y Diseño en Cuba',
+      description: 'Estudio profesional de fotografía en La Habana. Especialistas en fotos de quinces, bodas, moda y diseño gráfico. Capturamos tu esencia con estilo único.',
+      keywords: 'fotografo la habana, fotos de quince cuba, bodas cuba, estudio fotografico habana, diseño grafico cuba, minimax studio, sesion de fotos habana',
+    },
     header: {
       nav_inicio: 'Inicio',
       nav_servicios: 'Servicios',
@@ -50,6 +60,11 @@ export const translations: Translations = {
     },
   },
   en: {
+    meta: {
+      title: 'Havana MiniMax Studio | Photography & Design in Cuba',
+      description: 'Professional photography studio in Havana, Cuba. Specialists in Quinceañeras, Weddings, Fashion, and Graphic Design. We capture your essence with unique style.',
+      keywords: 'photographer havana, quinceanera photos cuba, weddings cuba, photo studio havana, graphic design cuba, minimax studio, photo shoot havana',
+    },
     header: {
       nav_inicio: 'Home',
       nav_servicios: 'Services',

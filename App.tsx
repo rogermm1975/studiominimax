@@ -15,11 +15,13 @@ import Footer from './components/Footer';
 import AnimatedBlob from './components/AnimatedBlob';
 import ScrollProgress from './components/ScrollProgress';
 import BackToTopButton from './components/BackToTopButton';
+import SEO from './components/SEO';
 import { LanguageProvider } from './contexts/LanguageContext';
 
 const App: React.FC = () => {
   return (
     <LanguageProvider>
+      <SEO />
       <div className="relative min-h-screen bg-[#05060d] text-gray-200 overflow-x-hidden">
         {/* Background Gradient Blobs */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
