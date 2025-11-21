@@ -81,28 +81,13 @@ const Services: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <img src="https://picsum.photos/seed/havana-street/800/900" alt="Fotógrafo en La Habana" className="rounded-lg shadow-xl object-cover h-full w-full opacity-90 grayscale-[30%]" />
+            <img 
+              src="https://ik.imagekit.io/ilczwuvvn/Urbano/Prado.webp?tr=w-1000,h-1200,fo-auto,f-auto,q-70" 
+              alt="Servicios MiniMax Studio" 
+              className="w-full h-auto rounded-lg shadow-2xl filter grayscale-[20%] hover:grayscale-0 transition-all duration-500 object-cover"
+            />
           </motion.div>
         </div>
-        
-        {/* Process Section */}
-        <motion.div 
-          className="mt-20 text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <h3 className="text-2xl md:text-3xl font-heading tracking-widest text-white mb-10">Nuestro Proceso Creativo</h3>
-          <div className="relative grid md:grid-cols-3 gap-10 max-w-4xl mx-auto">
-            <div className="absolute top-7 left-0 w-full h-px bg-gray-800 hidden md:block"></div>
-             <div className="absolute top-7 left-0 w-full h-px hidden md:block" style={{ background: 'linear-gradient(90deg, rgba(6,182,212,1) 0%, rgba(255,107,0,0) 100%)', clipPath: 'polygon(0 0, 33% 0, 33% 100%, 0% 100%)' }}></div>
-            <ProcessStep title="01. Preproducción" description="Definimos la visión, locaciones y logística para asegurar que cada detalle esté alineado con tus objetivos." />
-            <ProcessStep title="02. Rodaje" description="El día de la sesión, donde la creatividad fluye y capturamos la magia. Dirección profesional en un ambiente relajado." />
-            <ProcessStep title="03. Post & Entrega" description="Selección y edición meticulosa para realzar cada imagen. Entrega final en alta resolución a través de una galería privada." />
-          </div>
-        </motion.div>
-
       </div>
     </section>
   );
