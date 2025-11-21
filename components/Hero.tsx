@@ -46,10 +46,16 @@ const Hero: React.FC = () => {
     >
       {/* Background Layer with Bokeh Effect */}
       <div className="absolute inset-0 z-0">
+        {/* 
+          Lighthouse Optimization (LCP): 
+          1. fetchpriority="high" tells browser this is critical.
+          2. No loading="lazy" here, we want it immediately.
+        */}
         <img 
           src={heroImageUrl} 
           alt="Fondo Capitolio Habana" 
           className="w-full h-full object-cover filter blur-[3px] scale-110 brightness-[0.4]"
+          {...{ fetchpriority: "high" }} 
         />
       </div>
 
