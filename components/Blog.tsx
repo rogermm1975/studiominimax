@@ -129,7 +129,7 @@ const Blog: React.FC = () => {
 
         {/* Grid de Artículos */}
         <div className="grid md:grid-cols-3 gap-x-8 gap-y-12">
-          {t.blog.posts.map((post, index) => (
+          {t.blog.posts.map((post: any, index: number) => (
             <motion.article
               key={post.id}
               initial={{ opacity: 0, y: 20 }}

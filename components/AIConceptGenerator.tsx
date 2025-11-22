@@ -19,9 +19,8 @@ interface AIConceptResponse {
 }
 
 // --- BASE DE DATOS DE RESPALDO (OFFLINE/RESTRICTED REGIONS) ---
-// Los textos aquí son técnicos o de emergencia, pero idealmente también podrían traducirse.
-// Para este ejemplo, mantendremos la estructura local pero usamos el hook para los labels de UI.
-const FALLBACK_CONCEPTS: Record<string, AIConceptResponse> = {
+// Concepts in Spanish
+const FALLBACK_CONCEPTS_ES: Record<string, AIConceptResponse> = {
   quinces: {
     title: "Quinces: Glamour Habanero",
     concept: "Una fusión entre la arquitectura colonial decadente y la moda contemporánea de alta costura. Buscamos contrastar la textura de las paredes antiguas con telas brillantes y vaporosas, utilizando la luz dorada del atardecer para crear un ambiente de realeza moderna.",
@@ -84,23 +83,68 @@ const FALLBACK_CONCEPTS: Record<string, AIConceptResponse> = {
   }
 };
 
-const getOfflineConcept = (prompt: string): AIConceptResponse => {
-    const lowerPrompt = prompt.toLowerCase();
-    
-    if (lowerPrompt.includes('quince') || lowerPrompt.includes('15') || lowerPrompt.includes('vestido') || lowerPrompt.includes('princesa')) {
-        return FALLBACK_CONCEPTS.quinces;
-    }
-    if (lowerPrompt.includes('boda') || lowerPrompt.includes('novios') || lowerPrompt.includes('amor') || lowerPrompt.includes('pareja')) {
-        return FALLBACK_CONCEPTS.boda;
-    }
-    if (lowerPrompt.includes('urbano') || lowerPrompt.includes('calle') || lowerPrompt.includes('moderno') || lowerPrompt.includes('rebelde')) {
-        return FALLBACK_CONCEPTS.urbano;
-    }
-    if (lowerPrompt.includes('playa') || lowerPrompt.includes('mar') || lowerPrompt.includes('agua') || lowerPrompt.includes('verano')) {
-        return FALLBACK_CONCEPTS.playa;
-    }
-    
-    return FALLBACK_CONCEPTS.default;
+// Concepts in English
+const FALLBACK_CONCEPTS_EN: Record<string, AIConceptResponse> = {
+  quinces: {
+    title: "Quinces: Havana Glamour",
+    concept: "A fusion between decadent colonial architecture and contemporary haute couture fashion. We aim to contrast the texture of ancient walls with shiny, flowing fabrics, using golden sunset light to create a modern royalty atmosphere.",
+    locations: ["Escalera de los Guardianes (Central Havana)", "La Tropical Gardens", "Captains General Palace Interiors"],
+    colors: [
+      { name: "Vintage Gold", hex: "#D4AF37" },
+      { name: "Crimson Red", hex: "#DC143C" },
+      { name: "Stone Beige", hex: "#F5F5DC" },
+      { name: "Deep Black", hex: "#000000" }
+    ],
+    source: 'LOCAL'
+  },
+  boda: {
+    title: "Romance on the Malecon",
+    concept: "Capturing the couple's intimacy against the vastness of the sea. A cinematic style with artistic blurs and a soft palette evoking nostalgia and eternal love, leveraging the blue hour for dramatic silhouettes.",
+    locations: ["The Malecon at Sunset", "Barbers' Alley", "La Guarida (Rooftop)"],
+    colors: [
+      { name: "Pearl White", hex: "#EAE0C8" },
+      { name: "Steel Blue", hex: "#4682B4" },
+      { name: "Dusty Rose", hex: "#D8BFD8" },
+      { name: "Slate Gray", hex: "#708090" }
+    ],
+    source: 'LOCAL'
+  },
+  urbano: {
+    title: "Street Style Havana",
+    concept: "Raw and vibrant energy. We use graffiti, classic cars, and city movement as a backdrop. Dynamic poses, low angles, and high-contrast editing to highlight a rebellious and modern personality.",
+    locations: ["San Isidro Streets", "Chinatown", "La Maestranza Park (Industrial setting)"],
+    colors: [
+      { name: "Neon Cyan", hex: "#00FFFF" },
+      { name: "Urban Magenta", hex: "#FF00FF" },
+      { name: "Asphalt", hex: "#2F4F4F" },
+      { name: "Taxi Yellow", hex: "#FFD700" }
+    ],
+    source: 'LOCAL'
+  },
+  playa: {
+    title: "Caribbean Siren",
+    concept: "Ethereal, soft, and natural. Sunrise session to capture pastel tones and sea calm. Use of wet fabrics, water reflections, and diffuse natural light for a dreamy and free aesthetic.",
+    locations: ["Eastern Beaches (Dunes)", "Santa Maria del Mar", "Cojimar Rocky Coast"],
+    colors: [
+      { name: "Sea Turquoise", hex: "#40E0D0" },
+      { name: "Soft Coral", hex: "#F08080" },
+      { name: "White Sand", hex: "#F5F5F5" },
+      { name: "Sky Blue", hex: "#87CEEB" }
+    ],
+    source: 'LOCAL'
+  },
+  default: {
+    title: "MiniMax Essence",
+    concept: "Our studio's signature: dramatic Rembrandt-style lighting in studio or nocturnal outdoors. Focused on facial expression and connection with the camera, creating timeless and powerful portraits.",
+    locations: ["MiniMax Studio (Indoors)", "Christ of Havana (Night views)", "Paseo del Prado"],
+    colors: [
+      { name: "Matte Black", hex: "#1C1C1C" },
+      { name: "Silver", hex: "#C0C0C0" },
+      { name: "Midnight Blue", hex: "#191970" },
+      { name: "Pure White", hex: "#FFFFFF" }
+    ],
+    source: 'LOCAL'
+  }
 };
 
 const AIConceptGenerator: React.FC = () => {
@@ -109,6 +153,28 @@ const AIConceptGenerator: React.FC = () => {
     const [result, setResult] = useState<AIConceptResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+
+    // Helper to get the correct fallback DB
+    const getOfflineConcept = (prompt: string, lang: string): AIConceptResponse => {
+        const db = lang === 'es' ? FALLBACK_CONCEPTS_ES : FALLBACK_CONCEPTS_EN;
+        const lowerPrompt = prompt.toLowerCase();
+        
+        // Keywords check (works best if user types in English for English mode, but we check loosely)
+        if (lowerPrompt.includes('quince') || lowerPrompt.includes('15') || lowerPrompt.includes('vestido') || lowerPrompt.includes('dress') || lowerPrompt.includes('princesa') || lowerPrompt.includes('princess')) {
+            return db.quinces;
+        }
+        if (lowerPrompt.includes('boda') || lowerPrompt.includes('novios') || lowerPrompt.includes('wedding') || lowerPrompt.includes('amor') || lowerPrompt.includes('love') || lowerPrompt.includes('pareja') || lowerPrompt.includes('couple')) {
+            return db.boda;
+        }
+        if (lowerPrompt.includes('urbano') || lowerPrompt.includes('calle') || lowerPrompt.includes('urban') || lowerPrompt.includes('street') || lowerPrompt.includes('moderno') || lowerPrompt.includes('modern') || lowerPrompt.includes('rebelde')) {
+            return db.urbano;
+        }
+        if (lowerPrompt.includes('playa') || lowerPrompt.includes('mar') || lowerPrompt.includes('beach') || lowerPrompt.includes('sea') || lowerPrompt.includes('agua') || lowerPrompt.includes('water') || lowerPrompt.includes('verano') || lowerPrompt.includes('summer')) {
+            return db.playa;
+        }
+        
+        return db.default;
+    };
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -151,9 +217,8 @@ const AIConceptGenerator: React.FC = () => {
                 required: ["title", "concept", "locations", "colors"]
             };
 
-            // Se puede ajustar el prompt según el idioma, pero la IA suele entender.
             // Forzamos la respuesta en el idioma actual del usuario.
-            const fullPrompt = `Genera un concepto de sesión de fotos en La Habana para: "${prompt}". Response in ${language === 'es' ? 'Spanish' : 'English'}.`;
+            const fullPrompt = `Genera un concepto de sesión de fotos en La Habana para: "${prompt}". Response strictly in ${language === 'es' ? 'Spanish' : 'English'}.`;
 
             const response = await ai.models.generateContent({
                 model: model,
@@ -183,9 +248,8 @@ const AIConceptGenerator: React.FC = () => {
         } catch (err: any) {
             console.warn("API Fallback Triggered:", err.message);
             // FALLBACK AUTOMÁTICO: Si falla la API (VPN, bloqueo, cuota), usamos el generador local
-            // Simulamos un pequeño delay para que parezca que "pensó"
             setTimeout(() => {
-                const offlineResult = getOfflineConcept(prompt);
+                const offlineResult = getOfflineConcept(prompt, language);
                 setResult(offlineResult);
                 setIsLoading(false);
             }, 1500);

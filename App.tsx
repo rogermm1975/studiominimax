@@ -9,7 +9,7 @@ import AnimatedBlob from './components/AnimatedBlob';
 import ScrollProgress from './components/ScrollProgress';
 import BackToTopButton from './components/BackToTopButton';
 import SEO from './components/SEO';
-import { LanguageProvider } from './contexts/LanguageContext';
+import { useLanguage } from './contexts/LanguageContext';
 
 // Lazy Load: Importamos los componentes pesados solo cuando se necesitan.
 // Esto reduce el tamaño del paquete inicial (JS bundle) y mejora la métrica TBT (Total Blocking Time).
@@ -22,17 +22,20 @@ const FAQ = lazy(() => import('./components/FAQ'));
 const Contact = lazy(() => import('./components/Contact'));
 
 // Componente de carga ligero (Skeleton) para evitar cambios bruscos de diseño (CLS)
-const SectionLoader = () => (
-  <div className="w-full py-32 flex items-center justify-center">
-     <div className="text-cyan-500/50 text-xs font-bold tracking-[0.3em] uppercase animate-pulse">
-        Cargando Experiencia...
-     </div>
-  </div>
-);
+const SectionLoader = () => {
+  const { t } = useLanguage();
+  return (
+    <div className="w-full py-32 flex items-center justify-center">
+       <div className="text-cyan-500/50 text-xs font-bold tracking-[0.3em] uppercase animate-pulse">
+          {t.common.loading}
+       </div>
+    </div>
+  );
+};
 
 const App: React.FC = () => {
   return (
-    <LanguageProvider>
+    <>
       <SEO />
       <div className="relative min-h-screen bg-[#05060d] text-gray-200 overflow-x-hidden">
         {/* Background Gradient Blobs - Added pointer-events-none to prevent interference */}
@@ -82,7 +85,7 @@ const App: React.FC = () => {
         <Footer />
         <BackToTopButton />
       </div>
-    </LanguageProvider>
+    </>
   );
 };
 

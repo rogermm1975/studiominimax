@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SpinnerIcon, RefreshIcon } from '../assets/icons';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -13,63 +13,16 @@ interface PortfolioItem {
   orientation: 'vertical' | 'horizontal';
 }
 
-// Imágenes reales proporcionadas
-// Bodas: Verticales (2:3), Horizontales (3:2)
-// Quinces: Verticales (2:3)
-const portfolioItems: PortfolioItem[] = [
-  // --- BODAS ---
-  // Verticales
-  { id: 1, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/06.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Retrato Elegante', orientation: 'vertical' },
-  { id: 2, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Momento Especial', orientation: 'vertical' },
-  { id: 3, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Detalles', orientation: 'vertical' },
-  { id: 4, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/09.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Boda - Emoción', orientation: 'vertical' },
-  // Horizontales
-  { id: 5, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/05.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Paisaje', orientation: 'horizontal' },
-  { id: 6, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/01.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Ceremonia', orientation: 'horizontal' },
-  { id: 7, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/04.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Pareja', orientation: 'horizontal' },
-  { id: 8, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/02.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Exteriores', orientation: 'horizontal' },
-  { id: 9, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/03.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Boda - Atardecer', orientation: 'horizontal' },
-
-  // --- QUINCES ---
-  // Verticales (Todas las proporcionadas son 800x1200)
-  { id: 10, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces01.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 01', orientation: 'vertical' },
-  { id: 11, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces02.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 02', orientation: 'vertical' },
-  { id: 12, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces03.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 03', orientation: 'vertical' },
-  { id: 13, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces04.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 04', orientation: 'vertical' },
-  { id: 14, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces05.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 05', orientation: 'vertical' },
-  { id: 15, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 06', orientation: 'vertical' },
-  { id: 16, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces06.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 07', orientation: 'vertical' },
-  { id: 17, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 08', orientation: 'vertical' },
-  { id: 18, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces10.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 09', orientation: 'vertical' },
-  { id: 19, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces11.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 10', orientation: 'vertical' },
-  { id: 20, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces09.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 11', orientation: 'vertical' },
-  { id: 21, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces13.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 12', orientation: 'vertical' },
-  { id: 22, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces14.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 13', orientation: 'vertical' },
-  { id: 23, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces15.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 14', orientation: 'vertical' },
-  { id: 24, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces28.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Quinces - Retrato 15', orientation: 'vertical' },
-
-  // --- NIÑOS ---
-  { id: 25, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os01.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 01', orientation: 'vertical' },
-  { id: 26, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os02.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 02', orientation: 'vertical' },
-  { id: 27, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os03.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 03', orientation: 'vertical' },
-  { id: 28, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os04.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 04', orientation: 'vertical' },
-  { id: 29, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os05.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 05', orientation: 'vertical' },
-  { id: 30, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os06.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Niños - Horizontal 01', orientation: 'horizontal' },
-  { id: 31, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 06', orientation: 'vertical' },
-  { id: 32, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 07', orientation: 'vertical' },
-  { id: 33, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os11.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: 'Niños - Horizontal 02', orientation: 'horizontal' },
-  { id: 34, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os13.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 08', orientation: 'vertical' },
-  { id: 35, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os14.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 09', orientation: 'vertical' },
-  { id: 36, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os15.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 10', orientation: 'vertical' },
-  { id: 37, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os17.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 11', orientation: 'vertical' },
-  { id: 38, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os18.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 12', orientation: 'vertical' },
-  { id: 39, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os19.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 13', orientation: 'vertical' },
-  { id: 40, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os20.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: 'Niños - Retrato 14', orientation: 'vertical' },
-];
-
 // Componente interno para manejar la carga individual de cada imagen
 const PortfolioImageCard: React.FC<{ item: PortfolioItem }> = ({ item }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const { t } = useLanguage();
+
+  // Helper para obtener el nombre traducido de la categoría
+  const getCategoryLabel = (cat: string) => {
+    const filters = t.portfolio.filters as any;
+    return filters[cat] || cat;
+  };
 
   return (
     <motion.div
@@ -105,7 +58,7 @@ const PortfolioImageCard: React.FC<{ item: PortfolioItem }> = ({ item }) => {
       
       {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-        <p className="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">{item.category}</p>
+        <p className="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">{getCategoryLabel(item.category)}</p>
         <p className="text-white text-sm font-bold tracking-wide translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{item.alt}</p>
       </div>
     </motion.div>
@@ -113,8 +66,61 @@ const PortfolioImageCard: React.FC<{ item: PortfolioItem }> = ({ item }) => {
 };
 
 const Portfolio: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeFilter, setActiveFilter] = useState('all');
+  
+  // Movemos los items dentro del componente para usar 'language' en los textos ALT
+  const portfolioItems: PortfolioItem[] = useMemo(() => {
+      const isEs = language === 'es';
+      return [
+        // --- BODAS ---
+        { id: 1, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/06.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Boda - Retrato Elegante' : 'Wedding - Elegant Portrait', orientation: 'vertical' },
+        { id: 2, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Boda - Momento Especial' : 'Wedding - Special Moment', orientation: 'vertical' },
+        { id: 3, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Boda - Detalles' : 'Wedding - Details', orientation: 'vertical' },
+        { id: 4, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/09.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Boda - Emoción' : 'Wedding - Emotion', orientation: 'vertical' },
+        { id: 5, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/05.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: isEs ? 'Boda - Paisaje' : 'Wedding - Landscape', orientation: 'horizontal' },
+        { id: 6, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/01.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: isEs ? 'Boda - Ceremonia' : 'Wedding - Ceremony', orientation: 'horizontal' },
+        { id: 7, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/04.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: isEs ? 'Boda - Pareja' : 'Wedding - Couple', orientation: 'horizontal' },
+        { id: 8, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/02.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: isEs ? 'Boda - Exteriores' : 'Wedding - Outdoors', orientation: 'horizontal' },
+        { id: 9, category: 'bodas', src: 'https://ik.imagekit.io/ilczwuvvn/03.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: isEs ? 'Boda - Atardecer' : 'Wedding - Sunset', orientation: 'horizontal' },
+
+        // --- QUINCES ---
+        { id: 10, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces01.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 01' : 'Quinces - Portrait 01', orientation: 'vertical' },
+        { id: 11, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces02.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 02' : 'Quinces - Portrait 02', orientation: 'vertical' },
+        { id: 12, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces03.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 03' : 'Quinces - Portrait 03', orientation: 'vertical' },
+        { id: 13, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces04.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 04' : 'Quinces - Portrait 04', orientation: 'vertical' },
+        { id: 14, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces05.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 05' : 'Quinces - Portrait 05', orientation: 'vertical' },
+        { id: 15, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 06' : 'Quinces - Portrait 06', orientation: 'vertical' },
+        { id: 16, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces06.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 07' : 'Quinces - Portrait 07', orientation: 'vertical' },
+        { id: 17, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 08' : 'Quinces - Portrait 08', orientation: 'vertical' },
+        { id: 18, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces10.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 09' : 'Quinces - Portrait 09', orientation: 'vertical' },
+        { id: 19, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces11.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 10' : 'Quinces - Portrait 10', orientation: 'vertical' },
+        { id: 20, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces09.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 11' : 'Quinces - Portrait 11', orientation: 'vertical' },
+        { id: 21, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces13.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 12' : 'Quinces - Portrait 12', orientation: 'vertical' },
+        { id: 22, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces14.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 13' : 'Quinces - Portrait 13', orientation: 'vertical' },
+        { id: 23, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces15.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 14' : 'Quinces - Portrait 14', orientation: 'vertical' },
+        { id: 24, category: 'quinces', src: 'https://ik.imagekit.io/ilczwuvvn/Optimizadas/Quinces28.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Quinces - Retrato 15' : 'Quinces - Portrait 15', orientation: 'vertical' },
+
+        // --- NIÑOS ---
+        { id: 25, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os01.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 01' : 'Kids - Portrait 01', orientation: 'vertical' },
+        { id: 26, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os02.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 02' : 'Kids - Portrait 02', orientation: 'vertical' },
+        { id: 27, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os03.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 03' : 'Kids - Portrait 03', orientation: 'vertical' },
+        { id: 28, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os04.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 04' : 'Kids - Portrait 04', orientation: 'vertical' },
+        { id: 29, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os05.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 05' : 'Kids - Portrait 05', orientation: 'vertical' },
+        { id: 30, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os06.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Horizontal 01' : 'Kids - Horizontal 01', orientation: 'horizontal' },
+        { id: 31, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os07.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 06' : 'Kids - Portrait 06', orientation: 'vertical' },
+        { id: 32, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os08.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 07' : 'Kids - Portrait 07', orientation: 'vertical' },
+        { id: 33, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os11.webp?tr=w-1200,h-800,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Horizontal 02' : 'Kids - Horizontal 02', orientation: 'horizontal' },
+        { id: 34, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os13.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 08' : 'Kids - Portrait 08', orientation: 'vertical' },
+        { id: 35, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os14.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 09' : 'Kids - Portrait 09', orientation: 'vertical' },
+        { id: 36, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os15.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 10' : 'Kids - Portrait 10', orientation: 'vertical' },
+        { id: 37, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os17.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 11' : 'Kids - Portrait 11', orientation: 'vertical' },
+        { id: 38, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os18.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 12' : 'Kids - Portrait 12', orientation: 'vertical' },
+        { id: 39, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os19.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 13' : 'Kids - Portrait 13', orientation: 'vertical' },
+        { id: 40, category: 'ninos', src: 'https://ik.imagekit.io/ilczwuvvn/NI%C3%91OS/Ni%C3%B1os20.webp?tr=w-800,h-1200,fo-auto,f-auto,q-70', alt: isEs ? 'Niños - Retrato 14' : 'Kids - Portrait 14', orientation: 'vertical' },
+      ];
+  }, [language]);
+
   const [filteredItems, setFilteredItems] = useState(portfolioItems);
   const [visibleCount, setVisibleCount] = useState(6);
   const ITEMS_PER_LOAD = 6;
@@ -136,7 +142,7 @@ const Portfolio: React.FC = () => {
     } else {
       setFilteredItems(portfolioItems.filter(item => item.category === activeFilter));
     }
-  }, [activeFilter]);
+  }, [activeFilter, portfolioItems]);
 
   const handleLoadMore = () => {
     setVisibleCount(prev => prev + ITEMS_PER_LOAD);

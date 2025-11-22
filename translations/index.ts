@@ -19,6 +19,10 @@ type Translations = {
       description: string;
       keywords: string;
     };
+    common: {
+      loading: string;
+      backToTop: string;
+    };
     header: {
       nav_inicio: string;
       nav_servicios: string;
@@ -29,6 +33,10 @@ type Translations = {
       nav_faq: string;
       nav_contacto: string;
       cta: string;
+      menuOpen: string;
+      menuClose: string;
+      logoAria: string;
+      languageAria: string;
     };
     hero: {
       tagline: string;
@@ -38,10 +46,15 @@ type Translations = {
       subtitle: string;
       cta: string;
       cta_secondary: string;
+      scroll: string;
+      scrollAria: string;
+      alt_bg: string;
+      ariaLabel: string;
     };
     services: {
       title: string;
       subtitle: string;
+      imageAlt: string;
       items: {
         title: string;
         description: string;
@@ -154,6 +167,9 @@ type Translations = {
       contactTitle: string;
       address: string;
       addressNote: string;
+      copy: string;
+      copied: string;
+      mapTitle: string;
     };
     footer: {
       description: string;
@@ -170,6 +186,10 @@ export const translations: Translations = {
       description: 'Estudio profesional de fotografía en La Habana. Especialistas en fotos de quinces, bodas, moda y diseño gráfico. Capturamos tu esencia con estilo único.',
       keywords: 'fotografo la habana, fotos de quince cuba, bodas cuba, estudio fotografico habana, diseño grafico cuba, minimax studio, sesion de fotos habana',
     },
+    common: {
+      loading: 'Cargando Experiencia...',
+      backToTop: 'Volver arriba',
+    },
     header: {
       nav_inicio: 'Inicio',
       nav_servicios: 'Servicios',
@@ -180,6 +200,10 @@ export const translations: Translations = {
       nav_faq: 'Preguntas',
       nav_contacto: 'Contacto',
       cta: 'Reserva Ahora',
+      menuOpen: 'Abrir menú',
+      menuClose: 'Cerrar menú',
+      logoAria: 'Ir a la página de inicio',
+      languageAria: 'Cambiar idioma a Inglés',
     },
     hero: {
       tagline: '- Fotografía - Diseño - Edición - Sublimación -',
@@ -189,10 +213,15 @@ export const translations: Translations = {
       subtitle: 'La vida está hecha de momentos irrepetibles. Nuestra misión es que nunca se pierdan en el tiempo.',
       cta: 'Ver Portafolio',
       cta_secondary: 'Reservar Sesión',
+      scroll: 'Desplazar',
+      scrollAria: 'Desplazar hacia la sección de Servicios',
+      alt_bg: 'Fondo Capitolio Habana',
+      ariaLabel: 'Sección principal de bienvenida',
     },
     services: {
       title: 'Nuestros Servicios',
       subtitle: 'Creamos experiencias visuales que trascienden lo convencional.',
+      imageAlt: 'Servicios MiniMax Studio',
       items: [
         { title: 'Fotografía', description: 'Sesiones para quinceañeras, bodas, banquetes, niños, embarazadas, artísticas y más. Capturamos tus momentos inolvidables.' },
         { title: 'Edición Web', description: 'Creación de estilos únicos para páginas web, landing pages y proyectos empresariales que reflejen tu visión.' },
@@ -260,7 +289,7 @@ export const translations: Translations = {
           title: "Arquitectura y Luz: Locaciones en La Habana",
           excerpt: "Un análisis de los escenarios más icónicos de la ciudad y cómo aprovecharlos para una narrativa visual potente.",
           date: "15 ENE 2024",
-          category: "LOCACIONES",
+          category: "LOCATIONS",
           readTime: "6 MIN",
           image: "https://ik.imagekit.io/ilczwuvvn/05.webp?tr=w-800,h-600,fo-auto"
         }
@@ -344,7 +373,10 @@ export const translations: Translations = {
       ],
       contactTitle: 'Contacto Directo',
       address: 'Calle 48 entre 247 y 245, Punta Brava, La Lisa, La Habana, Cuba',
-      addressNote: '(Solo con cita previa)'
+      addressNote: '(Solo con cita previa)',
+      copy: 'Copiar Correo',
+      copied: '¡Copiado!',
+      mapTitle: 'Ubicación del Estudio',
     },
     footer: {
       description: 'Fotografía y diseño con alma cubana. Contamos tu historia con una mirada única y vanguardista desde el corazón de La Habana.',
@@ -358,6 +390,10 @@ export const translations: Translations = {
       description: 'Professional photography studio in Havana, Cuba. Specialists in Quinceañeras, Weddings, Fashion, and Graphic Design. We capture your essence with unique style.',
       keywords: 'photographer havana, quinceanera photos cuba, weddings cuba, photo studio havana, graphic design cuba, minimax studio, photo shoot havana',
     },
+    common: {
+      loading: 'Loading Experience...',
+      backToTop: 'Back to top',
+    },
     header: {
       nav_inicio: 'Home',
       nav_servicios: 'Services',
@@ -368,6 +404,10 @@ export const translations: Translations = {
       nav_faq: 'FAQ',
       nav_contacto: 'Contact',
       cta: 'Book Now',
+      menuOpen: 'Open menu',
+      menuClose: 'Close menu',
+      logoAria: 'Go to Home page',
+      languageAria: 'Switch language to Spanish',
     },
     hero: {
       tagline: '- Photography - Design - Editing - Sublimation -',
@@ -377,10 +417,15 @@ export const translations: Translations = {
       subtitle: 'Life is made of unrepeatable moments. Our mission is that they never get lost in time.',
       cta: 'View Portfolio',
       cta_secondary: 'Book Session',
+      scroll: 'Scroll',
+      scrollAria: 'Scroll to Services section',
+      alt_bg: 'Havana Capitol Background',
+      ariaLabel: 'Welcome hero section',
     },
     services: {
       title: 'Our Services',
       subtitle: 'We create visual experiences that transcend the conventional.',
+      imageAlt: 'MiniMax Studio Services',
       items: [
         { title: 'Photography', description: 'Sessions for Quinceañeras, weddings, events, kids, maternity, artistic and more. We capture your unforgettable moments.' },
         { title: 'Web Editing', description: 'Creation of unique styles for websites, landing pages, and business projects that reflect your vision.' },
@@ -532,7 +577,10 @@ export const translations: Translations = {
       ],
       contactTitle: 'Direct Contact',
       address: '48th Street between 247 and 245, Punta Brava, La Lisa, Havana, Cuba',
-      addressNote: '(By appointment only)'
+      addressNote: '(By appointment only)',
+      copy: 'Copy Email',
+      copied: 'Copied!',
+      mapTitle: 'Studio Location',
     },
     footer: {
       description: 'Photography and design with Cuban soul. We tell your story with a unique and avant-garde perspective from the heart of Havana.',

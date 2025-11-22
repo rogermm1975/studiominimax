@@ -42,7 +42,7 @@ const Hero: React.FC = () => {
     <section
       id="hero"
       className="relative min-h-[100dvh] flex items-center justify-center text-center overflow-hidden pt-16 pb-20"
-      aria-label="Sección principal de bienvenida"
+      aria-label={t.hero.ariaLabel}
     >
       {/* Background Layer with Bokeh Effect */}
       <div className="absolute inset-0 z-0">
@@ -53,7 +53,7 @@ const Hero: React.FC = () => {
         */}
         <img 
           src={heroImageUrl} 
-          alt="Fondo Capitolio Habana" 
+          alt={t.hero.alt_bg} 
           className="w-full h-full object-cover filter blur-[3px] scale-110 brightness-[0.4]"
           {...{ fetchpriority: "high" }} 
         />
@@ -131,11 +131,11 @@ const Hero: React.FC = () => {
       {/* Scroll down indicator */}
       <div className="absolute bottom-8 lg:bottom-10 left-1/2 -translate-x-1/2 z-20 mix-blend-difference">
         <button
-          aria-label="Desplazar hacia la sección de Servicios"
+          aria-label={t.hero.scrollAria}
           onClick={() => scrollTo('servicios')}
           className="flex flex-col items-center gap-2 opacity-80 hover:opacity-100 transition-opacity p-4"
         >
-          <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-white shadow-black drop-shadow-lg">Scroll</span>
+          <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-white shadow-black drop-shadow-lg">{t.hero.scroll}</span>
           <div className="w-[2px] h-10 sm:h-12 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
              <div className="w-full h-full bg-cyan-400 animate-bounce shadow-[0_0_10px_#22d3ee]"></div>
           </div>

@@ -27,7 +27,7 @@ const Services: React.FC = () => {
     <TshirtIcon className="w-10 h-10" />
   ];
 
-  const servicesData = t.services.items.map((item, index) => ({
+  const servicesData = t.services.items.map((item: any, index: number) => ({
     ...item,
     icon: icons[index]
   }));
@@ -64,7 +64,7 @@ const Services: React.FC = () => {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {servicesData.map((service, index) => (
+            {servicesData.map((service: any, index: number) => (
               <motion.div variants={itemVariants} key={index} >
                 <ServiceCard {...service} />
               </motion.div>
@@ -79,7 +79,7 @@ const Services: React.FC = () => {
           >
             <img 
               src="https://ik.imagekit.io/ilczwuvvn/Urbano/Prado.webp?tr=w-1000,h-1200,fo-auto,f-auto,q-70" 
-              alt="Servicios MiniMax Studio" 
+              alt={t.services.imageAlt}
               className="w-full h-auto rounded-lg shadow-2xl filter grayscale-[20%] hover:grayscale-0 transition-all duration-500 object-cover"
             />
           </motion.div>

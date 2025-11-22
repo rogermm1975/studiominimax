@@ -83,7 +83,12 @@ const Header: React.FC = () => {
         className="fixed top-0 left-0 w-full z-50"
       >
         <div className="container mx-auto px-5 lg:px-8 py-4 lg:py-5 flex justify-between items-center">
-          <a href="#hero" onClick={(e) => handleNavClick(e, '#hero')} className="z-50 relative">
+          <a 
+            href="#hero" 
+            onClick={(e) => handleNavClick(e, '#hero')} 
+            className="z-50 relative"
+            aria-label={t.header.logoAria}
+          >
             <LogoIcon className="w-9 h-9 lg:w-10 lg:h-10 text-white hover:text-cyan-400 transition-colors duration-300" />
           </a>
           
@@ -106,6 +111,7 @@ const Header: React.FC = () => {
             <button 
               onClick={toggleLanguage}
               className="text-xs font-bold text-gray-300 hover:text-white transition-colors uppercase tracking-wider border border-gray-700 px-2 py-1 rounded hover:border-cyan-400"
+              aria-label={t.header.languageAria}
             >
               {language === 'es' ? 'EN' : 'ES'}
             </button>
@@ -129,13 +135,14 @@ const Header: React.FC = () => {
             <button 
               onClick={toggleLanguage}
               className="text-xs font-bold text-gray-300 hover:text-white transition-colors uppercase tracking-wider border border-gray-700 px-2 py-1 rounded bg-black/50"
+              aria-label={t.header.languageAria}
             >
               {language === 'es' ? 'EN' : 'ES'}
             </button>
             <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)} 
                 className="text-cyan-400 p-1 focus:outline-none"
-                aria-label="Abrir menú"
+                aria-label={isMenuOpen ? t.header.menuClose : t.header.menuOpen}
             >
               {isMenuOpen ? <XIcon className="w-8 h-8" /> : <MenuIcon className="w-8 h-8" />}
             </button>

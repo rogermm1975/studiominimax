@@ -14,7 +14,7 @@ const Testimonials: React.FC = () => {
         'https://picsum.photos/seed/avatar4/100/100'
     ];
 
-    const testimonials = t.testimonials.items.map((item, index) => ({
+    const testimonials = t.testimonials.items.map((item: any, index: number) => ({
         ...item,
         avatar: avatars[index]
     }));
@@ -50,7 +50,7 @@ const Testimonials: React.FC = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial: any, index: number) => (
             <motion.div 
               key={index} 
               className="bg-gray-900/40 p-8 rounded-lg border border-gray-800 flex flex-col"

@@ -57,7 +57,7 @@ const FAQ: React.FC = () => {
         </motion.div>
 
         <div className="max-w-3xl mx-auto">
-          {t.faq.items.map((item, index) => (
+          {t.faq.items.map((item: any, index: number) => (
              <motion.div
               key={index}
               initial={{ opacity: 0, x: -10 }}

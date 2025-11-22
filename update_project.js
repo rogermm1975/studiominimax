@@ -1,4 +1,19 @@
 
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Configuración para módulos ES
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+/**
+ * LISTA DE ARCHIVOS A ACTUALIZAR
+ */
+const filesToUpdate = [
+  {
+    path: 'components/Contact.tsx',
+    content: `
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MailIcon, PhoneIcon, LocationMarkerIcon, WhatsAppIcon, ClipboardCopyIcon, CheckIcon } from '../assets/icons';
@@ -9,7 +24,7 @@ const Contact: React.FC = () => {
   const displayEmail = 'contacto@habanaminimax.com';
   const actualEmail = 'carlose6074@gmail.com';
   
-  const mailtoLink = `mailto:${actualEmail}`;
+  const mailtoLink = \`mailto:\${actualEmail}\`;
 
   const [isCopied, setIsCopied] = useState(false);
   
@@ -31,25 +46,25 @@ const Contact: React.FC = () => {
     const whatsappNumber = '5352679828';
     const wm = t.contact.whatsappMessage;
     
-    const formattedMessage = `
-${wm.header}
+    const formattedMessage = \`
+\${wm.header}
 
-${wm.subheader}
+\${wm.subheader}
 ━━━━━━━━━━━━━━━━━━━━
 
-${wm.name} ${name}
-${wm.email} ${email}
-${wm.interest} ${service}
+\${wm.name} \${name}
+\${wm.email} \${email}
+\${wm.interest} \${service}
 ━━━━━━━━━━━━━━━━━━━━
 
-${wm.message}
-${message}
+\${wm.message}
+\${message}
 
-${wm.footer}
-    `.trim();
+\${wm.footer}
+    \`.trim();
     
     const encodedMessage = encodeURIComponent(formattedMessage);
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    const whatsappUrl = \`https://wa.me/\${whatsappNumber}?text=\${encodedMessage}\`;
     
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
@@ -96,7 +111,7 @@ ${wm.footer}
               </div>
               <div>
                 <label htmlFor="service" className={formLabelStyles}>{t.contact.labelService}</label>
-                <select id="service" value={service} onChange={(e) => setService(e.target.value)} required className={`${formInputStyles} appearance-none`}>
+                <select id="service" value={service} onChange={(e) => setService(e.target.value)} required className={\`\${formInputStyles} appearance-none\`}>
                   <option value="" disabled>{t.contact.selectDefault}</option>
                   {t.contact.serviceOptions.map((opt: string, i: number) => (
                     <option key={i}>{opt}</option>
@@ -143,9 +158,10 @@ ${wm.footer}
                                 <MailIcon className="w-5 h-5 mr-3" />
                                 {displayEmail}
                             </a>
+                            {/* Botón de Copiar con Mejor Visibilidad */}
                             <button 
                                 onClick={handleCopyEmail} 
-                                className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-3 py-2 rounded-md text-xs transition-all border border-gray-600 hover:border-cyan-500" 
+                                className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-xs transition-all border border-cyan-500/30 hover:border-cyan-400 shadow-[0_0_10px_rgba(0,0,0,0.3)]" 
                                 aria-label={t.contact.copy}
                                 title={isCopied ? t.contact.copied : t.contact.copy}
                             >
@@ -188,3 +204,73 @@ ${wm.footer}
 };
 
 export default Contact;
+    `
+  },
+  {
+    path: 'README.md',
+    content: `
+# Habana MiniMax Studio - Landing Page
+
+Esta es la landing page para Habana MiniMax Studio, desarrollada con React, Vite, TypeScript y Tailwind CSS.
+
+## Automatización de Actualizaciones
+
+Este proyecto utiliza un script \`update_project.js\` para facilitar la actualización rápida de archivos generados por la IA.
+
+### Cómo actualizar el código:
+1. Copia el contenido proporcionado por la IA (que incluirá el script actualizado).
+2. Pega el contenido en el archivo \`update_project.js\`.
+3. Ejecuta el comando:
+   \`\`\`bash
+   node update_project.js
+   \`\`\`
+4. El script reescribirá automáticamente los archivos modificados en las carpetas correctas.
+
+## Requisitos
+
+- Node.js (versión 18 o superior)
+- npm
+
+## Instalación y Ejecución
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Despliegue
+
+\`\`\`bash
+npm run deploy
+\`\`\`
+    `
+  }
+];
+
+/**
+ * LOGICA PRINCIPAL DEL SCRIPT
+ */
+console.log('\\x1b[36m%s\\x1b[0m', '🚀 Iniciando actualización de archivos...');
+
+filesToUpdate.forEach(file => {
+  try {
+    // Resolver ruta absoluta
+    const filePath = path.join(__dirname, file.path);
+    const dirPath = path.dirname(filePath);
+
+    // Crear directorios si no existen
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+      console.log(`   📁 Directorio creado: ${dirPath}`);
+    }
+
+    // Escribir el archivo
+    fs.writeFileSync(filePath, file.content.trim(), 'utf8');
+    console.log(`   ✅ Archivo actualizado: ${file.path}`);
+
+  } catch (error) {
+    console.error(`   ❌ Error actualizando ${file.path}:`, error.message);
+  }
+});
+
+console.log('\\x1b[32m%s\\x1b[0m', '✨ ¡Actualización completada con éxito!');

@@ -28,7 +28,7 @@ const LeadMagnet: React.FC = () => {
     <PhotographIcon className="w-5 h-5" />
   ];
 
-  const resources = t.leadMagnet.items.map((item, index) => ({
+  const resources = t.leadMagnet.items.map((item: any, index: number) => ({
     ...item,
     icon: icons[index]
   }));
@@ -65,7 +65,7 @@ const LeadMagnet: React.FC = () => {
             </p>
 
             <div className="space-y-6">
-              {resources.map((res, i) => (
+              {resources.map((res: any, i: number) => (
                 <div key={i} className="flex items-start group">
                   <div className="mt-1 mr-4 text-gray-600 group-hover:text-cyan-400 transition-colors">
                     {res.icon}
